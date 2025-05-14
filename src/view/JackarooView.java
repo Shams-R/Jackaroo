@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -342,4 +344,38 @@ public class JackarooView {
         	}
         }
     }
+    
+    
+    
+    
+    
+    
+    public static void showPopMessage(Stage owner, Exception e) {
+    	
+    	Label msg = new Label(e.getMessage());
+	    
+	    msg.setWrapText(true);
+	    msg.setMaxWidth(380);
+	    msg.setTextAlignment(TextAlignment.CENTER);
+	    msg.setAlignment(Pos.CENTER);
+	    msg.setStyle("-fx-padding: 10;");
+
+	    VBox root = new VBox(msg);
+	    root.setAlignment(Pos.CENTER);
+	    root.setFillWidth(true);
+
+	    Stage popup = new Stage();
+	    popup.initOwner(owner);
+	    popup.initModality(Modality.WINDOW_MODAL);
+	    popup.setResizable(false);
+	    popup.setTitle("wrong move");
+	    Scene scene = new Scene(root, 300, 150);
+	    popup.setScene( scene);
+
+	    popup.setOnCloseRequest(evt -> popup.hide());
+	    popup.show();
+	    
+	    Image icon=new Image("icon.png");
+		popup.getIcons().add(icon);
+	}
 }
