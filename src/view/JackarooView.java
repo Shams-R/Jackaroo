@@ -2,6 +2,8 @@ package view;
 
 import java.util.ArrayList;
 
+import model.card.Card;
+import model.player.Marble;
 import model.player.Player;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -29,6 +31,8 @@ public class JackarooView {
 	private ArrayList<Circle> mainTrack;
 	private ArrayList<ArrayList> safeZones;
 	private ArrayList<ArrayList> homezones;
+	private ArrayList<PlayerHandView>playersHandView;
+	private ArrayList<HomeZoneView>homeZonesView;
 	
 	public String getPlayerName() {
 		return playerName;
@@ -332,6 +336,81 @@ public class JackarooView {
             }
         }
         
+    }
+    public void makeHandsView(ArrayList<Player>players){
+    	ArrayList<Card>array1=players.get(0).getHand();//1---humanplyer
+    	ArrayList<Card>array2=players.get(1).getHand();
+    	ArrayList<Card>array3=players.get(2).getHand();
+    	ArrayList<Card>array4=players.get(3).getHand();
+  
+         PlayerHandView bottomPlayer = new PlayerHandView(array1);
+         PlayerHandView rightPlayer  = new PlayerHandView(array2);
+         PlayerHandView topPlayer    = new PlayerHandView(array3);
+         PlayerHandView leftPlayer   = new PlayerHandView(array4);
+
+         // Orient cards correctly
+         leftPlayer.setRotate(90);
+         rightPlayer.setRotate(-90);
+         topPlayer.setRotate(180);
+         HBox topHand = new HBox(topPlayer);
+         topHand.setAlignment(Pos.CENTER);
+
+         HBox bottomHand = new HBox(bottomPlayer);
+         bottomHand.setAlignment(Pos.CENTER);
+
+         VBox leftHand = new VBox(leftPlayer);
+         leftHand.setAlignment(Pos.CENTER);
+
+         VBox rightHand = new VBox(rightPlayer);
+         rightHand.setAlignment(Pos.CENTER);
+        
+         BorderPane root = new BorderPane();
+         root.setTop(topHand);
+         root.setBottom(bottomHand);
+         root.setLeft(leftHand);
+         root.setRight(rightHand);
+         mainLayout.getChildren().add(root);
+    	
+    }
+   public void createHomeZones(ArrayList<Player>players){
+	   homeZonesView=new ArrayList<>();
+	   BorderPane root = new BorderPane();
+	   root.setPrefSize(800,800); // Set desired width and height
+	   root.setMaxSize(800,800);
+    	for(int i=0;i<4;i++){
+    		ArrayList<Marble>marbles=players.get(i).getMarbles();
+    		ArrayList<CellView>cellsview=new ArrayList<>();
+    		for(int j=0;j<4;j++)
+    		{
+    			CellView cell=new CellView(players.get(i).getColour().toString());
+    			MarbleView marbleview=new MarbleView(marbles.get(j));
+    			cell.setMarbleView(marbleview);
+    			cellsview.add(cell);
+    		}
+    		HomeZoneView homeZoneView=new HomeZoneView(cellsview);
+    		homeZonesView.add(homeZoneView);
+    		HBox box = new HBox(homeZoneView);
+    		box.setAlignment(Pos.CENTER);
+    		if(i==0){
+    			root.setBottom(box);
+    			BorderPane.setMargin(box, new Insets(0, 0, 45,-62));
+    		}
+    		if(i==1)
+    			root.setRight(box);
+    		if(i==2)
+    			root.setTop(box);
+    		if(i==3)
+    			root.setLeft(box);
+    			
+    		
+    		
+    		
+    		
+    		
+    		
+    	}
+    	mainLayout.getChildren().add(root);
+    	
     }
     
     
