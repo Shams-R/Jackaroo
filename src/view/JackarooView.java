@@ -118,16 +118,16 @@ public class JackarooView {
 	    mainLayout.setAlignment(board, Pos.CENTER);
 
 	    // Set fixed size for the GridPane
-	    board.setPrefSize(1115, 1115);
-	    board.setMinSize(1115, 1115);
-	    board.setMaxSize(1115, 1115);
+	    board.setPrefSize(1050, 1050);
+	    board.setMinSize(1000, 1050);
+	    board.setMaxSize(1050, 1050);
 	    
 	    // Set background image for the board
 	    Image boardImg = new Image("Board.png");
 	    ImageView boardBg = new ImageView(boardImg);
 	    boardBg.setPreserveRatio(false);
-	    boardBg.setFitWidth(1115);
-	    boardBg.setFitHeight(1115);
+	    boardBg.setFitWidth(1050);
+	    boardBg.setFitHeight(1050);
 	    
 	    // shift it 100px to the right
 	    boardBg.setTranslateX(-25);
@@ -168,8 +168,6 @@ public class JackarooView {
     	for(CellView cell : mainTrack) {
     		board.getChildren().add(cell.getCircle());
     	}
-    	
-    	System.out.println(mainTrack.size());
     }
     
     public void makeHandsView(ArrayList<Player>players){

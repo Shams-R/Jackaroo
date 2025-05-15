@@ -17,7 +17,7 @@ public class TrackView {
     	
     	//reference points
     	
-    	int x = 159;
+    	int x = 100;
     	int y = 300;
     	
     	for(int i=0; i<7; i++) {
@@ -30,92 +30,92 @@ public class TrackView {
     	
     	mainTrack.add(new CellView(track.get(c++),x, y));
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x+=22;
     		y+=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<5; i++) {
     		x+=32;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x+=22;
     		y-=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<7; i++) {
+    	for(int i=0; i<4; i++) {
     		x+=23;
     		y+=22;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x-=22;
     		y+=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<5; i++) {
     		y+=32;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x+=22;
     		y+=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<7; i++) {
+    	for(int i=0; i<4; i++) {
     		x-=23;
     		y+=22;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x-=22;
     		y-=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<5; i++) {
     		x-=32;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x-=22;
     		y+=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<7; i++) {
+    	for(int i=0; i<4; i++) {
     		x-=23;
     		y-=22;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x+=22;
     		y-=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<5; i++) {
     		y-=32;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
     	
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<8; i++) {
     		x-=22;
     		y-=23;
     		mainTrack.add(new CellView(track.get(c++),x, y));
     	}
-    	for(int i=0; i<6; i++) {
+    	for(int i=0; i<3; i++) {
     		x+=23;
     		y-=22;
     		mainTrack.add(new CellView(track.get(c++),x, y));
