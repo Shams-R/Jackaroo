@@ -33,6 +33,8 @@ public class JackarooView {
 	private ArrayList<ArrayList> homezones;
 	private ArrayList<PlayerHandView>playersHandView;
 	private ArrayList<HomeZoneView>homeZonesView;
+	private ArrayList<PlayerHandView>playersHands;
+	private CardsPoolView cardsPool;
 	
 	public String getPlayerName() {
 		return playerName;
@@ -338,16 +340,21 @@ public class JackarooView {
         
     }
     public void makeHandsView(ArrayList<Player>players){
-    	ArrayList<Card>array1=players.get(0).getHand();//1---humanplyer
-    	ArrayList<Card>array2=players.get(1).getHand();
-    	ArrayList<Card>array3=players.get(2).getHand();
-    	ArrayList<Card>array4=players.get(3).getHand();
+    	playersHands=new ArrayList<>();
+    	for(int i=0;i<4;i++){
+    		ArrayList<Card>array=players.get(i).getHand();
+    		PlayerHandView playerHand = new PlayerHandView(array);
+    		playersHands.add(playerHand);
+    	}
   
-         PlayerHandView bottomPlayer = new PlayerHandView(array1);
-         PlayerHandView rightPlayer  = new PlayerHandView(array2);
-         PlayerHandView topPlayer    = new PlayerHandView(array3);
-         PlayerHandView leftPlayer   = new PlayerHandView(array4);
-
+         PlayerHandView bottomPlayer = playersHands.get(0);
+         PlayerHandView rightPlayer  = playersHands.get(1);
+         PlayerHandView topPlayer    = playersHands.get(2);
+         PlayerHandView leftPlayer   = playersHands.get(3);
+         for(int i=1;i<4;i++){//to showBack of oponent cards
+        	 PlayerHandView hand=playersHands.get(i);
+        	 hand.showBack();
+         }
          // Orient cards correctly
          leftPlayer.setRotate(90);
          rightPlayer.setRotate(-90);
@@ -434,6 +441,14 @@ public class JackarooView {
     	mainLayout.getChildren().add(root);
     	
     }
+   public void createCardsPool(int numberOfCards){
+	   
+	   cardsPool=new CardsPoolView(numberOfCards);
+	   mainLayout.getChildren().add(cardsPool);
+	   cardsPool.setTranslateX(120);
+	   
+	   
+   }
     
     
     
