@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import view.*;
+import javafx.scene.input.KeyCode;
 
 public class JackarooGUI extends Application{
 
@@ -71,15 +72,35 @@ public class JackarooGUI extends Application{
 	    }  );
 	 
 	    // this was to test the popup message
-	    Exception e= new CannotFieldException("vrbebverb rvrebeaw rvewrvbrev vwrvwervwa vwvwreav");  
-	    view.showPopMessage(primaryStage , e); 
+	    //Exception e= new CannotFieldException("vrbebverb rvrebeaw rvewrvbrev vwrvwervwa vwvwreav");  
+	   // view.showPopMessage(primaryStage , e); 
 	    
 	   
 	    
 		
 	}
 	   
-	
+	public static void fieldShortcut( Stage owner,JackarooView view  ,Game game) {
+    	VBox root = new VBox();
+    	Scene scene = new Scene(root);
+    	scene.setOnKeyPressed(event -> {
+    	    if (event.getCode() == KeyCode.ENTER) {
+    	    	try {
+					game.fieldMarble();
+					
+				} catch (CannotFieldException | IllegalDestroyException e) {
+					
+					view.showPopMessage(owner, e);
+				}
+					}
+			
+    	    }
+    	) ;
+    	
+    	owner.setScene(scene);
+    
+ }
+
 
 	
 	
