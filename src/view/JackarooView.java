@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import model.player.Player;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -111,28 +111,24 @@ public class JackarooView {
 	    mainLayout.setAlignment(board, Pos.CENTER);
 
 	    // Set fixed size for the GridPane
-	    board.setPrefSize(1100, 1100);
-	    board.setMinSize(1100, 1100);
-	    board.setMaxSize(1100, 1100);
-	    
-	    board.setTranslateY(10);
+	    board.setPrefSize(1115, 1115);
+	    board.setMinSize(1115, 1115);
+	    board.setMaxSize(1115, 1115);
 	    
 	    // Set background image for the board
-	    Image backgroundImage = new Image("Board.png");
-	    BackgroundSize backgroundSize = new BackgroundSize(
-	        BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true);
+	    Image boardImg = new Image("Board.png");
+	    ImageView boardBg = new ImageView(boardImg);
+	    boardBg.setPreserveRatio(false);
+	    boardBg.setFitWidth(1115);
+	    boardBg.setFitHeight(1115);
+	    // shift it 100px to the right
+	    boardBg.setTranslateX(-25);
 
-	    BackgroundImage bgImage = new BackgroundImage(
-	        backgroundImage,
-	        BackgroundRepeat.NO_REPEAT,
-	        BackgroundRepeat.NO_REPEAT,
-	        BackgroundPosition.CENTER,
-	        backgroundSize);
+	    // Add it *behind* your cells:
+	    board.getChildren().add(0, boardBg);
 
-	    board.setBackground(new Background(bgImage));
-
-	    // Add the cells to the board
-	    addCells(board, players); // 👈 Add all circular cells here
+	    // Now lay down your track cells on top
+	    addCells(board, players);
 	}
 	
     private Circle mainTrackCell(int x, int y) {
@@ -168,85 +164,114 @@ public class JackarooView {
     	
     	//reference points
     	
-    	int x = 120;
-    	int y = 398;
+    	int x = 159;
+    	int y = 300;
     	
-    	for(int i=1; i<10; i++) {
-    		mainTrack.add(mainTrackCell(x, y+(13*2+8)*i));
+    	for(int i=0; i<7; i++) {
+    		x+=23;
+    		y-=22;
     	}
     	
-    	y = (int) mainTrack.get(mainTrack.size()-1).getCenterY();
+    	x-=23;
+    	y+=22;
     	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x+(13*2+8)*i, y));
+    	mainTrack.add(mainTrackCell(x, y));
+    	
+    	for(int i=0; i<6; i++) {
+    		x+=22;
+    		y+=23;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	x = (int) mainTrack.get(mainTrack.size()-1).getCenterX();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x, y+(13*2+8)*i));
+    	for(int i=0; i<6; i++) {
+    		x+=32;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	y = (int) mainTrack.get(mainTrack.size()-1).getCenterY();
-    	
-    	for(int i=1; i<10; i++) {
-    		mainTrack.add(mainTrackCell(x+(13*2+8)*i, y));
+    	for(int i=0; i<6; i++) {
+    		x+=22;
+    		y-=23;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	x = (int) mainTrack.get(mainTrack.size()-1).getCenterX();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x, y-(13*2+8)*i));
+    	for(int i=0; i<7; i++) {
+    		x+=23;
+    		y+=22;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	y = (int) mainTrack.get(mainTrack.size()-1).getCenterY();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x+(13*2+8)*i, y));
+    	for(int i=0; i<6; i++) {
+    		x-=22;
+    		y+=23;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	x = (int) mainTrack.get(mainTrack.size()-1).getCenterX();
-    	
-    	for(int i=1; i<10; i++) {
-    		mainTrack.add(mainTrackCell(x, y-(13*2+8)*i));
+    	for(int i=0; i<6; i++) {
+    		y+=32;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	y = (int) mainTrack.get(mainTrack.size()-1).getCenterY();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x-(13*2+8)*i, y));
+    	for(int i=0; i<6; i++) {
+    		x+=22;
+    		y+=23;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	x = (int) mainTrack.get(mainTrack.size()-1).getCenterX();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x, y-(13*2+8)*i));
+    	for(int i=0; i<7; i++) {
+    		x-=23;
+    		y+=22;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	y = (int) mainTrack.get(mainTrack.size()-1).getCenterY();
-    	
-    	for(int i=1; i<10; i++) {
-    		mainTrack.add(mainTrackCell(x-(13*2+8)*i, y));
+    	for(int i=0; i<6; i++) {
+    		x-=22;
+    		y-=23;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	x = (int) mainTrack.get(mainTrack.size()-1).getCenterX();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x, y+(13*2+8)*i));
+    	for(int i=0; i<6; i++) {
+    		x-=32;
+    		mainTrack.add(mainTrackCell(x, y));
+    	}
+    
+    	for(int i=0; i<6; i++) {
+    		x-=22;
+    		y+=23;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	y = (int) mainTrack.get(mainTrack.size()-1).getCenterY();
-    	
-    	for(int i=1; i<9; i++) {
-    		mainTrack.add(mainTrackCell(x-(13*2+8)*i, y));
+    	for(int i=0; i<7; i++) {
+    		x-=23;
+    		y-=22;
+    		mainTrack.add(mainTrackCell(x, y));
     	}
     	
-    	System.out.println(mainTrack.size());
+    	for(int i=0; i<6; i++) {
+    		x+=22;
+    		y-=23;
+    		mainTrack.add(mainTrackCell(x, y));
+    	}
+    	
+    	for(int i=0; i<6; i++) {
+    		y-=32;
+    		mainTrack.add(mainTrackCell(x, y));
+    	}
+    	
+    	for(int i=0; i<6; i++) {
+    		x-=22;
+    		y-=23;
+    		mainTrack.add(mainTrackCell(x, y));
+    	}
+    	for(int i=0; i<6; i++) {
+    		x+=23;
+    		y-=22;
+    		mainTrack.add(mainTrackCell(x, y));
+    	}
     	
     	for(Circle cell : mainTrack) {
     		board.getChildren().add(cell);
     	}
-        
+    	
     	//Base Cells 
     	
         for(int i=0; i<4; i++) {
@@ -254,13 +279,16 @@ public class JackarooView {
         	mainTrack.get(baseIndex).setStroke(Color.valueOf(players.get(i).getColour().toString()));
         	mainTrack.get(baseIndex).setStrokeWidth(4);
         }
-        
+    	
+    	System.out.println(mainTrack.size());
+    	    
         //Safezone Cells
         
         safeZones = new ArrayList<>();
         
+        
         for(int i=0; i<4; i++) {
-        	int entry = (i*25+102)%100;
+        	int entry = (i*25+98)%100;
         	
         	Circle entryCell = mainTrack.get(entry);
         	int entryX = (int) entryCell.getCenterX();
@@ -270,21 +298,29 @@ public class JackarooView {
         	String colour = players.get(i).getColour().toString();
         	
             if (i == 0) {
-                for (int j = 1; j < 5; j++) {
-                    safeZone.add(zoneCell(colour, entryX + j * (13 * 2 + 5), entryY));
-                }
+            	for(int c=0; c<4; c++) {
+            		entryX+=22;
+            		entryY+=23;
+            		safeZone.add(zoneCell(colour, entryX, entryY));
+            	}
             } else if (i == 1) {
-                for (int j = 1; j < 5; j++) {
-                    safeZone.add(zoneCell(colour, entryX, entryY - j * (13 * 2 + 5)));
-                }
+            	for(int c=0; c<4; c++) {
+            		entryX-=22;
+            		entryY+=23;
+            		safeZone.add(zoneCell(colour, entryX, entryY));
+            	}
             } else if (i == 2) {
-                for (int j = 1; j < 5; j++) {
-                    safeZone.add(zoneCell(colour, entryX - j * (13 * 2 + 5), entryY));
-                }
+            	for(int c=0; c<4; c++) {
+            		entryX-=22;
+            		entryY-=23;
+            		safeZone.add(zoneCell(colour, entryX, entryY));
+            	}
             } else if (i == 3) {
-                for (int j = 1; j < 5; j++) {
-                    safeZone.add(zoneCell(colour, entryX, entryY + j * (13 * 2 + 5)));
-                }
+            	for(int c=0; c<4; c++) {
+            		entryX+=22;
+            		entryY-=23;
+            		safeZone.add(zoneCell(colour, entryX, entryY));
+            	}
             }
 
             safeZones.add(safeZone);
@@ -294,52 +330,5 @@ public class JackarooView {
             }
         }
         
-        //Homezone cells
-        
-        homezones = new ArrayList<>();
-        
-        for(int i=0; i<4; i++) {
-        	int startIndex = (i*25-13+100)%100;
-        	int posX = (int) mainTrack.get(startIndex).getCenterX();
-        	int posY = (int) mainTrack.get(startIndex).getCenterY();
-        	
-        	ArrayList<Circle> homeZone = new ArrayList<>();
-        	
-        	String colour = players.get(i).getColour().toString();
-        	if(i==0) {
-        		posX-=4*34+5;
-        		homeZone.add(zoneCell(colour, posX, posY));
-        		homeZone.add(zoneCell(colour, posX, posY+34+5));
-        		homeZone.add(zoneCell(colour, posX+34+5, posY));
-        		homeZone.add(zoneCell(colour, posX+34+5, posY+34+5));
-        	}
-        	else if(i==1) {
-        		posY+=4*34+5;
-        		homeZone.add(zoneCell(colour, posX, posY));
-        		homeZone.add(zoneCell(colour, posX, posY-34-5));
-        		homeZone.add(zoneCell(colour, posX+34+5, posY));
-        		homeZone.add(zoneCell(colour, posX+34+5, posY-34-5));
-        	}
-        	else if(i==2) {
-        		posX+=4*34+5;
-        		homeZone.add(zoneCell(colour, posX, posY));
-        		homeZone.add(zoneCell(colour, posX, posY-34-5));
-        		homeZone.add(zoneCell(colour, posX-34-5, posY));
-        		homeZone.add(zoneCell(colour, posX-34-5, posY-34-5));
-        	}
-        	else if(i==3) {
-        		posY-=4*34+5;
-        		homeZone.add(zoneCell(colour, posX, posY));
-        		homeZone.add(zoneCell(colour, posX, posY+34+5));
-        		homeZone.add(zoneCell(colour, posX-34-5, posY));
-        		homeZone.add(zoneCell(colour, posX-34-5, posY+34+5));
-        	}
-        	
-        	homezones.add(homeZone);
-        	
-        	for(Circle cell : homeZone) {
-        		board.getChildren().add(cell);
-        	}
-        }
     }
 }
