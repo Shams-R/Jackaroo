@@ -2,6 +2,8 @@ package view;
 
 import java.util.ArrayList;
 
+import engine.board.Cell;
+import engine.board.SafeZone;
 import model.card.Card;
 import model.player.Marble;
 import model.player.Player;
@@ -28,11 +30,10 @@ import javafx.stage.Stage;
 public class JackarooView {
 	private String playerName;
 	private StackPane mainLayout;
-	private ArrayList<Circle> mainTrack;
-	private ArrayList<ArrayList> safeZones;
-	private ArrayList<ArrayList> homezones;
-	private ArrayList<PlayerHandView>playersHandView;
-	private ArrayList<HomeZoneView>homeZonesView;
+	private TrackView trackView;
+	private ArrayList<SafeZoneView> safeZonesView;
+	private ArrayList<PlayerHandView> playersHandView;
+	private ArrayList<HomeZoneView> homeZonesView;
 	
 	public String getPlayerName() {
 		return playerName;
@@ -100,7 +101,7 @@ public class JackarooView {
 	    return submitButton;
 	}
 	
-	public void initializeBoard(Stage stage, ArrayList<Player> players) {
+	public void initializeBoard(Stage stage, ArrayList<Player> players, ArrayList<Cell> track, ArrayList<SafeZone> safeZones) {
 	    // Background image view setup
 	    Image background = new Image("Background.png");
 	    ImageView view = new ImageView(background);
@@ -127,216 +128,50 @@ public class JackarooView {
 	    boardBg.setPreserveRatio(false);
 	    boardBg.setFitWidth(1115);
 	    boardBg.setFitHeight(1115);
+	    
 	    // shift it 100px to the right
 	    boardBg.setTranslateX(-25);
 
-	    // Add it *behind* your cells:
+	    // Add behind cells:
 	    board.getChildren().add(0, boardBg);
 
-	    // Now lay down your track cells on top
-	    addCells(board, players);
+	    // Add track cells
+	    addTrack(board, players, track);
+	    addSafeZones(board, players, safeZones);
+	    addHomeZones(players);
 	}
-	
-    private Circle mainTrackCell(int x, int y) {
-    	Circle circle = new Circle();
-    	circle.setCenterX(x);
-    	circle.setCenterY(y);
-    	circle.setRadius(13);
-//    	Image cell = new Image("Cell.png", 50, 50, true, true);
-//    	ImagePattern cellPattern = new ImagePattern(cell);
-//    	circle.setFill(cellPattern);
-    	circle.setFill(Color.BEIGE);
-        circle.setStroke(Color.BLACK);
-        return circle;
-    }
     
-    private Circle zoneCell(String colour, int x, int y) {
-    	Circle circle = new Circle();
-    	circle.setCenterX(x);
-    	circle.setCenterY(y);
-    	circle.setRadius(13);
-//    	Image cell = new Image("Cell.png", 50, 50, true, true);
-//    	ImagePattern cellPattern = new ImagePattern(cell);
-//    	circle.setFill(cellPattern);
-    	circle.setFill(Color.BEIGE);
-        circle.setStroke(Color.valueOf(colour));
-        circle.setStrokeWidth(4);
-        return circle;
-    }
-
-
-    private void addCells(Pane board, ArrayList<Player> players) {
-    	mainTrack = new ArrayList<>();
+    private void addSafeZones(Pane board, ArrayList<Player> players, ArrayList<SafeZone> safeZones) {
+    	safeZonesView = new ArrayList<SafeZoneView>();
     	
-    	//reference points
-    	
-    	int x = 159;
-    	int y = 300;
-    	
-    	for(int i=0; i<7; i++) {
-    		x+=23;
-    		y-=22;
-    	}
-    	
-    	x-=23;
-    	y+=22;
-    	
-    	mainTrack.add(mainTrackCell(x, y));
-    	
-    	for(int i=0; i<6; i++) {
-    		x+=22;
-    		y+=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x+=32;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x+=22;
-    		y-=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<7; i++) {
-    		x+=23;
-    		y+=22;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x-=22;
-    		y+=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		y+=32;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x+=22;
-    		y+=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<7; i++) {
-    		x-=23;
-    		y+=22;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x-=22;
-    		y-=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x-=32;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    
-    	for(int i=0; i<6; i++) {
-    		x-=22;
-    		y+=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<7; i++) {
-    		x-=23;
-    		y-=22;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x+=22;
-    		y-=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		y-=32;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(int i=0; i<6; i++) {
-    		x-=22;
-    		y-=23;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	for(int i=0; i<6; i++) {
-    		x+=23;
-    		y-=22;
-    		mainTrack.add(mainTrackCell(x, y));
-    	}
-    	
-    	for(Circle cell : mainTrack) {
-    		board.getChildren().add(cell);
-    	}
-    	
-    	//Base Cells 
-    	
-        for(int i=0; i<4; i++) {
-        	int baseIndex = (i*25+100)%100;
-        	mainTrack.get(baseIndex).setStroke(Color.valueOf(players.get(i).getColour().toString()));
-        	mainTrack.get(baseIndex).setStrokeWidth(4);
-        }
-    	
-    	System.out.println(mainTrack.size());
-    	    
-        //Safezone Cells
-        
-        safeZones = new ArrayList<>();
-        
-        
-        for(int i=0; i<4; i++) {
+    	for(int i=0; i<4; i++) {
         	int entry = (i*25+98)%100;
         	
-        	Circle entryCell = mainTrack.get(entry);
+        	Circle entryCell = trackView.getMainTrack().get(entry).getCircle();
         	int entryX = (int) entryCell.getCenterX();
         	int entryY = (int) entryCell.getCenterY();
-        	
-        	ArrayList<Circle> safeZone = new ArrayList<>();
-        	String colour = players.get(i).getColour().toString();
-        	
-            if (i == 0) {
-            	for(int c=0; c<4; c++) {
-            		entryX+=22;
-            		entryY+=23;
-            		safeZone.add(zoneCell(colour, entryX, entryY));
-            	}
-            } else if (i == 1) {
-            	for(int c=0; c<4; c++) {
-            		entryX-=22;
-            		entryY+=23;
-            		safeZone.add(zoneCell(colour, entryX, entryY));
-            	}
-            } else if (i == 2) {
-            	for(int c=0; c<4; c++) {
-            		entryX-=22;
-            		entryY-=23;
-            		safeZone.add(zoneCell(colour, entryX, entryY));
-            	}
-            } else if (i == 3) {
-            	for(int c=0; c<4; c++) {
-            		entryX+=22;
-            		entryY-=23;
-            		safeZone.add(zoneCell(colour, entryX, entryY));
-            	}
+    		
+        	SafeZoneView safeZone = new SafeZoneView(safeZones.get(i).getCells(), players.get(i).getColour().toString(), entryX, entryY, i);
+    		safeZonesView.add(safeZone);
+    		
+            for (CellView cell : safeZone.getSafeZoneView()) {
+                board.getChildren().add(cell.getCircle());
             }
-
-            safeZones.add(safeZone);
-
-            for (Circle cell : safeZone) {
-                board.getChildren().add(cell);
-            }
-        }
-        
+    	}
     }
+    
+    private void addTrack(Pane board, ArrayList<Player> players, ArrayList<Cell> track) {
+    	trackView = new TrackView(track, players);
+    	
+    	ArrayList<CellView> mainTrack = trackView.getMainTrack();
+    	
+    	for(CellView cell : mainTrack) {
+    		board.getChildren().add(cell.getCircle());
+    	}
+    	
+    	System.out.println(mainTrack.size());
+    }
+    
     public void makeHandsView(ArrayList<Player>players){
     	ArrayList<Card>array1=players.get(0).getHand();//1---humanplyer
     	ArrayList<Card>array2=players.get(1).getHand();
@@ -372,22 +207,19 @@ public class JackarooView {
 		 root.setLeft(leftPlayer);
 		 BorderPane.setAlignment(leftPlayer, Pos.CENTER);
 		 leftPlayer.setTranslateX(270);
-		 
          
-        
-         
-         
-         mainLayout.getChildren().add(root);
-    	
+         mainLayout.getChildren().add(root);    	
     }
-   public void createHomeZones(ArrayList<Player>players){
-	   homeZonesView=new ArrayList<>();
+    
+   public void addHomeZones(ArrayList<Player>players){
+	   homeZonesView = new ArrayList<>();
 	   BorderPane root = new BorderPane();
 	   root.setPrefSize(800,800); 
 	   root.setMaxSize(800,800);
+	   
     	for(int i=0;i<4;i++){
-    		ArrayList<Marble>marbles=players.get(i).getMarbles();
-    		ArrayList<CellView>cellsview=new ArrayList<>();
+    		ArrayList<Marble>marbles = players.get(i).getMarbles();
+    		ArrayList<CellView>cellsview = new ArrayList<>();
     		for(int j=0;j<4;j++)
     		{
     			CellView cell=new CellView(players.get(i).getColour().toString());
@@ -395,6 +227,7 @@ public class JackarooView {
     			cell.setMarbleView(marbleview);
     			cellsview.add(cell);
     		}
+    		
     		HomeZoneView homeZoneView=new HomeZoneView(cellsview);
     		homeZonesView.add(homeZoneView);
     		
@@ -425,20 +258,9 @@ public class JackarooView {
     			homeZoneView.setTranslateX(3);
     		}
     		
-    		
-    		
-    		
-    		
-    		
     	}
     	mainLayout.getChildren().add(root);
-    	
     }
-    
-    
-    
-    
-    
     
     public static void showPopMessage(Stage owner, Exception e) {
     	

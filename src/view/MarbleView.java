@@ -25,8 +25,6 @@ public class MarbleView extends StackPane {
         imageView.setFitHeight(40);
 		getChildren().add(imageView);
 		this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		
-	
 	}
 
 	public Marble getMarble() {
@@ -36,5 +34,4 @@ public class MarbleView extends StackPane {
 	public ImageView getImageView() {
 		return imageView;
 	}
-
 }
