@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 
 
 
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import model.player.Marble;
 
@@ -23,7 +24,7 @@ public class MarbleView extends StackPane {
 		imageView.setFitWidth(40);
         imageView.setFitHeight(40);
 		getChildren().add(imageView);
-		
+		this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		
 	
 	}

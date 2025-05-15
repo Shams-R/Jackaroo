@@ -28,6 +28,7 @@ public class CellView extends StackPane{
     	circle.setFill(Color.BEIGE);
         circle.setStroke(Color.BLACK);
         getChildren().add(circle);
+        this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 	}
 	public MarbleView getMarbleView() {
 		getChildren().remove(marbleView);
