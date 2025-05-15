@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.card.Card;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 
 public class PlayerHandView extends HBox{
 	private ArrayList<CardView> handCardsView;
@@ -17,6 +18,7 @@ public class PlayerHandView extends HBox{
             getChildren().add(cardView);
             this.handCardsView.add(cardView);
         }
+        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);//not to take the whole screen
     }
 	 public void setHandCardsView(ArrayList<Card> newCards) {
 	        getChildren().clear();

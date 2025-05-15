@@ -352,30 +352,38 @@ public class JackarooView {
          leftPlayer.setRotate(90);
          rightPlayer.setRotate(-90);
          topPlayer.setRotate(180);
-         HBox topHand = new HBox(topPlayer);
-         topHand.setAlignment(Pos.CENTER);
-
-         HBox bottomHand = new HBox(bottomPlayer);
-         bottomHand.setAlignment(Pos.CENTER);
-
-         VBox leftHand = new VBox(leftPlayer);
-         leftHand.setAlignment(Pos.CENTER);
-
-         VBox rightHand = new VBox(rightPlayer);
-         rightHand.setAlignment(Pos.CENTER);
-        
          BorderPane root = new BorderPane();
-         root.setTop(topHand);
-         root.setBottom(bottomHand);
-         root.setLeft(leftHand);
-         root.setRight(rightHand);
+         
+         root.setBottom(bottomPlayer);
+		 BorderPane.setAlignment(bottomPlayer, Pos.CENTER);
+		 bottomPlayer.setTranslateX(-35);
+		 bottomPlayer.setTranslateY(-10);
+		 
+		 
+		 root.setRight(rightPlayer);
+		 BorderPane.setAlignment(rightPlayer, Pos.CENTER);
+		 rightPlayer.setTranslateX(-320);
+		 
+		 root.setTop(topPlayer);
+		 BorderPane.setAlignment(topPlayer, Pos.CENTER);
+		 topPlayer.setTranslateX(-35);
+		 topPlayer.setTranslateY(10);
+		 
+		 root.setLeft(leftPlayer);
+		 BorderPane.setAlignment(leftPlayer, Pos.CENTER);
+		 leftPlayer.setTranslateX(270);
+		 
+         
+        
+         
+         
          mainLayout.getChildren().add(root);
     	
     }
    public void createHomeZones(ArrayList<Player>players){
 	   homeZonesView=new ArrayList<>();
 	   BorderPane root = new BorderPane();
-	   root.setPrefSize(800,800); // Set desired width and height
+	   root.setPrefSize(800,800); 
 	   root.setMaxSize(800,800);
     	for(int i=0;i<4;i++){
     		ArrayList<Marble>marbles=players.get(i).getMarbles();
@@ -389,19 +397,33 @@ public class JackarooView {
     		}
     		HomeZoneView homeZoneView=new HomeZoneView(cellsview);
     		homeZonesView.add(homeZoneView);
-    		HBox box = new HBox(homeZoneView);
-    		box.setAlignment(Pos.CENTER);
+    		
     		if(i==0){
-    			root.setBottom(box);
-    			BorderPane.setMargin(box, new Insets(0, 0, 45,-62));
-    		}
-    		if(i==1)
-    			root.setRight(box);
-    		if(i==2)
-    			root.setTop(box);
-    		if(i==3)
-    			root.setLeft(box);
+    			root.setBottom(homeZoneView);
+    			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
+    			homeZoneView.setTranslateX(-30);
+    			homeZoneView.setTranslateY(-45);
     			
+    			
+    		}
+    		if(i==1){
+    			root.setRight(homeZoneView);
+    			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
+    			homeZoneView.setTranslateX(-65);
+    			}
+    		
+    		if(i==2){
+    			root.setTop(homeZoneView);
+    			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
+    			homeZoneView.setTranslateX(-30);
+    			homeZoneView.setTranslateY(45);
+    		}
+    		
+    		if(i==3){
+    			root.setLeft(homeZoneView);
+    			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
+    			homeZoneView.setTranslateX(3);
+    		}
     		
     		
     		
