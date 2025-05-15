@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import model.card.Deck;
 import engine.Game;
 import exception.*;
 import javafx.application.Application;
@@ -65,12 +64,8 @@ public class JackarooGUI extends Application{
 	            
 	            try {
 	            	Game game = new Game(playerName);
-	            	view.initializeBoard(primaryStage, game.getPlayers());
+	            	view.initializeBoard(primaryStage, game.getPlayers(), game.getBoard().getTrack(), game.getBoard().getSafeZones());
 	            	view.makeHandsView(game.getPlayers());
-	            	view.createHomeZones(game.getPlayers());
-	            	int numberOfCards=Deck.getPoolSize();
-	            	view.createCardsPool(numberOfCards);
-	            	System.out.print(game.getPlayers().get(0).getColour());
 	            }
 	            catch(IOException exception) {
 	            }
