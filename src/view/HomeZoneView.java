@@ -9,7 +9,7 @@ import javafx.scene.layout.StackPane;
 public class HomeZoneView extends StackPane{
 	private final GridPane grid;
 	private final ArrayList<CellView> cells;
-	static int nofmarbles =3;
+
 
 	
 	

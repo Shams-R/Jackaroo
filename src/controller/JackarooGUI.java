@@ -8,6 +8,7 @@ import model.card.Deck;
 import engine.Game;
 import exception.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -89,12 +90,15 @@ public class JackarooGUI extends Application{
 	}
 	   
 	
+	
+	
+	
 	public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game) {
 		Scene scene = owner.getScene();
 
     	scene.setOnKeyPressed(event -> {
     	    if (event.getCode() == KeyCode.ENTER) {
-    	    	view.fieldingMechanism(mainTrack,homeZones,owner, view , game);
+    	    	fieldingMechanism(mainTrack,homeZones,owner, view , game);
     	    }
     	    }
     	) ;
@@ -102,6 +106,56 @@ public class JackarooGUI extends Application{
     	owner.setScene(scene);
     
  }
+	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
+		   // discard one marble from a specific homezone  
+		   // added that marble to the player base cell when they play ace
+		   Platform.runLater(() -> {
+			   
+		   try{ 
+			// if ( (game.getCurrentPlayerIndex()==0) && (game.getPlayers().get(0).getSelectedCard() instanceof Ace ) )
+			   
+			   game.fieldMarble();
+		   if ( (game.getCurrentPlayerIndex()==0) )
+		   { 
+			   int n=3;
+			   HomeZoneView homeZone = homeZones.get(0);
+			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
+			   trackView.getMainTrack().get(0).setMarbleView(marble) ;
+			   
+			  
+			   
+		   }
+		   else if ( (game.getCurrentPlayerIndex()==1)  )
+		   { 
+			   int n=3;
+			   HomeZoneView homeZone = homeZones.get(1);
+			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
+			   trackView.getMainTrack().get(25).setMarbleView(marble) ;
+			  
+		   }
+		   else if (game.getCurrentPlayerIndex()==2)
+		   { 
+			   int n=3;
+			   HomeZoneView homeZone = homeZones.get(2);
+			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
+			   trackView.getMainTrack().get(50).setMarbleView(marble) ;
+			   
+		   }
+		   else if (game.getCurrentPlayerIndex()==3)
+		   {
+			   int n=3;
+			   HomeZoneView homeZone = homeZones.get(3);
+			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
+			   trackView.getMainTrack().get(75).setMarbleView(marble) ;
+			   
+		   }
+				
+			} catch (CannotFieldException | IllegalDestroyException e) {
+				view.showPopMessage(owner, e);
+			}
+		  
+	   });
+	   }
 
 
 	
