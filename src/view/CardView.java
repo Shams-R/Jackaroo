@@ -18,8 +18,9 @@ public class CardView extends StackPane{
 	final private Card card;
 	final private Image faceImage;
 	final private Image backImage=new Image("view/"+"deck1.png");
-    private final ImageView imageView;
-	
+    private final ImageView imageView;	
+    private Tooltip tooltip;
+
 	public Card getCard() {
 		return card;
 	}
@@ -55,7 +56,7 @@ public class CardView extends StackPane{
 		getChildren().add(imageView);
 		
 		// Optional: tooltip to show the description
-		Tooltip tooltip = new Tooltip(card.getDescription());  // assuming getDescription() exists
+		tooltip = new Tooltip(card.getDescription());  // assuming getDescription() exists
 		Tooltip.install(this, tooltip);
 
 		// Border effect
@@ -78,23 +79,27 @@ public class CardView extends StackPane{
 
 		// On hover
 		this.setOnMouseEntered((MouseEvent e) -> {
-		    delay.setOnFinished(event -> {
-		        this.setEffect(borderGlow);
-		        scaleUp.playFromStart();
-		    });
-		    delay.playFromStart();
+		    if (this.getEffect() == null) { // only apply hover effect if no selection effect
+		        delay.setOnFinished(event -> {
+		            this.setEffect(borderGlow);
+		            scaleUp.playFromStart();
+		        });
+		        delay.playFromStart();
+		    }
 		});
 
-		// On exit
 		this.setOnMouseExited((MouseEvent e) -> {
-		    delay.stop();
-		    this.setEffect(null);
-		    scaleDown.playFromStart();
+		    if (this.getEffect() == borderGlow) { // only remove if it's the hover effect
+		        delay.stop();
+		        this.setEffect(null);
+		        scaleDown.playFromStart();
+		    }
 		});
 			
 	}
 	public void showBack(){
 		imageView.setImage(backImage);
+		Tooltip.uninstall(this, tooltip);
 	}
 	public void showFace(){
 		imageView.setImage(faceImage);

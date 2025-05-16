@@ -36,7 +36,11 @@ public class Player {
         return name;
     }
 
-    public Colour getColour() {
+    public ArrayList<Marble> getSelectedMarbles() {
+		return selectedMarbles;
+	}
+
+	public Colour getColour() {
         return colour;
     }
 

@@ -2,7 +2,10 @@ package view;
 
 import java.util.ArrayList;
 
+import controller.JackarooGUI;
 import model.card.Card;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
@@ -15,6 +18,14 @@ public class PlayerHandView extends HBox{
 
         for (Card card : handCards) {
             CardView cardView = new CardView(card);
+            
+            cardView.setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					JackarooGUI.selectCard(cardView);
+				}
+            });
+     
             getChildren().add(cardView);
             this.handCardsView.add(cardView);
         }

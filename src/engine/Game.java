@@ -65,6 +65,10 @@ public class Game implements GameManager {
         return firePit;
     }
     
+    public ArrayList<Marble> getSelectedMarbles() {
+		return players.get(currentPlayerIndex).getSelectedMarbles();
+	}
+    
     public void selectCard(Card card) throws InvalidCardException {
         players.get(currentPlayerIndex).selectCard(card);
     }
