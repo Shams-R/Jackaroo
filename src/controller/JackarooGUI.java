@@ -108,49 +108,19 @@ public class JackarooGUI extends Application{
     
  }
 	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
-		   // discard one marble from a specific homezone  
-		   // added that marble to the player base cell when they play ace
+		   
 		   Platform.runLater(() -> {
 			   
 		   try{ 
-			// if ( (game.getCurrentPlayerIndex()==0) && (game.getPlayers().get(0).getSelectedCard() instanceof Ace ) )
+			
 			   
 			   game.fieldMarble();
-		   if ( (game.getCurrentPlayerIndex()==0) )
-		   { 
-			   int n=3;
-			   HomeZoneView homeZone = homeZones.get(0);
-			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
-			   trackView.getMainTrack().get(0).setMarbleView(marble) ;
-			   
-			  
-			   
-		   }
-		   else if ( (game.getCurrentPlayerIndex()==1)  )
-		   { 
-			   int n=3;
-			   HomeZoneView homeZone = homeZones.get(1);
-			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
-			   trackView.getMainTrack().get(25).setMarbleView(marble) ;
-			  
-		   }
-		   else if (game.getCurrentPlayerIndex()==2)
-		   { 
-			   int n=3;
-			   HomeZoneView homeZone = homeZones.get(2);
-			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
-			   trackView.getMainTrack().get(50).setMarbleView(marble) ;
-			   
-		   }
-		   else if (game.getCurrentPlayerIndex()==3)
-		   {
-			   int n=3;
-			   HomeZoneView homeZone = homeZones.get(3);
-			   MarbleView marble=homeZone.getCells().get(n--).getMarbleView() ;
-			   trackView.getMainTrack().get(75).setMarbleView(marble) ;
-			   
-		   }
-				
+			   int i= game.getCurrentPlayerIndex();
+			   HomeZoneView homeZone = homeZones.get(i);
+			   MarbleView marble=homeZone.fieldMarble() ;
+			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
+		   
+		
 			} catch (CannotFieldException | IllegalDestroyException e) {
 				view.showPopMessage(owner, e);
 			}

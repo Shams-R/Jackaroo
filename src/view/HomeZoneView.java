@@ -9,11 +9,13 @@ import javafx.scene.layout.StackPane;
 public class HomeZoneView extends StackPane{
 	private final GridPane grid;
 	private final ArrayList<CellView> cells;
+	private int numberOfMarbles;
 
 
 	
 	
 	public HomeZoneView(ArrayList<CellView> cells){
+		numberOfMarbles=4;
 		this.cells = cells;
 		grid=new GridPane();
 		grid.setHgap(5); // Horizontal gap between cells
@@ -34,6 +36,12 @@ public class HomeZoneView extends StackPane{
 	
 	public ArrayList<CellView> getCells() {
 		return cells;
+	}
+	public MarbleView fieldMarble (){
+		CellView cell=cells.get(--numberOfMarbles);
+		MarbleView marble=cell.getMarbleView();
+		return marble;
+		
 	}
 	
 	
