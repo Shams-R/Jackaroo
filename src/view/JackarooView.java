@@ -210,7 +210,7 @@ public class JackarooView {
     		safeZonesView.add(safeZone);
     		
             for (CellView cell : safeZone.getSafeZoneView()) {
-                board.getChildren().add(cell.getCircle());
+                board.getChildren().add(cell);
             }
     	}
     }
@@ -221,7 +221,8 @@ public class JackarooView {
     	ArrayList<CellView> mainTrack = trackView.getMainTrack();
     	
     	for(CellView cell : mainTrack) {
-    		board.getChildren().add(cell.getCircle());
+    		
+    		board.getChildren().add(cell);
     	}
     }
     
@@ -349,6 +350,7 @@ public class JackarooView {
 		   HomeZoneView homeZone = homeZones.get(0);
 		   MarbleView marble=homeZone.getCells().get(homeZone.nofmarbles--).getMarbleView() ;
 		   trackView.getMainTrack().get(0).setMarbleView(marble) ;
+		   
 		  
 		   
 	   }

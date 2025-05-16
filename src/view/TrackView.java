@@ -17,8 +17,8 @@ public class TrackView {
     	
     	//reference points
     	
-    	int x = 100;
-    	int y = 300;
+    	int x = 88;
+        int y = 286;
     	
     	for(int i=0; i<7; i++) {
     		x+=23;

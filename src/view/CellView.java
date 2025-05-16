@@ -1,5 +1,7 @@
 package view;
 
+import model.Colour;
+import model.player.Marble;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -10,6 +12,7 @@ public class CellView extends StackPane{
 	private final Cell cell;
 	private final Circle circle;
 	private MarbleView marbleView;
+	
 	
 	public CellView (String colour){ //Homezone cells
 		this.cell = null;
@@ -26,6 +29,8 @@ public class CellView extends StackPane{
 		this.cell = cell;
 	    circle = new Circle();
     	circle.setRadius(13);
+    	setTranslateX(x);
+    	setTranslateY(y);
     	circle.setCenterX(x);
     	circle.setCenterY(y);
     	circle.setFill(Color.BEIGE);
@@ -39,18 +44,26 @@ public class CellView extends StackPane{
 		this.cell=cell;
 	    circle = new Circle();
     	circle.setRadius(13);
+    	setTranslateX(x);
+    	setTranslateY(y);
     	circle.setCenterX(x);
     	circle.setCenterY(y);
     	circle.setFill(Color.BEIGE);
         circle.setStroke(Color.BLACK);
         getChildren().add(circle);
+       
+        
+        
         this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 	}
 	
 	public MarbleView getMarbleView() {
 		getChildren().remove(marbleView);
 		requestLayout();
-		return marbleView;
+		MarbleView m=marbleView;
+		marbleView=null;
+		
+		return m;
 	}
 	
 	public void setMarbleView(MarbleView marbleView) {
@@ -59,9 +72,13 @@ public class CellView extends StackPane{
 	    }
 	    this.marbleView = marbleView;
 	    if (marbleView != null) {
-	        getChildren().add(marbleView);  // Add new marble
+	        getChildren().add(marbleView);// Add new marble
+	        
 	        marbleView.toFront();  // Ensure visibility on top
 	    }
+	    
+	    
+	    
 	    requestLayout();  // Force UI update
 	}
 
