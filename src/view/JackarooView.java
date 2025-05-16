@@ -1,6 +1,7 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 import engine.board.Cell;
 import engine.board.SafeZone;
@@ -14,7 +15,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -29,6 +32,7 @@ import javafx.stage.Stage;
 
 public class JackarooView {
 	private String playerName;
+	private String playerGender;
 	private StackPane mainLayout;
 	private TrackView trackView;
 	private ArrayList<SafeZoneView> safeZonesView;
@@ -43,64 +47,109 @@ public class JackarooView {
 		playerName = name;
 	}
 	
+	public String getPlayerGender() {
+		return playerGender;
+	}
+
+	public void setPlayerGender(String playerGender) {
+		this.playerGender = playerGender;
+	}
+
 	public StackPane getMainLayout() {
 		return mainLayout;
 	}
 
-	public Button onGameStart(Stage stage, TextField nameField) {
+	public Button onGameStart(Stage stage, TextField nameField, AtomicReference<String> selectedGender) {
 	    // Main container
 	    mainLayout = new StackPane();
 
 	    // Background image view setup
-	    Image background = new Image("Start.jpg");
+	    Image background = new Image("Start.png");
 	    ImageView view = new ImageView(background);
-	    view.setPreserveRatio(false); // Don't preserve aspect ratio
+	    view.setPreserveRatio(false);
 	    view.setFitWidth(Screen.getPrimary().getBounds().getWidth());
 	    view.setFitHeight(Screen.getPrimary().getBounds().getHeight());
 
-	    // Semi-transparent black background rectangle
+	    // Brown themed rectangle background
 	    Rectangle r = new Rectangle();
-	    r.setWidth(400);  // Adjust to your desired width
-	    r.setHeight(200); // Adjust to your desired height
-	    r.setArcWidth(30); // Rounded corners for aesthetic
-	    r.setArcHeight(30);
-	    r.setFill(Color.rgb(0, 0, 0, 0.6)); // 60% transparent black
+	    r.setWidth(500);
+	    r.setHeight(350);
+	    r.setArcWidth(40);
+	    r.setArcHeight(40);
+	    r.setFill(Color.web("#8b5e3c")); // rich brown
+	    r.setStroke(Color.web("#5c3b24")); // deeper brown stroke
+	    r.setStrokeWidth(3);
 
-	    // VBox to hold label, input field, and button
-	    VBox userInput = new VBox(20); // 20px spacing
+	    // VBox to hold input UI
+	    VBox userInput = new VBox(20);
 	    userInput.setAlignment(Pos.CENTER);
 
-	    Label text = new Label("Enter Your Name:");
-	    text.setTextFill(Color.WHITE);
-	    text.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+	    Label title = new Label("Enter Your Name:");
+	    title.setTextFill(Color.web("#fdf6e3")); // soft ivory for contrast
+	    title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-font-family: 'Georgia';");
 
 	    nameField.setMaxWidth(250);
-	    nameField.setStyle("-fx-background-color: rgba(255, 255, 255, 0.6); -fx-font-size: 18px;");
+	    nameField.setStyle(
+	        "-fx-background-color: rgba(255,255,255,0.7);" +
+	        "-fx-font-size: 18px;" +
+	        "-fx-font-family: 'Georgia';" +
+	        "-fx-text-fill: #000;"
+	    );
 
-	    Button submitButton = new Button("Start");
-	    submitButton.setStyle("-fx-font-size: 18px; -fx-padding: 10px 20px;");
+	    // Gender selection
+	    Label genderLabel = new Label("Select Gender:");
+	    genderLabel.setTextFill(Color.web("#fdf6e3")); // ivory
+	    genderLabel.setStyle("-fx-font-size: 20px; -fx-font-family: 'Georgia';");
 
-	    userInput.getChildren().addAll(text, nameField, submitButton);
+	    ToggleGroup genderGroup = new ToggleGroup();
+	    RadioButton male = new RadioButton("Male");
+	    male.setToggleGroup(genderGroup);
+	    male.setStyle("-fx-font-size: 16px; -fx-font-family: 'Georgia'; -fx-text-fill: #fdf6e3;");
 
-	    // A container for the input and rectangle background
-	    StackPane inputContainer = new StackPane();
-	    inputContainer.getChildren().addAll(r, userInput);
+	    RadioButton female = new RadioButton("Female");
+	    female.setToggleGroup(genderGroup);
+	    female.setStyle("-fx-font-size: 16px; -fx-font-family: 'Georgia'; -fx-text-fill: #fdf6e3;");
+
+	    HBox genderBox = new HBox(20, male, female);
+	    genderBox.setAlignment(Pos.CENTER);
+
+	    // Play button
+	    Button submitButton = new Button("Play");
+	    submitButton.setStyle(
+	        "-fx-font-size: 18px;" +
+	        "-fx-padding: 10px 25px;" +
+	        "-fx-background-color: #d1964d;" +  // sunset yellow
+	        "-fx-text-fill: white;" +
+	        "-fx-font-family: 'Georgia';" +
+	        "-fx-font-weight: bold;" +
+	        "-fx-background-radius: 10;"
+	    );
+
+	    // Save selected gender when button is clicked
+	    submitButton.setOnAction(e -> {
+	        RadioButton selected = (RadioButton) genderGroup.getSelectedToggle();
+	        if (selected != null) {
+	            selectedGender.set(selected.getText());
+	        }
+	        else 
+	        	selectedGender.set("");
+	    });
+
+	    userInput.getChildren().addAll(title, nameField, genderLabel, genderBox, submitButton);
+
+	    StackPane inputContainer = new StackPane(r, userInput);
 	    inputContainer.setAlignment(Pos.CENTER);
 
-	    // Add background image and UI to the main StackPane
 	    mainLayout.getChildren().addAll(view, inputContainer);
-	    StackPane.setAlignment(inputContainer, Pos.CENTER);
-
-	    // Create and set the scene
 	    Scene s = new Scene(mainLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
 	    stage.setScene(s);
 	    stage.setTitle("Jackaroo");
 	    stage.setFullScreen(true);
 	    stage.show();
-	    
+
 	    return submitButton;
 	}
-	
+
 	public void initializeBoard(Stage stage, ArrayList<Player> players, ArrayList<Cell> track, ArrayList<SafeZone> safeZones) {
 	    // Background image view setup
 	    Image background = new Image("Background.png");

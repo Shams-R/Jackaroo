@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import engine.Game;
 import exception.*;
@@ -38,29 +39,31 @@ public class JackarooGUI extends Application{
 		JackarooView view = new JackarooView();
 		
 		TextField nameField = new TextField();
+		AtomicReference<String> selectedGender = new AtomicReference<>(); 
 		
-		Button start = view.onGameStart(primaryStage, nameField);
+		Button start = view.onGameStart(primaryStage, nameField, selectedGender);
 		
 	    start.setOnMouseClicked(new EventHandler<Event>() {
 	        public void handle(Event e) {
 	            String playerName = nameField.getText();
-	            if (playerName.equals("")) {
+	            if (playerName.equals("") || selectedGender.get().equals("")) {
 	                Stage alertStage = new Stage();
 	                StackPane alertPane = new StackPane();
-	                Text alert = new Text("Please enter your name!");
+	                Text alert = new Text("Please enter your name and gender!");
 	                alert.setFill(Color.RED);
 	                alert.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-	                Image alertbg = new Image("Alert.jpg");
-	                ImageView alertView = new ImageView(alertbg);
-	                alertPane.getChildren().addAll(alertView, alert);
-	                Scene alertScene = new Scene(alertPane, 303, 200);
+	                alertPane.getChildren().addAll(alert);
+	                Scene alertScene = new Scene(alertPane, 450, 150);
 	                alertStage.setScene(alertScene);
 	                alertStage.setTitle("Error");
 	                alertStage.setResizable(false);
 	                alertStage.show();
 	                return;
 	            }
+	            
 	            view.setPlayerName(playerName);
+	            String gender = selectedGender.get();
+	            view.setPlayerGender(gender);
 	            
 	            try {
 	            	Game game = new Game(playerName);
@@ -75,10 +78,6 @@ public class JackarooGUI extends Application{
 	    // this was to test the popup message
 	    //Exception e= new CannotFieldException("vrbebverb rvrebeaw rvewrvbrev vwrvwervwa vwvwreav");  
 	   // view.showPopMessage(primaryStage , e); 
-	    
-	   
-	    
-		
 	}
 	   
 	public static void fieldShortcut( Stage owner,JackarooView view  ,Game game) {
