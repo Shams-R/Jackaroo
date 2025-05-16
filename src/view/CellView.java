@@ -49,14 +49,22 @@ public class CellView extends StackPane{
 	
 	public MarbleView getMarbleView() {
 		getChildren().remove(marbleView);
+		requestLayout();
 		return marbleView;
 	}
 	
 	public void setMarbleView(MarbleView marbleView) {
-		this.marbleView=marbleView;
-		getChildren().add(marbleView);
+	    if (this.marbleView != null) {
+	        getChildren().remove(this.marbleView);  // Remove previous marble
+	    }
+	    this.marbleView = marbleView;
+	    if (marbleView != null) {
+	        getChildren().add(marbleView);  // Add new marble
+	        marbleView.toFront();  // Ensure visibility on top
+	    }
+	    requestLayout();  // Force UI update
 	}
-	
+
 	public boolean isFull(){
 		return marbleView!=null;
 	}

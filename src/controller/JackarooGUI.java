@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import model.card.Deck;
@@ -72,6 +73,10 @@ public class JackarooGUI extends Application{
 	            	view.makeHandsView(game.getPlayers());
 	            	int numberOfCards=Deck.getPoolSize();
 	            	view.createCardsPool(numberOfCards);
+	            
+	            	fieldShortcut(view.getTrackView(),view.getHomeZonesView(),primaryStage, view  ,game);
+	            	
+	            	
 	            }
 	            catch(IOException exception) {
 	            }
@@ -83,20 +88,14 @@ public class JackarooGUI extends Application{
 	   // view.showPopMessage(primaryStage , e); 
 	}
 	   
-	public static void fieldShortcut( Stage owner,JackarooView view  ,Game game) {
-    	VBox root = new VBox();
-    	Scene scene = new Scene(root);
+	
+	public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game) {
+		Scene scene = owner.getScene();
+
     	scene.setOnKeyPressed(event -> {
     	    if (event.getCode() == KeyCode.ENTER) {
-    	    	try {
-					game.fieldMarble();
-					
-				} catch (CannotFieldException | IllegalDestroyException e) {
-					
-					view.showPopMessage(owner, e);
-				}
-					}
-			
+    	    	view.fieldingMechanism(mainTrack,homeZones,owner, view , game);
+    	    }
     	    }
     	) ;
     	

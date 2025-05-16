@@ -9,6 +9,9 @@ import javafx.scene.layout.StackPane;
 public class HomeZoneView extends StackPane{
 	private final GridPane grid;
 	private final ArrayList<CellView> cells;
+	static int nofmarbles =3;
+
+	
 	
 	public HomeZoneView(ArrayList<CellView> cells){
 		this.cells = cells;
@@ -32,4 +35,7 @@ public class HomeZoneView extends StackPane{
 	public ArrayList<CellView> getCells() {
 		return cells;
 	}
+	
+	
+	
 }

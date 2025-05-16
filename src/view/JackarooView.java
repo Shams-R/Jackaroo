@@ -3,11 +3,16 @@ package view;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
+import engine.Game;
 import engine.board.Cell;
 import engine.board.SafeZone;
+import exception.CannotFieldException;
+import exception.IllegalDestroyException;
 import model.card.Card;
+import model.card.standard.Ace;
 import model.player.Marble;
 import model.player.Player;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
@@ -220,6 +225,7 @@ public class JackarooView {
     	}
     }
     
+    
     public void makeHandsView(ArrayList<Player>players){
     	playersHandsView=new ArrayList<>();
     	for(int i=0;i<4;i++){
@@ -285,7 +291,7 @@ public class JackarooView {
 	   
     	for(int i=0;i<4;i++){
     		ArrayList<Marble>marbles = players.get(i).getMarbles();
-    		ArrayList<CellView>cellsview = new ArrayList<>();
+    		ArrayList<CellView>cellsview = new ArrayList<>();  
     		for(int j=0;j<4;j++)
     		{
     			CellView cell=new CellView(players.get(i).getColour().toString());
@@ -329,8 +335,58 @@ public class JackarooView {
     	}
     	mainLayout.getChildren().add(root);
     }
-    
-    public static void showPopMessage(Stage owner, Exception e) {
+   
+   public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
+	   // discard one marble from a specific homezone  
+	   // added that marble to the player base cell when they play ace
+	   Platform.runLater(() -> {
+		   
+	   try{ 
+		// if ( (game.getCurrentPlayerIndex()==0) && (game.getPlayers().get(0).getSelectedCard() instanceof Ace ) )
+		   game.fieldMarble();
+	   if ( (game.getCurrentPlayerIndex()==0) )
+	   { 
+		   HomeZoneView homeZone = homeZones.get(0);
+		   MarbleView marble=homeZone.getCells().get(homeZone.nofmarbles--).getMarbleView() ;
+		   trackView.getMainTrack().get(0).setMarbleView(marble) ;
+		  
+		   
+	   }
+	   else if ( (game.getCurrentPlayerIndex()==1)  )
+	   { 
+		   HomeZoneView homeZone = homeZones.get(1);
+		   MarbleView marble=homeZone.getCells().get(homeZone.nofmarbles--).getMarbleView() ;
+		   trackView.getMainTrack().get(25).setMarbleView(marble) ;
+		  
+	   }
+	   else if (game.getCurrentPlayerIndex()==2)
+	   { 
+		   HomeZoneView homeZone = homeZones.get(2);
+		   MarbleView marble=homeZone.getCells().get(homeZone.nofmarbles--).getMarbleView() ;
+		   trackView.getMainTrack().get(50).setMarbleView(marble) ;
+		   
+	   }
+	   else if (game.getCurrentPlayerIndex()==3)
+	   {
+		   HomeZoneView homeZone = homeZones.get(3);
+		   MarbleView marble=homeZone.getCells().get(homeZone.nofmarbles--).getMarbleView() ;
+		   trackView.getMainTrack().get(75).setMarbleView(marble) ;
+		   
+	   }
+			
+		} catch (CannotFieldException | IllegalDestroyException e) {
+			view.showPopMessage(owner, e);
+		}
+	  
+   });
+   }
+
+
+public ArrayList<HomeZoneView> getHomeZonesView() {
+	return homeZonesView;
+}
+
+	public static void showPopMessage(Stage owner, Exception e) {
     	
     	Label msg = new Label(e.getMessage());
 	    
@@ -350,7 +406,7 @@ public class JackarooView {
 	    popup.setResizable(false);
 	    popup.setTitle("wrong move");
 	    Scene scene = new Scene(root, 300, 150);
-	    popup.setScene( scene);
+	    popup.setScene(scene);
 
 	    popup.setOnCloseRequest(evt -> popup.hide());
 	    popup.show();
@@ -358,4 +414,9 @@ public class JackarooView {
 	    Image icon=new Image("icon.png");
 		popup.getIcons().add(icon);
 	}
+	
+	  public TrackView getTrackView() {
+			return trackView;
+		}
+		    
 }

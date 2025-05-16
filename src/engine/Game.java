@@ -178,5 +178,9 @@ public class Game implements GameManager {
     public Colour getNextPlayerColour() {
         return players.get((currentPlayerIndex + 1) % 4).getColour();
     }
-    
+
+	public int getCurrentPlayerIndex() {
+		return currentPlayerIndex;
+	}
+
 }
