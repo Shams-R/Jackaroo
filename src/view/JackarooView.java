@@ -10,6 +10,7 @@ import exception.CannotFieldException;
 import exception.IllegalDestroyException;
 import model.card.Card;
 import model.card.standard.Ace;
+import model.card.wild.Burner;
 import model.player.Marble;
 import model.player.Player;
 import javafx.application.Platform;
@@ -44,6 +45,7 @@ public class JackarooView {
 	private ArrayList<PlayerHandView> playersHandsView;
 	private ArrayList<HomeZoneView> homeZonesView;
 	private CardsPoolView cardsPool;
+	private FirePitView firePit;
 	
 	public String getPlayerName() {
 		return playerName;
@@ -378,7 +380,6 @@ public class JackarooView {
 	   }
 	   	root.setPickOnBounds(false);
 		root.setMouseTransparent(false);
-	   	
 	   	mainLayout.getChildren().add(root);
 	   }
 
@@ -416,6 +417,11 @@ public ArrayList<HomeZoneView> getHomeZonesView() {
 	    
 	    Image icon=new Image("icon.png");
 		popup.getIcons().add(icon);
+	}
+	public void putFirePit(){
+		firePit=new FirePitView();
+		firePit.setTranslateX(-25);
+		mainLayout.getChildren().add(firePit);
 	}
 	
 	  public TrackView getTrackView() {
