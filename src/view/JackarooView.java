@@ -273,7 +273,8 @@ public class JackarooView {
 		 BorderPane.setAlignment(leftPlayer, Pos.CENTER);
 		 leftPlayer.setTranslateX(-160);
 		 leftPlayer.setTranslateY(-10);
-         
+		 root.setPickOnBounds(false);
+		 root.setMouseTransparent(false);
          mainLayout.getChildren().add(root);    	
     }
     public void createCardsPool(int numberOfCards){
@@ -334,6 +335,9 @@ public class JackarooView {
     		}
     		
     	}
+    	root.setPickOnBounds(false);
+		root.setMouseTransparent(false);
+    	
     	mainLayout.getChildren().add(root);
     }
    public void showPlayers(ArrayList<Player> players){
@@ -372,6 +376,8 @@ public class JackarooView {
 	                  
 	           }
 	   }
+	   	root.setPickOnBounds(false);
+		root.setMouseTransparent(false);
 	   	
 	   	mainLayout.getChildren().add(root);
 	   }
