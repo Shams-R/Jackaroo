@@ -72,6 +72,7 @@ public class JackarooGUI extends Application{
 	            	Game game = new Game(playerName);
 	            	view.initializeBoard(primaryStage, game.getPlayers(), game.getBoard().getTrack(), game.getBoard().getSafeZones());
 	            	view.makeHandsView(game.getPlayers());
+	            	view.showPlayers(game.getPlayers());
 	            	int numberOfCards=Deck.getPoolSize();
 	            	view.createCardsPool(numberOfCards);
 	            

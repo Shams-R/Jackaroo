@@ -34,7 +34,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
+import view.PlayerView.*;
 public class JackarooView {
 	private String playerName;
 	private String playerGender;
@@ -336,7 +336,46 @@ public class JackarooView {
     	}
     	mainLayout.getChildren().add(root);
     }
-   
+   public void showPlayers(ArrayList<Player> players){
+	   	AnchorPane root=new AnchorPane();    
+	   	for(int i=0;i<4;i++){
+	          
+	           	//topLeft
+	               if(i==0 ){
+	            	PlayerView playerView=new PlayerView(players.get(i),getPlayerGender());
+	               	playerView.setPrefSize(100, 100);
+	               	AnchorPane.setTopAnchor(playerView, 0.0);
+	               	AnchorPane.setLeftAnchor(playerView, 0.0);
+	               	root.getChildren().add(playerView);
+	                   }
+	               if(i== 1){ 
+	            	PlayerView playerView=new PlayerView(players.get(i),"");
+	               	playerView.setPrefSize(100, 100);
+	               	AnchorPane.setTopAnchor(playerView, 0.0);
+	               	AnchorPane.setRightAnchor(playerView, 0.0);
+	               	root.getChildren().add(playerView);
+	                  
+	               }
+	               if(i==2){
+	               PlayerView playerView=new PlayerView(players.get(i),"");
+	               	playerView.setPrefSize(100, 100);
+	               	AnchorPane.setBottomAnchor(playerView, 0.0);
+	               	AnchorPane.setRightAnchor(playerView, 0.0);
+	               	root.getChildren().add(playerView);
+	                   }
+	               if(i==3){
+	            	PlayerView playerView=new PlayerView(players.get(i),"");
+	               	playerView.setPrefSize(100, 100);
+	               	AnchorPane.setBottomAnchor(playerView, 0.0);
+	               	AnchorPane.setLeftAnchor(playerView, 0.0);
+	               	root.getChildren().add(playerView);
+	                  
+	           }
+	   }
+	   	
+	   	mainLayout.getChildren().add(root);
+	   }
+
   
 
 
