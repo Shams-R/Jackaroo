@@ -12,6 +12,8 @@ public class CellView extends StackPane{
 	private final Cell cell;
 	private final Circle circle;
 	private MarbleView marbleView;
+	private double x;
+	private double y;
 	
 	
 	public CellView (String colour){ //Homezone cells
@@ -25,14 +27,16 @@ public class CellView extends StackPane{
         this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 	}
 	
-	public CellView (String colour, Cell cell, int x, int y){ //Safezone cells
+	public CellView (String colour, Cell cell, int x, int y){//Safezone cells
+		this.x=x;
+		this.y=y;
 		this.cell = cell;
 	    circle = new Circle();
     	circle.setRadius(13);
     	setTranslateX(x);
     	setTranslateY(y);
-    	circle.setCenterX(x);
-    	circle.setCenterY(y);
+    	//circle.setCenterX(x);
+    	//circle.setCenterY(y);
     	circle.setFill(Color.BEIGE);
         circle.setStroke(Color.valueOf(colour));
         circle.setStrokeWidth(4);
@@ -41,13 +45,18 @@ public class CellView extends StackPane{
 	}
 	
 	public CellView (Cell cell, int x, int y){ //Main track cells
+		this.x=x;
+		this.y=y;
 		this.cell=cell;
 	    circle = new Circle();
     	circle.setRadius(13);
-    	setTranslateX(x);
-    	setTranslateY(y);
-    	circle.setCenterX(x);
-    	circle.setCenterY(y);
+    	setLayoutX(x);
+    	setLayoutY(y);
+    	//setTranslateX(x);
+    	//setTranslateY(y);
+    	//circle.setCenterX(x);
+    	//circle.setCenterY(y);
+    	
     	circle.setFill(Color.BEIGE);
         circle.setStroke(Color.BLACK);
         getChildren().add(circle);
@@ -92,5 +101,11 @@ public class CellView extends StackPane{
 	
 	public Circle getCircle() {
 		return circle;
+	}
+	public double getX(){
+		return x;
+	}
+	public double getY(){
+		return y;
 	}
 }

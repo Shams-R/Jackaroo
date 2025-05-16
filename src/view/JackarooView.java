@@ -202,9 +202,9 @@ public class JackarooView {
     	for(int i=0; i<4; i++) {
         	int entry = (i*25+98)%100;
         	
-        	Circle entryCell = trackView.getMainTrack().get(entry).getCircle();
-        	int entryX = (int) entryCell.getCenterX();
-        	int entryY = (int) entryCell.getCenterY();
+        	CellView entryCell = trackView.getMainTrack().get(entry);
+        	int entryX = (int) entryCell.getX();
+        	int entryY = (int) entryCell.getY();
     		
         	SafeZoneView safeZone = new SafeZoneView(safeZones.get(i).getCells(), players.get(i).getColour().toString(), entryX, entryY, i);
     		safeZonesView.add(safeZone);

@@ -125,7 +125,8 @@ public class JackarooGUI extends Application{
 				view.showPopMessage(owner, e);
 			}
 		  
-	   });
+	   }
+		   );
 	   }
 
 
