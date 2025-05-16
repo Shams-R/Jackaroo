@@ -49,8 +49,8 @@ public class CardView extends StackPane{
 		imageView =new ImageView(faceImage);
 		imageView.setSmooth(true);
 		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(90);
-        imageView.setFitHeight(140);
+		imageView.setFitWidth(120);
+        imageView.setFitHeight(180);
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		getChildren().add(imageView);
 		

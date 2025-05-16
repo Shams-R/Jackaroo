@@ -36,8 +36,9 @@ public class JackarooView {
 	private StackPane mainLayout;
 	private TrackView trackView;
 	private ArrayList<SafeZoneView> safeZonesView;
-	private ArrayList<PlayerHandView> playersHandView;
+	private ArrayList<PlayerHandView> playersHandsView;
 	private ArrayList<HomeZoneView> homeZonesView;
+	private CardsPoolView cardsPool;
 	
 	public String getPlayerName() {
 		return playerName;
@@ -220,49 +221,67 @@ public class JackarooView {
     }
     
     public void makeHandsView(ArrayList<Player>players){
-    	ArrayList<Card>array1=players.get(0).getHand();//1---humanplyer
-    	ArrayList<Card>array2=players.get(1).getHand();
-    	ArrayList<Card>array3=players.get(2).getHand();
-    	ArrayList<Card>array4=players.get(3).getHand();
+    	playersHandsView=new ArrayList<>();
+    	for(int i=0;i<4;i++){
+    	ArrayList<Card>cards=players.get(i).getHand();
+    	PlayerHandView hand = new PlayerHandView(cards);
+    	playersHandsView.add(hand);
+    	}
+    	
   
-         PlayerHandView bottomPlayer = new PlayerHandView(array1);
-         PlayerHandView rightPlayer  = new PlayerHandView(array2);
-         PlayerHandView topPlayer    = new PlayerHandView(array3);
-         PlayerHandView leftPlayer   = new PlayerHandView(array4);
+         PlayerHandView bottomPlayer = playersHandsView.get(0);
+         PlayerHandView rightPlayer  = playersHandsView.get(1);
+         PlayerHandView topPlayer    = playersHandsView.get(2);
+         PlayerHandView leftPlayer   = playersHandsView.get(3);
+         
+         for(int i=1;i<4;i++){
+        	 playersHandsView.get(i).showBack();;
+         }
 
          // Orient cards correctly
          leftPlayer.setRotate(90);
          rightPlayer.setRotate(-90);
          topPlayer.setRotate(180);
          BorderPane root = new BorderPane();
+         root.setPrefSize(1200,1200); 
+  	     root.setMaxSize(1200,1200);
          
          root.setBottom(bottomPlayer);
 		 BorderPane.setAlignment(bottomPlayer, Pos.CENTER);
 		 bottomPlayer.setTranslateX(-35);
-		 bottomPlayer.setTranslateY(-10);
+		 bottomPlayer.setTranslateY(5);
 		 
 		 
 		 root.setRight(rightPlayer);
 		 BorderPane.setAlignment(rightPlayer, Pos.CENTER);
-		 rightPlayer.setTranslateX(-320);
+		 rightPlayer.setTranslateX(100);
+		 rightPlayer.setTranslateY(-10);
 		 
 		 root.setTop(topPlayer);
 		 BorderPane.setAlignment(topPlayer, Pos.CENTER);
-		 topPlayer.setTranslateX(-35);
-		 topPlayer.setTranslateY(10);
+		 topPlayer.setTranslateX(-30);
+		 topPlayer.setTranslateY(-20);
 		 
 		 root.setLeft(leftPlayer);
 		 BorderPane.setAlignment(leftPlayer, Pos.CENTER);
-		 leftPlayer.setTranslateX(270);
+		 leftPlayer.setTranslateX(-160);
+		 leftPlayer.setTranslateY(-10);
          
          mainLayout.getChildren().add(root);    	
+    }
+    public void createCardsPool(int numberOfCards){
+    	 cardsPool=new CardsPoolView(numberOfCards);
+    	 StackPane.setAlignment(cardsPool, Pos.CENTER_RIGHT);
+    	 cardsPool.setTranslateX(-200);
+    	 mainLayout.getChildren().add(cardsPool);
+    	
     }
     
    public void addHomeZones(ArrayList<Player>players){
 	   homeZonesView = new ArrayList<>();
 	   BorderPane root = new BorderPane();
-	   root.setPrefSize(800,800); 
-	   root.setMaxSize(800,800);
+	   root.setPrefSize(600,600); 
+	   root.setMaxSize(600,600);
 	   
     	for(int i=0;i<4;i++){
     		ArrayList<Marble>marbles = players.get(i).getMarbles();
@@ -282,27 +301,29 @@ public class JackarooView {
     			root.setBottom(homeZoneView);
     			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
     			homeZoneView.setTranslateX(-30);
-    			homeZoneView.setTranslateY(-45);
+    			homeZoneView.setTranslateY(-25);
     			
     			
     		}
     		if(i==1){
     			root.setRight(homeZoneView);
     			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
-    			homeZoneView.setTranslateX(-65);
+    			homeZoneView.setTranslateX(-45);
+    			homeZoneView.setTranslateY(-5);
+    			
     			}
     		
     		if(i==2){
     			root.setTop(homeZoneView);
     			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
     			homeZoneView.setTranslateX(-30);
-    			homeZoneView.setTranslateY(45);
+    			homeZoneView.setTranslateY(14);
     		}
     		
     		if(i==3){
     			root.setLeft(homeZoneView);
     			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
-    			homeZoneView.setTranslateX(3);
+    			homeZoneView.setTranslateX(-15);
     		}
     		
     	}

@@ -12,10 +12,11 @@ import javafx.scene.layout.StackPane;
 public class CardsPoolView extends StackPane {
    
     public CardsPoolView(int numberOfCards) {
-        setPrefSize(100, 140); // Adjust as needed
+        setPrefSize(120, 180); // Adjust as needed
         setPickOnBounds(false); // So you don’t block clicks
-        double yOffsetStep=2;//make small distance
+        double yOffsetStep=3;//make small distance
         numberOfCards/=10;
+        
         for (int i = 0; i < numberOfCards; i++) {
         	
         	Card card=new Standard("Ace","",1,Suit.SPADE,null,null);
@@ -29,15 +30,15 @@ public class CardsPoolView extends StackPane {
     }
     public void setCards(int numberOfCards){
     	getChildren().clear();
-    	//this.cards=cards;
-        double angleStep;//make small distance
+    	numberOfCards/=10;
         double yOffsetStep;
         if (numberOfCards > 5) {
-            yOffsetStep = 2;
-        } else if (numberOfCards > 2) {
-            yOffsetStep = 3.5;
+            yOffsetStep = 3;
+        } else if (numberOfCards > 3) {
+            yOffsetStep = 4;
         } else {
             yOffsetStep = 5;
+            if(numberOfCards==1)numberOfCards++;
         }
         for (int i = 0; i < numberOfCards; i++) {
         	Card card=new Standard("Ace","",1,Suit.SPADE,null,null);

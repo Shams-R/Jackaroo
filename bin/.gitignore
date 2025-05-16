@@ -1,8 +1,11 @@
+/Background.png
+/Board.png
+/Cell.png
+/Start.png
 /controller/
 /engine/
 /exception/
+/icon.png
 /model/
 /test/
 /view/
-/Start.png
-/Background.png

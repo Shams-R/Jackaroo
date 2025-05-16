@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import model.card.Deck;
 import engine.Game;
 import exception.*;
 import javafx.application.Application;
@@ -69,6 +70,8 @@ public class JackarooGUI extends Application{
 	            	Game game = new Game(playerName);
 	            	view.initializeBoard(primaryStage, game.getPlayers(), game.getBoard().getTrack(), game.getBoard().getSafeZones());
 	            	view.makeHandsView(game.getPlayers());
+	            	int numberOfCards=Deck.getPoolSize();
+	            	view.createCardsPool(numberOfCards);
 	            }
 	            catch(IOException exception) {
 	            }
