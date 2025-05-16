@@ -2,6 +2,7 @@ package view;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import model.card.Card;
 import model.card.standard.Standard;
@@ -15,6 +16,8 @@ import javafx.util.Duration;
 
 public class CardView extends StackPane{
 	final private Card card;
+	final private Image faceImage;
+	final private Image backImage=new Image("view/"+"deck1.png");
     private final ImageView imageView;
 	
 	public Card getCard() {
@@ -27,7 +30,7 @@ public class CardView extends StackPane{
 
 	public CardView(Card card){
 		this.card=card;
-		Image image;
+		 ;
 		if(card instanceof Standard){
 			Standard card2=(Standard)card;
 			String s1=card2.getSuit().toString();
@@ -37,17 +40,18 @@ public class CardView extends StackPane{
 			s2=s2.toUpperCase();
 			s3=s3.toLowerCase();
 			
-			image=new Image("view/"+card2.getName()+s2+s3+".png");
+			faceImage=new Image("view/"+card2.getName()+s2+s3+".png");
 		}
 		else{
-			
-			image=new Image("view/"+card.getName()+".png");
+			//System.out.print(card.getName());
+			faceImage=new Image("view/"+card.getName()+".png");
 		}
-		imageView =new ImageView(image);
+		imageView =new ImageView(faceImage);
 		imageView.setSmooth(true);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(90);
         imageView.setFitHeight(140);
+        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		getChildren().add(imageView);
 		
 		// Optional: tooltip to show the description
@@ -88,6 +92,12 @@ public class CardView extends StackPane{
 		    scaleDown.playFromStart();
 		});
 			
+	}
+	public void showBack(){
+		imageView.setImage(backImage);
+	}
+	public void showFace(){
+		imageView.setImage(faceImage);
 	}
 	
 
