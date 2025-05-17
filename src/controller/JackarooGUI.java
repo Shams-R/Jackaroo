@@ -187,6 +187,7 @@ public class JackarooGUI extends Application{
 				 scaleDown.setToY(1.0);
 		         scaleDown.play();
 		    	 currentlySelectedCard = null;
+		    	 view.removePlayButton();
 		         return;
 		     }
 		      
