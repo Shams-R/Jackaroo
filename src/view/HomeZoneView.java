@@ -43,6 +43,9 @@ public class HomeZoneView extends StackPane{
 		return marble;
 		
 	}
+	public CellView getCellView(){
+		return cells.get(--numberOfMarbles);
+	}
 
 	public Object getColour() {
 		// TODO Auto-generated method stub

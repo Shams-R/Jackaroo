@@ -641,25 +641,26 @@ public class JackarooView {
 			Standard card2=(Standard)card;
 			if(selectedMarbles.size()==1 && ! (card instanceof Four) && ! (card instanceof Five)){
 				
-				//move(selectedMarbles.get(0),card2.getRank(),true);
+				move(selectedMarbles.get(0),card2.getRank(),true);
 			}
 			else{
-				if(card instanceof Ace || card instanceof King)
-					//field();
+				if(card instanceof Ace || card instanceof King){
+					field();
+				}
 				if(card instanceof Seven){
-				   // move(selectedMarbles.get(0),jackarooGUI.getSplitDistance(),true);
-					//move(selectedMarbles.get(1),7-jackarooGUI.getSplitDistance(),true);
+				    move(selectedMarbles.get(0),jackarooGUI.getSplitDistance(),true);
+					move(selectedMarbles.get(1),7-jackarooGUI.getSplitDistance(),true);
 					
 				}
 				if(card instanceof Four)
-				  //  move(selectedMarbles.get(0),-(card2.getRank()));
+				   move(selectedMarbles.get(0),-(card2.getRank()));
 				if(card instanceof Five){
 					MarbleView marble=selectedMarbles.get(0);
 					int i=game.getCurrentPlayerIndex();
 					ArrayList<Player> players=game.getPlayers();
 					Player player=players.get(i); 
 					boolean f= (marble.getColour()==player.getColour());
-					//move(marble,5,f);
+					move(marble,5,f);
 				}
 				
 				if(card instanceof Jack)
@@ -1136,20 +1137,52 @@ public class JackarooView {
                 transition.play();
             }
             
-            public void field(ArrayList<HomeZoneView> homeZones ){
-            	animateMarbleMovement(homeZones.get(0).getCells().get(3), trackView.getMainTrack().get(0) );
+            public void field( ){
+            	int i=0 ;//game.getCurrentPlayerIndex();
+            	HomeZoneView homeZone=homeZonesView.get(i);
+            	CellView cell =homeZone.getCellView();
             	
-            	Platform.runLater(() -> {
-            		
-     			   int i= game.getCurrentPlayerIndex();
-     			   HomeZoneView homeZone = homeZones.get(i);
-     			   MarbleView marble=homeZone.fieldMarble() ;
-     			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ; 
-     	   
-            	}
             	
-     		   );
+            	animateField(cell, trackView.getMainTrack().get(i*25) );
+            	
+            	
+            	
+     		   
      	   }
+            public void animateField( CellView sourceCell, CellView targetCell) {
+            	MarbleView marble=sourceCell.getWithOutRemove();
+                // 1. Get the marble’s current position in scene coordinates
+                Bounds startBounds = marble.localToScene(marble.getBoundsInLocal());
+                Bounds mainBounds = mainLayout.localToScene(mainLayout.getBoundsInLocal());
+
+                double startX = startBounds.getMinX() - mainBounds.getMinX();
+                double startY = startBounds.getMinY() - mainBounds.getMinY();
+
+                // 2. Get target position in scene coordinates
+                Bounds targetBounds = targetCell.localToScene(targetCell.getBoundsInLocal());
+                double endX = targetBounds.getMinX() - mainBounds.getMinX();
+                double endY = targetBounds.getMinY() - mainBounds.getMinY();
+
+                // 3. Remove marble from source cell (but not from scene)
+                sourceCell.getMarbleView();
+
+                // 4. Temporarily add marble to the main layout overlay
+                mainLayout.getChildren().add(marble);
+                marble.setTranslateX(startX);
+                marble.setTranslateY(startY);
+
+                // 5. Animate movement
+                TranslateTransition transition = new TranslateTransition(Duration.millis(500), marble);
+                transition.setToX(endX);
+                transition.setToY(endY);
+                transition.setOnFinished(e -> {
+                    // 6. After animation, remove from mainLayout and add to target cell
+                    mainLayout.getChildren().remove(marble);
+                    targetCell.setMarbleView(marble);
+                });
+
+                transition.play();
+            }
         
         public void showCurrentPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
             int currentIndex = game.getCurrentPlayerIndex();
