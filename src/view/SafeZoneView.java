@@ -11,25 +11,25 @@ public class SafeZoneView {
 	public SafeZoneView(ArrayList<Cell> safeZoneCells ,String colour, int entryX, int entryY, int index) {
 		safeZoneView = new ArrayList<CellView>();
 		this.colour=colour;
-            if (index == 0) {
+            if (index == 2) {
             	for(int c=0; c<4; c++) {
             		entryX+=22;
             		entryY+=23;
             		safeZoneView.add(new CellView(colour, safeZoneCells.get(c), entryX, entryY));
             	}
-            } else if (index == 1) {
+            } else if (index == 3) {
             	for(int c=0; c<4; c++) {
             		entryX-=22;
             		entryY+=23;
             		safeZoneView.add(new CellView(colour, safeZoneCells.get(c), entryX, entryY));
             	}
-            } else if (index == 2) {
+            } else if (index == 0) {
             	for(int c=0; c<4; c++) {
             		entryX-=22;
             		entryY-=23;
             		safeZoneView.add(new CellView(colour, safeZoneCells.get(c), entryX, entryY));
             	}
-            } else if (index == 3) {
+            } else if (index == 1) {
             	for(int c=0; c<4; c++) {
             		entryX+=22;
             		entryY-=23;

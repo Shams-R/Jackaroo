@@ -353,7 +353,7 @@ public class JackarooView {
     			
     			
     		}
-    		if(i==1){
+    		if(i==3){
     			root.setRight(homeZoneView);
     			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
     			homeZoneView.setTranslateX(-45);
@@ -368,7 +368,7 @@ public class JackarooView {
     			homeZoneView.setTranslateY(14);
     		}
     		
-    		if(i==3){
+    		if(i==1){
     			root.setLeft(homeZoneView);
     			BorderPane.setAlignment(homeZoneView, Pos.CENTER);
     			homeZoneView.setTranslateX(-15);
@@ -392,35 +392,56 @@ public class JackarooView {
 
 	        // Create label for the name
 	        Label nameLabel = new Label(player.getName());
-	        nameLabel.setStyle("-fx-text-fill: #5C3317; " +  // darker wooden brown
+	        nameLabel.setStyle("-fx-text-fill: #5C3317; " +
 	                           "-fx-font-weight: bold; " +
-	                           "-fx-font-size: 17px; " +
+	                           "-fx-font-size: 24px; " +
 	                           "-fx-font-family: 'Georgia', 'Garamond', serif;");
-	        StackPane.setAlignment(nameLabel, Pos.TOP_LEFT);
-	        nameLabel.setPadding(new Insets(10, 0, 0, 15)); // top, right, bottom, left
 
-	        // Wrap in a StackPane
-	        StackPane wrapper = new StackPane();
-	        wrapper.setPrefSize(100, 100);
-	        wrapper.getChildren().addAll(playerView, nameLabel);
+	        // Create a wooden frame around the name label
+	        StackPane nameFrame = new StackPane(nameLabel);
+	        nameFrame.setPadding(new Insets(5)); // space inside the frame
+	        nameFrame.setStyle(
+	            "-fx-border-color: saddlebrown; " +
+	            "-fx-border-width: 4; " +
+	            "-fx-border-radius: 6; " +
+	            "-fx-background-color: #f5deb3; " + // light wood tone
+	            "-fx-background-radius: 6;"
+	        );
 
-	        // Anchor it to the root pane
+	        // Use AnchorPane for precise positioning
+	        AnchorPane wrapper = new AnchorPane();
+	        wrapper.setPrefSize(150, 150);
+	        wrapper.getChildren().addAll(playerView, nameFrame);
+
+	        // Position PlayerView inside wrapper
+	        AnchorPane.setTopAnchor(playerView, 30.0);
+	        AnchorPane.setLeftAnchor(playerView, 25.0);
+
+	        // Position the frame and the wrapper based on corner
 	        switch (i) {
-	            case 0:
-	                AnchorPane.setTopAnchor(wrapper, 0.0);
-	                AnchorPane.setLeftAnchor(wrapper, 0.0);
+	            case 2: // Top-left → label to left
+	                AnchorPane.setTopAnchor(nameFrame, 10.0);
+	                AnchorPane.setLeftAnchor(nameFrame, -50.0);
+	                AnchorPane.setTopAnchor(wrapper, 30.0);
+	                AnchorPane.setLeftAnchor(wrapper, 300.0);
 	                break;
-	            case 1:
-	                AnchorPane.setTopAnchor(wrapper, 0.0);
-	                AnchorPane.setRightAnchor(wrapper, 0.0);
+	            case 3: // Top-right → label to right
+	                AnchorPane.setTopAnchor(nameFrame, 0.0);
+	                AnchorPane.setLeftAnchor(nameFrame, 200.0);
+	                AnchorPane.setTopAnchor(wrapper, 30.0);
+	                AnchorPane.setRightAnchor(wrapper, 300.0);
 	                break;
-	            case 2:
-	                AnchorPane.setBottomAnchor(wrapper, 0.0);
-	                AnchorPane.setRightAnchor(wrapper, 0.0);
+	            case 0: // Bottom-right → label to right
+	                AnchorPane.setTopAnchor(nameFrame, 0.0);
+	                AnchorPane.setLeftAnchor(nameFrame, 200.0);
+	                AnchorPane.setBottomAnchor(wrapper, 30.0);
+	                AnchorPane.setRightAnchor(wrapper, 300.0);
 	                break;
-	            case 3:
-	                AnchorPane.setBottomAnchor(wrapper, 0.0);
-	                AnchorPane.setLeftAnchor(wrapper, 0.0);
+	            case 1: // Bottom-left → label to left
+	                AnchorPane.setTopAnchor(nameFrame, 10.0);
+	                AnchorPane.setLeftAnchor(nameFrame, -50.0);
+	                AnchorPane.setBottomAnchor(wrapper, 30.0);
+	                AnchorPane.setLeftAnchor(wrapper, 300.0);
 	                break;
 	        }
 
@@ -499,20 +520,20 @@ public class JackarooView {
 	    playButton.setStyle(
 	        "-fx-font-size: 26px;" +
 	        "-fx-padding: 10px 25px;" +
-	        "-fx-background-color: #8b5e3c;" +
-	        "-fx-text-fill: white;" +
+	        "-fx-background-color: #f5deb3;" +         // Light wood tone
+	        "-fx-text-fill: #5C3317;" +                // Dark wooden text
 	        "-fx-font-family: 'Georgia';" +
 	        "-fx-font-weight: bold;" +
 	        "-fx-background-radius: 10;" +
-	        "-fx-border-color: white;" +             // Frame color
-	        "-fx-border-width: 3px;" +               // Frame thickness
-	        "-fx-border-radius: 10;"                 // Match background radius
+	        "-fx-border-color: saddlebrown;" +         // Wooden border
+	        "-fx-border-width: 4;" +
+	        "-fx-border-radius: 10;"
 	    );
 
 	    playButton.setOnAction(e -> {
-	    	CardView card=JackarooGUI.getCurrentlySelectedCard();
-	    	ArrayList<MarbleView>marbles=JackarooGUI.getSelectedMarbles();
-	    	act(card,marbles);
+	        CardView card = JackarooGUI.getCurrentlySelectedCard();
+	        ArrayList<MarbleView> marbles = JackarooGUI.getSelectedMarbles();
+	        act(card, marbles);
 	    });
 
 	    buttonPane = new Pane();
@@ -525,7 +546,7 @@ public class JackarooView {
 
 	    // Border glow effect
 	    DropShadow borderGlow = new DropShadow();
-	    borderGlow.setColor(Color.BROWN);
+	    borderGlow.setColor(Color.SADDLEBROWN);
 	    borderGlow.setWidth(20);
 	    borderGlow.setHeight(20);
 

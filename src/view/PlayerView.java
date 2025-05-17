@@ -42,23 +42,31 @@ public class PlayerView extends StackPane{
 
 	    // Create ImageView
 	    imageView = new ImageView(image);
-	    imageView.setFitWidth(300);
-	    imageView.setFitHeight(300);
+	    imageView.setFitWidth(200);
+	    imageView.setFitHeight(200);
 	    imageView.setPreserveRatio(true);
 
-	    // Create a wooden-colored rectangular border using a StackPane with padding
+	    // Clip the image to a circle
+	    Circle clip = new Circle(100, 100, 100); // centerX, centerY, radius
+	    imageView.setClip(clip);
+
+	    // Wrap in a StackPane with a circular border
 	    StackPane imageWithBorder = new StackPane();
 	    imageWithBorder.setStyle("-fx-border-color: saddlebrown; " +
-	                             "-fx-border-width: 6; " +
-	                             "-fx-border-radius: 0; " +  // sharp corners
+	                             "-fx-border-width: 12; " +
+	                             "-fx-border-radius: 100; " +  // circular
+	                             "-fx-background-radius: 100; " +
 	                             "-fx-background-color: transparent;");
-	    imageWithBorder.setPadding(new Insets(4)); // space between image and border
+	    imageWithBorder.setPadding(new Insets(6));
+	    imageWithBorder.setMaxSize(212, 212); // 200 image + 6*2 padding
+	    imageWithBorder.setMinSize(212, 212);
 	    imageWithBorder.getChildren().add(imageView);
 
 	    // Add to this PlayerView
 	    this.getChildren().add(imageWithBorder);
 	    this.setPrefSize(300, 300);
 	}
-	
+
+
 	
 }
