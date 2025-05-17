@@ -914,4 +914,123 @@ public class JackarooView {
 	}
 	
 	
+	
+	
+	
+	
+	
+	public void move (MarbleView marble, int steps){
+		int i=0;
+	if (steps >0 ){
+		 while (i < steps){
+			int pos = getPosition(marble,trackView.getMainTrack() );
+			
+			if ( isMarbleAtSafezoneEntry(marble,trackView.getMainTrack() , game.getPlayers() ) )
+				break ;
+			
+			animateMarbleMovement(trackView.getMainTrack().get(pos+1), trackView.getMainTrack().get(pos) );
+			trackView.getMainTrack().get(pos+1).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+			
+			i++;
+		}
+			}
+		else {
+			int absSteps= Math.abs(steps) ;
+			while (i < absSteps){
+				int pos= getPosition(marble,trackView.getMainTrack() );
+				if ( isMarbleAtSafezoneEntry(marble,trackView.getMainTrack() , game.getPlayers() ) )
+					break ;
+				animateMarbleMovement(trackView.getMainTrack().get((pos==0)? 99: pos-1 ), trackView.getMainTrack().get(pos) );
+				trackView.getMainTrack().get( (pos==0)? 99: pos-1 ).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+				i++;
+			}
+		}
+	
+	}
+	
+	
+
+	public int getPlayerSafezoneIndex(ArrayList<Player> players, MarbleView marble) {
+	    
+	    Colour marbleColour = marble.getMarble().getColour();
+
+	    
+	    boolean playerFound = false;
+	    int i=0;
+	    while (i < players.size()) {
+	        if (players.get(i).getColour().equals(marbleColour) ) {
+	            playerFound = true;
+	            break;
+	        }
+	        i++;
+	    }
+	    if (!playerFound) {
+	        return -1;
+	    }
+	    
+	    return (i==0)? i*25+98 : i*25+98-100 ;
+	}
+	
+	
+
+
+    public boolean isMarbleAtSafezoneEntry(MarbleView marble, ArrayList<CellView> path, ArrayList<Player> players) {
+        int currentPosition = getPosition(marble, path);
+        if (currentPosition == -1) {
+            return false; 
+        }
+        
+        int safezoneIndex = getPlayerSafezoneIndex(players, marble);
+        if (safezoneIndex == -1) {
+            return false; 
+        }
+        
+        return currentPosition == safezoneIndex;
+    }
+
+ 
+
+       
+        public void animateMarbleMovement(CellView source, CellView target) {
+            
+            MarbleView marble = source.getWithOutRemove();
+           
+            Scene scene = mainLayout.getScene();
+
+            Point2D sourceSceneCoords = source.localToScene(0, 0); // makes a vector from (0,0) on the scene to the cell  
+            Point2D targetSceneCoords = target.localToScene(0, 0);
+
+            
+            double deltaX = (target.getX() - source.getX());
+            double deltaY = (target.getY() - source.getY());
+
+           
+            TranslateTransition transition = new TranslateTransition(Duration.millis(1000), marble);
+            transition.setByX(deltaX);
+            transition.setByY(deltaY);
+            transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+
+     
+            transition.play();
+        }
+        
+        public void fieldingView(ArrayList<HomeZoneView> homeZones ,Game game){
+        	animateMarbleMovement(homeZones.get(0).getCells().get(3), trackView.getMainTrack().get(0) );
+        	
+        	Platform.runLater(() -> {
+ 			  
+ 			   int i= game.getCurrentPlayerIndex();
+ 			   HomeZoneView homeZone = homeZones.get(i);
+ 			   MarbleView marble=homeZone.fieldMarble() ;
+ 			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
+ 		  
+ 	   }
+ 		   );
+ 	   }
 }
+	
+	
+	
+	
+	
+	
