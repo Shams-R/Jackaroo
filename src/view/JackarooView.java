@@ -9,6 +9,7 @@ import engine.board.Cell;
 import engine.board.SafeZone;
 import exception.CannotFieldException;
 import exception.IllegalDestroyException;
+import exception.SplitOutOfRangeException;
 import model.card.Card;
 import model.card.standard.Ace;
 import model.card.wild.Burner;
@@ -53,6 +54,7 @@ public class JackarooView {
 	private CardsPoolView cardsPool;
 	private FirePitView firePit;
 	private Pane buttonPane;
+	private BorderPane splitDistancePane;
 	
 	public String getPlayerName() {
 		return playerName;
@@ -524,4 +526,75 @@ public class JackarooView {
 	public void removePlayButton() {
 		mainLayout.getChildren().remove(buttonPane);
 	}
+	
+	public void showSplitDistance(Game game, Stage owner) {
+	    // Label with styled text
+	    Label msg = new Label("Enter Split Distance");
+	    msg.setWrapText(true);
+	    msg.setMaxWidth(380);
+	    msg.setTextAlignment(TextAlignment.CENTER);
+	    msg.setAlignment(Pos.CENTER);
+	    msg.setTextFill(Color.web("#fdf6e3")); // soft ivory
+	    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+	    
+	    TextField distanceField = new TextField();
+	    distanceField.setMaxWidth(150);
+	    distanceField.setStyle(
+        "-fx-background-color: rgba(255,255,255,0.7);" +
+        "-fx-font-size: 18px;" +
+        "-fx-font-family: 'Georgia';" +
+        "-fx-text-fill: #000;"
+	    );
+	    distanceField.setPromptText("e.g. 5");
+	    
+	    Button submitButton = new Button("Submit");
+	    submitButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
+	    
+	    // VBox to hold content
+	    VBox content = new VBox(msg, distanceField, submitButton);
+	    content.setAlignment(Pos.CENTER);
+	    content.setSpacing(15);
+	
+	    // Styled background rectangle
+	    Rectangle background = new Rectangle(400, 200);
+	    background.setArcWidth(40);
+	    background.setArcHeight(40);
+	    background.setFill(Color.web("#8b5e3c")); // rich brown
+	    background.setStroke(Color.web("#5c3b24")); // deeper brown
+	    background.setStrokeWidth(3);
+	
+	    // StackPane for layering rectangle and text
+	    StackPane root = new StackPane(background, content);
+	    root.setPadding(new Insets(20));
+	
+	    // Create the popup window
+	    Stage popup = new Stage();
+	    popup.initOwner(owner);
+	    popup.initModality(Modality.WINDOW_MODAL);
+	    popup.setResizable(false);
+	    popup.setTitle("Split Distance");
+	
+	    Scene scene = new Scene(root, 400, 200);
+	    popup.setScene(scene);
+	
+	    // Optional icon
+	    Image icon = new Image("icon.png");
+	    popup.getIcons().add(icon);
+	
+	    popup.setOnCloseRequest(evt -> popup.hide());
+	    popup.show();
+	    
+	    submitButton.setOnAction(e -> {
+	        String input = distanceField.getText().trim();
+	        if (!input.isEmpty()) {
+	            try {
+					game.editSplitDistance(Integer.parseInt(input));
+				} catch (Exception e1) {
+					showPopMessage(owner, e1);
+				}
+	            popup.close();
+	        }
+	    });
+	}
+	
 }

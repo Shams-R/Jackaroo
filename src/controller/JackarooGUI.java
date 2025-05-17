@@ -13,6 +13,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -61,18 +63,42 @@ public class JackarooGUI extends Application{
 	        public void handle(Event e) {
 	            String playerName = nameField.getText();
 	            if (playerName.equals("") || selectedGender.get().equals("")) {
-	                Stage alertStage = new Stage();
-	                StackPane alertPane = new StackPane();
-	                Text alert = new Text("Please enter your name and gender!");
-	                alert.setFill(Color.RED);
-	                alert.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-	                alertPane.getChildren().addAll(alert);
-	                Scene alertScene = new Scene(alertPane, 450, 150);
-	                alertStage.setScene(alertScene);
-	                alertStage.setTitle("Error");
-	                alertStage.setResizable(false);
-	                alertStage.show();
-	                return;
+	            	Stage alertStage = new Stage();
+	            	// Text message
+	            	Text alert = new Text("Please enter your name and gender!");
+	            	alert.setFill(Color.web("#fdf6e3")); // Soft ivory
+	            	alert.setStyle("-fx-font-size: 20px; -fx-font-family: 'Georgia'; -fx-font-weight: bold;");
+	            	alert.setTextAlignment(TextAlignment.CENTER);
+
+	            	// Container for the message
+	            	VBox content = new VBox(alert);
+	            	content.setAlignment(Pos.CENTER);
+	            	content.setSpacing(10);
+
+	            	// Styled background rectangle
+	            	Rectangle background = new Rectangle(450, 150);
+	            	background.setArcWidth(40);
+	            	background.setArcHeight(40);
+	            	background.setFill(Color.web("#8b5e3c")); // Rich brown
+	            	background.setStroke(Color.web("#5c3b24")); // Deeper brown
+	            	background.setStrokeWidth(3);
+
+	            	// StackPane for layering
+	            	StackPane alertPane = new StackPane(background, content);
+	            	alertPane.setPadding(new Insets(20));
+
+	            	// Scene and stage setup
+	            	Scene alertScene = new Scene(alertPane, 450, 150);
+	            	alertStage.setScene(alertScene);
+	            	alertStage.setTitle("Invalid Input");
+	            	alertStage.setResizable(false);
+	            	alertStage.initModality(Modality.APPLICATION_MODAL);
+	            	
+	        	    Image icon = new Image("icon.png");
+	        	    alertStage.getIcons().add(icon);
+	        	    
+	            	alertStage.show();
+
 	            }
 	            
 	            view.setPlayerName(playerName);
@@ -180,6 +206,9 @@ public class JackarooGUI extends Application{
 		        scaleUp.play();
 		        
 		        view.showPlayButton();
+		        
+		        if(card.getCard().getName().equals("Seven"))
+		        	view.showSplitDistance(game, primaryStage);
 		 }
 		 catch(InvalidCardException e) {
 			 JackarooView.showPopMessage(primaryStage, e);
