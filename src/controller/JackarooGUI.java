@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import model.card.Deck;
+import model.player.Player;
 import engine.Game;
 import exception.*;
 import javafx.animation.ScaleTransition;
@@ -263,7 +264,7 @@ public class JackarooGUI extends Application{
 			 JackarooView.showPopMessage(primaryStage, e);
 		 }
 	 }
-	
+	 
 	public static void main(String[] args) {
 		launch(args);
 	}

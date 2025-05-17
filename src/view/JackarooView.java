@@ -717,6 +717,15 @@ public class JackarooView {
 				save(selectedMarbles.get(0),game);
 		}
 	}
+	
+	public void playHuman() {
+		
+	}
+	
+	public void playCPU() {
+		
+	}
+	
 	public int getEntry(Colour colour){
 		int i=0;
 		ArrayList<Player> players=game.getPlayers();
@@ -871,24 +880,24 @@ public class JackarooView {
 	    mainTrack.get(index).setMarbleView(null);
 
 	    Colour colour = marbleView.getMarble().getColour();
-	    HomeZoneView homeZoneView = getHomeZoneView(colour);
+	    ArrayList<CellView> homeZoneView = getHomeZoneView(colour).getCells();
 
-	    int row = homeZoneView.getNumberOfMarbles() / 2;
-	    int col = homeZoneView.getNumberOfMarbles() % 2;
+	    int row = getHomeZoneView(colour).getNumberOfMarbles() / 2;
+	    int col = getHomeZoneView(colour).getNumberOfMarbles() % 2;
+	    CellView finalCell=null;
+	    for(CellView cellView: homeZoneView){
+	    	if(cellView.getMarbleView()==null){
+	    		finalCell=cellView;
+	    		break;
+	    	}
+	    		
+	    }
 
 	    // Get scene coordinates before moving
 	    Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
 
-	    // Remove from original parent
-	    Parent originalParent = marbleView.getParent();
-	    if (originalParent instanceof Pane) {
-	        ((Pane) originalParent).getChildren().remove(marbleView);
-	    } else if (originalParent instanceof GridPane) {
-	        ((GridPane) originalParent).getChildren().remove(marbleView);
-	    }
-
 	    // Add to overlay pane (assume you have a transparent Pane above everything)
-	     // <- You must implement this or pass it in
+
 	    overlayPane.getChildren().add(marbleView);
 
 	    // Set position on overlay
@@ -896,9 +905,8 @@ public class JackarooView {
 	    marbleView.setLayoutY(startBounds.getMinY());
 
 	    // Get destination bounds
-	    homeZoneView.getGrid().add(new Region(), col, row); // Temp placeholder
-	    Node targetCell = getNodeByRowColumnIndex(row, col, homeZoneView.getGrid());
-	    Bounds endBounds = targetCell.localToScene(targetCell.getBoundsInLocal());
+	 
+	    Bounds endBounds = finalCell.localToScene(finalCell.getBoundsInLocal());
 
 	    // Create animation
 	    TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
@@ -916,11 +924,12 @@ public class JackarooView {
 	        marbleView.setTranslateY(0);
 	        marbleView.setLayoutX(0);
 	        marbleView.setLayoutY(0);
-	        homeZoneView.getGrid().add(marbleView, col, row);
+	        getHomeZoneView(colour).getGrid().add(marbleView, col, row);
 	    });
 
 	    transition.play();
 	}
+<<<<<<< HEAD
 	public Node getNodeByRowColumnIndex(int row, int column, GridPane gridPane) {
 	    for (Node node : gridPane.getChildren()) {
 	        Integer r = GridPane.getRowIndex(node);
@@ -931,6 +940,10 @@ public class JackarooView {
 	    }
 	    return null;*/
 	}
+=======
+
+
+>>>>>>> fa448000e985b4d50e2d2e8efc837c41d4a84c9c
 
 	public int getPositionInTrackView(MarbleView marbleView ){
 		ArrayList<CellView> mainTrack=trackView.getMainTrack();

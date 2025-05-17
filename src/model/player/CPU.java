@@ -10,13 +10,18 @@ import model.card.Card;
 
 public class CPU extends Player {
 	private final BoardManager boardManager;
-
+	private boolean played;
+	
     public CPU(String name, Colour colour, BoardManager boardManager) {
         super(name, colour);
         this.boardManager = boardManager;
     }
+    
+    public boolean isPlayed() { //to indicate whether the CPU player played or not
+		return played;
+	}
 
-    @Override
+	@Override
     public void play() throws GameException {
         // Retrieve a list of actionable marbles from the board manager.
         ArrayList<Marble> actionableMarbles = boardManager.getActionableMarbles();
@@ -55,6 +60,7 @@ public class CPU extends Player {
                     try {
                         // Attempt to act with no marbles if the count is 0.
                         getSelectedCard().act(new ArrayList<>());
+                        played = true;
                         return; // Return after successful action.
                     }
                     catch(Exception e) {
@@ -70,6 +76,10 @@ public class CPU extends Player {
                         if(card.validateMarbleColours(toSend)) {
                             try {
                                 getSelectedCard().act(toSend);
+                                for(Marble marble1 : toSend) {
+                                	selectMarble(marble1);
+                                }
+                                played = true;
                                 return; // Return after successful action.
                             }
                             catch(Exception e) {
@@ -90,6 +100,10 @@ public class CPU extends Player {
                             if(card.validateMarbleColours(toSend)) {
                                 try {
                                     getSelectedCard().act(toSend);
+                                    for(Marble marble1 : toSend) {
+                                    	selectMarble(marble1);
+                                    }
+                                    played = true;
                                     return; // Return after successful action.
                                 }
                                 catch(Exception e) {
@@ -104,8 +118,10 @@ public class CPU extends Player {
         }
         
         // If no cards were played, select the first card by default.
-        if (cards.size() == initialHandSize)
+        if (cards.size() == initialHandSize) {
             this.selectCard(this.getHand().get(0));
+            played = false;
+        }
     }
     
 }
