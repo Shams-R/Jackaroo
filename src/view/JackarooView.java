@@ -905,11 +905,66 @@ public class JackarooView {
 		return null;
 	}
 	
-	public void save (MarbleView marbleView){
-		
+	public void save(MarbleView marbleView, Game game) {
+	    ArrayList<CellView> safeZoneView = getSafeZoneView(marbleView).getSafeZoneView();
+	    ArrayList<Cell> safeZone = getSafeZone(marbleView, game).getCells();
+
+	    for (int i = 0; i < 4; i++) {
+	        if (safeZone.get(i).getMarble() == marbleView.getMarble()) {
+	        	int index=i;
+	            // Get the scene position of marbleView and target safeZoneView
+	            Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
+	            Bounds endBounds = safeZoneView.get(i).localToScene(safeZoneView.get(i).getBoundsInLocal());
+
+	            double xStart = startBounds.getMinX();
+	            double yStart = startBounds.getMinY();
+	            double xEnd = endBounds.getMinX();
+	            double yEnd = endBounds.getMinY();
+
+	            Parent originalParent = marbleView.getParent();
+
+	            TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
+	            transition.setToX(xEnd - xStart);
+	            transition.setToY(yEnd - yStart);
+
+	            transition.setOnFinished(e -> {
+	                // Clean up the old location
+	                if (originalParent instanceof Pane) {
+	                    ((Pane) originalParent).getChildren().remove(marbleView);
+	                }
+
+	                
+	                marbleView.setTranslateX(0);
+	                marbleView.setTranslateY(0);
+
+	                // Let the target cell add it in the correct place
+	                safeZoneView.get(index).setMarbleView(marbleView);
+	            });
+
+	            transition.play();
+	            break; 
+	        }
+	    }
 	}
 	
-	public int updateSafeZone(){
+	public SafeZoneView getSafeZoneView(MarbleView marbleView){
+		for (SafeZoneView safeZoneView: safeZonesView){
+			if(safeZoneView.getColour().equals(marbleView.getColour().toString())){
+				return safeZoneView;
+			}
+		}
+		return null; 
+	}
+	public SafeZone getSafeZone(MarbleView marbleView,Game game){
+		for (SafeZone safeZone:game.getBoard().getSafeZones()){
+			if(safeZone.getColour().equals(marbleView.getColour())){
+				return safeZone;
+			}
+		}
+		return null;
+	}
+	
+	public void updateSafeZone(){
 		
 	}
 	
