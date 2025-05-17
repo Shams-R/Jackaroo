@@ -713,6 +713,15 @@ public class JackarooView {
 				//save(selectedMarbles.get(0));
 		}
 	}
+	
+	public void playHuman() {
+		
+	}
+	
+	public void playCPU() {
+		
+	}
+	
 	public int getEntry(Colour colour){
 		int i=0;
 		ArrayList<Player> players=game.getPlayers();
