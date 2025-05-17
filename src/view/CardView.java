@@ -17,7 +17,7 @@ import javafx.util.Duration;
 public class CardView extends StackPane{
 	final private Card card;
 	final private Image faceImage;
-	final private Image backImage=new Image("view/"+"deck1.png");
+	final private Image backImage=new Image("view/"+"back.jpg");
     private final ImageView imageView;	
     private Tooltip tooltip;
 
@@ -58,10 +58,19 @@ public class CardView extends StackPane{
 		// Optional: tooltip to show the description
 		tooltip = new Tooltip(card.getDescription());  // assuming getDescription() exists
 		Tooltip.install(this, tooltip);
+		
+		tooltip.setStyle(
+			    "-fx-background-color: #8b5e3c;" +        // same rich brown
+			    "-fx-text-fill: #fdf6e3;" +              // soft ivory text
+			    "-fx-font-size: 14px;" +
+			    "-fx-font-family: 'Georgia';" +
+			    "-fx-background-radius: 12;" +           // rounded corners
+			    "-fx-padding: 8;"
+			);
 
 		// Border effect
 		DropShadow borderGlow = new DropShadow();
-		borderGlow.setColor(Color.DEEPSKYBLUE);
+		borderGlow.setColor(Color.BROWN);
 		borderGlow.setWidth(20);
 		borderGlow.setHeight(20);
 

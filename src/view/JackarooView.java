@@ -184,16 +184,16 @@ public class JackarooView {
 	    mainLayout.setAlignment(board, Pos.CENTER);
 
 	    // Set fixed size for the GridPane
-	    board.setPrefSize(1050, 1050);
-	    board.setMinSize(1000, 1050);
-	    board.setMaxSize(1050, 1050);
+	    board.setPrefSize(1150, 1150);
+	    board.setMinSize(1150, 1150);
+	    board.setMaxSize(1150, 1150);
 	    
 	    // Set background image for the board
 	    Image boardImg = new Image("Board.png");
 	    ImageView boardBg = new ImageView(boardImg);
 	    boardBg.setPreserveRatio(false);
-	    boardBg.setFitWidth(1050);
-	    boardBg.setFitHeight(1050);
+	    boardBg.setFitWidth(1150);
+	    boardBg.setFitHeight(1150);
 	    
 	    // shift it 100px to the right
 	    boardBg.setTranslateX(-25);
@@ -465,63 +465,66 @@ public class JackarooView {
 	    playButton.setStyle(
 	        "-fx-font-size: 26px;" +
 	        "-fx-padding: 10px 25px;" +
-	        "-fx-background-color: #8b5e3c;" +  // sunset yellow
+	        "-fx-background-color: #8b5e3c;" +
 	        "-fx-text-fill: white;" +
 	        "-fx-font-family: 'Georgia';" +
 	        "-fx-font-weight: bold;" +
-	        "-fx-background-radius: 10;"
+	        "-fx-background-radius: 10;" +
+	        "-fx-border-color: white;" +             // Frame color
+	        "-fx-border-width: 3px;" +               // Frame thickness
+	        "-fx-border-radius: 10;"                 // Match background radius
 	    );
-	    
+
 	    playButton.setOnAction(e -> {
-	        //Call the method act in the GUI
+	        // Call the method act in the GUI
 	    });
-	   
+
 	    buttonPane = new Pane();
-	    
-	    buttonPane.setPickOnBounds(false); // prevents clicks on empty space
-	    
+	    buttonPane.setPickOnBounds(false);
 	    buttonPane.getChildren().add(playButton);
+
 	    playButton.setTranslateY(500);
 	    playButton.setTranslateX(100);
 	    playButton.setPrefSize(180, 80);
-	    
-		// Border effect
-		DropShadow borderGlow = new DropShadow();
-		borderGlow.setColor(Color.BROWN);
-		borderGlow.setWidth(20);
-		borderGlow.setHeight(20);
 
-		// Hover animation
-		ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), playButton);
-		scaleUp.setToX(1.1);
-		scaleUp.setToY(1.1);
+	    // Border glow effect
+	    DropShadow borderGlow = new DropShadow();
+	    borderGlow.setColor(Color.BROWN);
+	    borderGlow.setWidth(20);
+	    borderGlow.setHeight(20);
 
-		ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), playButton);
-		scaleDown.setToX(1.0);
-		scaleDown.setToY(1.0);
+	    // Hover animations
+	    ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), playButton);
+	    scaleUp.setToX(1.1);
+	    scaleUp.setToY(1.1);
 
-		// Delay before animation triggers
-		PauseTransition delay = new PauseTransition(Duration.millis(50));
-		
-		playButton.setOnMouseEntered((MouseEvent e) -> {
-		    if (playButton.getEffect() == null) { // only apply hover effect if no selection effect
-		        delay.setOnFinished(event -> {
-		            playButton.setEffect(borderGlow);
-		            scaleUp.playFromStart();
-		        });
-		        delay.playFromStart();
-		    }
-		});
+	    ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), playButton);
+	    scaleDown.setToX(1.0);
+	    scaleDown.setToY(1.0);
 
-		playButton.setOnMouseExited((MouseEvent e) -> {
-		    if (playButton.getEffect() == borderGlow) { // only remove if it's the hover effect
-		        delay.stop();
-		        playButton.setEffect(null);
-		        scaleDown.playFromStart();
-		    }
-		});
+	    PauseTransition delay = new PauseTransition(Duration.millis(50));
+
+	    playButton.setOnMouseEntered((MouseEvent e) -> {
+	        if (playButton.getEffect() == null) {
+	            delay.setOnFinished(event -> {
+	                playButton.setEffect(borderGlow);
+	                scaleUp.playFromStart();
+	            });
+	            delay.playFromStart();
+	        }
+	    });
+
+	    playButton.setOnMouseExited((MouseEvent e) -> {
+	        if (playButton.getEffect() == borderGlow) {
+	            delay.stop();
+	            playButton.setEffect(null);
+	            scaleDown.playFromStart();
+	        }
+	    });
+
 	    mainLayout.getChildren().add(buttonPane);
 	}
+
 	
 	public void removePlayButton() {
 		mainLayout.getChildren().remove(buttonPane);
