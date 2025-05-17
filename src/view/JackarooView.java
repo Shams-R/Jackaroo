@@ -1093,6 +1093,47 @@ public class JackarooView {
  	   }
  		   );
  	   }
+        
+        public void showCurrentPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
+            int currentIndex = game.getCurrentPlayerIndex();
+            PlayerView currentPlayerView = playerViews.get(currentIndex);
+
+            // Highlight the current player
+            Platform.runLater(() -> currentPlayerView.highlightCurrentPlayer(true));
+
+            // Start a background thread to wait for the turn to change
+            new Thread(() -> {
+                while (game.getCurrentPlayerIndex() == currentIndex) {
+                    try {
+                        Thread.sleep(100); // avoid busy waiting
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Remove highlight once turn changes
+                Platform.runLater(() -> currentPlayerView.highlightCurrentPlayer(false));
+            }).start();
+        }
+        public void showNextPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
+            int nextIndex = (game.getCurrentPlayerIndex() + 1) % playerViews.size();
+            PlayerView nextPlayerView = playerViews.get(nextIndex);
+
+            Platform.runLater(() -> nextPlayerView.highlightNextPlayer(true));
+
+            new Thread(() -> {
+                while ((game.getCurrentPlayerIndex() + 1) % playerViews.size() == nextIndex) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                Platform.runLater(() -> nextPlayerView.highlightNextPlayer(false)); 
+            }).start();
+        } 
+        
 }
 	
 	
