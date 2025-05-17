@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import model.Colour;
 import model.player.Marble;
 
 
@@ -33,5 +34,8 @@ public class MarbleView extends StackPane {
 
 	public ImageView getImageView() {
 		return imageView;
+	}
+	public Colour getColour(){
+		return marble.getColour();
 	}
 }
