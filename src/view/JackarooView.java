@@ -380,46 +380,57 @@ public class JackarooView {
     	
     	mainLayout.getChildren().add(root);
     }
-   public void showPlayers(ArrayList<Player> players){
-	   	AnchorPane root=new AnchorPane();    
-	   	for(int i=0;i<4;i++){
-	          
-	           	//topLeft
-	               if(i==0 ){
-	            	PlayerView playerView=new PlayerView(players.get(i),getPlayerGender());
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setTopAnchor(playerView, 0.0);
-	               	AnchorPane.setLeftAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                   }
-	               if(i== 1){ 
-	            	PlayerView playerView=new PlayerView(players.get(i),"");
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setTopAnchor(playerView, 0.0);
-	               	AnchorPane.setRightAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                  
-	               }
-	               if(i==2){
-	               PlayerView playerView=new PlayerView(players.get(i),"");
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setBottomAnchor(playerView, 0.0);
-	               	AnchorPane.setRightAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                   }
-	               if(i==3){
-	            	PlayerView playerView=new PlayerView(players.get(i),"");
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setBottomAnchor(playerView, 0.0);
-	               	AnchorPane.setLeftAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                  
-	           }
-	   }
-	   	root.setPickOnBounds(false);
-		root.setMouseTransparent(false);
-	   	mainLayout.getChildren().add(root);
-	   }
+   public void showPlayers(ArrayList<Player> players) {
+	    AnchorPane root = new AnchorPane();
+
+	    for (int i = 0; i < 4; i++) {
+	        Player player = players.get(i);
+
+	        // Create PlayerView
+	        PlayerView playerView = new PlayerView(player, i == 0 ? getPlayerGender() : "");
+	        playerView.setPrefSize(100, 100);
+
+	        // Create label for the name
+	        Label nameLabel = new Label(player.getName());
+	        nameLabel.setStyle("-fx-text-fill: #5C3317; " +  // darker wooden brown
+	                           "-fx-font-weight: bold; " +
+	                           "-fx-font-size: 17px; " +
+	                           "-fx-font-family: 'Georgia', 'Garamond', serif;");
+	        StackPane.setAlignment(nameLabel, Pos.TOP_LEFT);
+	        nameLabel.setPadding(new Insets(10, 0, 0, 15)); // top, right, bottom, left
+
+	        // Wrap in a StackPane
+	        StackPane wrapper = new StackPane();
+	        wrapper.setPrefSize(100, 100);
+	        wrapper.getChildren().addAll(playerView, nameLabel);
+
+	        // Anchor it to the root pane
+	        switch (i) {
+	            case 0:
+	                AnchorPane.setTopAnchor(wrapper, 0.0);
+	                AnchorPane.setLeftAnchor(wrapper, 0.0);
+	                break;
+	            case 1:
+	                AnchorPane.setTopAnchor(wrapper, 0.0);
+	                AnchorPane.setRightAnchor(wrapper, 0.0);
+	                break;
+	            case 2:
+	                AnchorPane.setBottomAnchor(wrapper, 0.0);
+	                AnchorPane.setRightAnchor(wrapper, 0.0);
+	                break;
+	            case 3:
+	                AnchorPane.setBottomAnchor(wrapper, 0.0);
+	                AnchorPane.setLeftAnchor(wrapper, 0.0);
+	                break;
+	        }
+
+	        root.getChildren().add(wrapper);
+	    }
+
+	    root.setPickOnBounds(false);
+	    root.setMouseTransparent(false);
+	    mainLayout.getChildren().add(root);
+	}
 
   
 
