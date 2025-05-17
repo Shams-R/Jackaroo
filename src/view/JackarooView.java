@@ -1059,40 +1059,97 @@ public class JackarooView {
  
 
        
-        public void animateMarbleMovement(CellView source, CellView target) {
-            
-            MarbleView marble = source.getWithOutRemove();
-           
-            Scene scene = mainLayout.getScene();
-
-
-            
-            double deltaX = (target.getX() - source.getX());
-            double deltaY = (target.getY() - source.getY());
-
-           
-            TranslateTransition transition = new TranslateTransition(Duration.millis(1000), marble);
-            transition.setByX(deltaX);
-            transition.setByY(deltaY);
-            transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+        public void move (MarbleView marble, int steps, boolean safeZoneAccess ){
+    		int i=0;
+    	if (steps >0 ){
+    		int pos = getPosition(marble,trackView.getMainTrack() ); 
+    		int entry = getEntry( marble.getColour() );
+    		 SafeZoneView safeZone = getSafeZoneView(marble) ;
+    		while (i < steps){
+    			
+    			if ( (pos == entry) && (safeZoneAccess) ){
+    				
+    				animateMarbleMovement(trackView.getMainTrack().get(pos) , safeZone.getCellView(0) );
+    				safeZone.getCellView(0).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+    				getSafeZoneView(marble); 
+    				break ;
+    		}
+    			
+    			
+    			animateMarbleMovement(trackView.getMainTrack().get( (pos) ), trackView.getMainTrack().get( (pos+1)%100 ) );
+    			trackView.getMainTrack().get((pos+1) %100 ).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+    			
+    			pos++ ;
+    			i++;
+    		}
+    			
+    		
+    		pos=0;
+    		while ( (i<steps) && (pos<4) ) {
+    			CellView safeCell_1 =safeZone.getCellView(pos) ;
+    			CellView safeCell_2 =safeZone.getCellView(pos+1) ;
+    			
+    			safeCell_1.setMarbleView( safeCell_1.getMarbleView() );
+    			pos++;
+    			i++;
+    			}
+    		
+    			}
+    	
+    		else {
+    			int absSteps= Math.abs(steps) ;
+    			int pos= getPosition(marble,trackView.getMainTrack() );
+    			while (i < absSteps){
+    				
+    				
+    			animateMarbleMovement(trackView.getMainTrack().get( pos ), trackView.getMainTrack().get( (pos+99)%100 ) );
+    			trackView.getMainTrack().get((pos+99)%100).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+    			pos = (pos+99)%100 ;
+    			i++;
+    			}
+    		
+    		}
+    	
+    	}
 
      
-            transition.play();
-        }
-        
-        public void fieldingView(ArrayList<HomeZoneView> homeZones ,Game game){
-        	animateMarbleMovement(homeZones.get(0).getCells().get(3), trackView.getMainTrack().get(0) );
-        	
-        	Platform.runLater(() -> {
- 			  
- 			   int i= game.getCurrentPlayerIndex();
- 			   HomeZoneView homeZone = homeZones.get(i);
- 			   MarbleView marble=homeZone.fieldMarble() ;
- 			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
- 		  
- 	   }
- 		   );
- 	   }
+
+           
+            public void animateMarbleMovement(CellView source, CellView target ) {
+                
+                MarbleView marble = source.getWithOutRemove();
+               
+                Scene scene = mainLayout.getScene();
+
+
+                
+                double deltaX = (target.getX() - source.getX());
+                double deltaY = (target.getY() - source.getY());
+
+               
+                TranslateTransition transition = new TranslateTransition(Duration.millis(1000), marble);
+                transition.setByX(deltaX);
+                transition.setByY(deltaY);
+                transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+
+         
+                transition.play();
+            }
+            
+            public void field(ArrayList<HomeZoneView> homeZones ){
+            	animateMarbleMovement(homeZones.get(0).getCells().get(3), trackView.getMainTrack().get(0) );
+            	
+            	Platform.runLater(() -> {
+            		
+     			   int i= game.getCurrentPlayerIndex();
+     			   HomeZoneView homeZone = homeZones.get(i);
+     			   MarbleView marble=homeZone.fieldMarble() ;
+     			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ; 
+     	   
+            	}
+            	
+     		   );
+     	   }
         
         public void showCurrentPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
             int currentIndex = game.getCurrentPlayerIndex();
