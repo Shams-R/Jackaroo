@@ -142,7 +142,7 @@ public class JackarooGUI extends Application{
 
     	scene.setOnKeyPressed(event -> {
     	    if (event.getCode() == KeyCode.ENTER) {
-    	    	fieldingMechanism(mainTrack,homeZones,owner, view , game);
+    	    	view.fieldingView(homeZones, game);
     	    }
     	    }
     	) ;
@@ -150,6 +150,7 @@ public class JackarooGUI extends Application{
     	owner.setScene(scene);
     
  }
+
 	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
 		   
 		   Platform.runLater(() -> {
