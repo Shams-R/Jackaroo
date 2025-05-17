@@ -1085,7 +1085,7 @@ public class JackarooView {
     			
     		
     		pos=0;
-    		while ( (i<steps) && (pos<4) ) {
+    		while ( (i<steps) && (pos<3) ) {
     			CellView safeCell_1 =safeZone.getCellView(pos) ;
     			CellView safeCell_2 =safeZone.getCellView(pos+1) ;
     			
