@@ -53,7 +53,11 @@ public class Game implements GameManager {
         
     }
     
-    public Board getBoard() {
+    public int getTurn() {
+		return turn;
+	}
+
+	public Board getBoard() {
         return board;
     }
 

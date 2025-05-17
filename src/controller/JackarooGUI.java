@@ -2,9 +2,13 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import model.card.Card;
 import model.card.Deck;
+import model.player.CPU;
+import model.player.Marble;
 import model.player.Player;
 import engine.Game;
 import exception.*;
@@ -23,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -263,6 +268,150 @@ public class JackarooGUI extends Application{
 			 JackarooView.showPopMessage(primaryStage, e);
 		 }
 	 }
+	 
+	public boolean playHuman() {
+		try {
+			game.playPlayerTurn();
+			
+			view.act(currentlySelectedCard, selectedMarbles);
+			
+			return true;
+		}
+		catch(GameException e) {
+			view.showPopMessage(primaryStage, e);
+			
+		    Label msg = new Label("Do you want to discard this card?");
+		    msg.setWrapText(true);
+		    msg.setMaxWidth(380);
+		    msg.setTextAlignment(TextAlignment.CENTER);
+		    msg.setAlignment(Pos.CENTER);
+		    msg.setTextFill(Color.web("#fdf6e3")); // soft ivory
+		    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+
+		    // Buttons
+		    Button yesButton = new Button("Yes");
+		    Button noButton = new Button("No");
+
+		    yesButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
+		    noButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
+
+		    HBox buttonBox = new HBox(10, yesButton, noButton);
+		    buttonBox.setAlignment(Pos.CENTER);
+
+		    // Content layout
+		    VBox content = new VBox(20, msg, buttonBox);
+		    content.setAlignment(Pos.CENTER);
+
+		    // Background
+		    Rectangle background = new Rectangle(400, 180);
+		    background.setArcWidth(40);
+		    background.setArcHeight(40);
+		    background.setFill(Color.web("#8b5e3c")); // rich brown
+		    background.setStroke(Color.web("#5c3b24")); // deep brown
+		    background.setStrokeWidth(3);
+
+		    StackPane root = new StackPane(background, content);
+		    root.setPadding(new Insets(20));
+
+		    // Popup stage
+		    Stage popup = new Stage();
+		    popup.initOwner(primaryStage);
+		    popup.initModality(Modality.WINDOW_MODAL);
+		    popup.setResizable(false);
+		    popup.setTitle("Discard Card");
+
+		    Scene scene = new Scene(root, 400, 180);
+		    popup.setScene(scene);
+
+		    // Optional icon
+		    Image icon = new Image("icon.png");
+		    popup.getIcons().add(icon);
+
+		    AtomicBoolean returnValue = new AtomicBoolean(false);
+
+		    yesButton.setOnMouseClicked(event -> {
+		        returnValue.set(true);
+		        popup.close();
+		    });
+
+		    noButton.setOnMouseClicked(event -> {
+		        returnValue.set(false);
+		        popup.close();
+		    });
+
+		    popup.showAndWait(); // Waits here until popup closes
+
+		    return returnValue.get();
+		}
+	}
+		
+	public void playCPU(PlayerView CPU) {
+		CPU cpu = (CPU) CPU.getPlayer();
+		
+		try {
+			game.playPlayerTurn(); //play the current player turn which is the CPU 
+		} 
+		catch (GameException e) {
+			view.showPopMessage(primaryStage, e);
+		}
+			
+		if(cpu.isPlayed()) {
+			ArrayList<Marble> selectedMarbles = cpu.getSelectedMarbles();
+			Card selectedCard = cpu.getSelectedCard();
+			
+			ArrayList<CellView> mainTrack = view.getTrackView().getMainTrack();
+			
+			ArrayList<MarbleView> selectedMarblesView = new ArrayList<>();
+			
+			for(CellView cellView : mainTrack) {
+				if(cellView.getMarbleView().getMarble()!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
+					selectedMarblesView.add(cellView.getMarbleView());
+			}
+			
+			ArrayList<CellView> homeZone = view.getHomeZoneView(CPU).getCells();
+			ArrayList<CellView> safeZone = view.getHomeZoneView(CPU).getCells();
+			
+			for(CellView cellView : homeZone) {
+				if(cellView.getMarbleView().getMarble()!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
+					selectedMarblesView.add(cellView.getMarbleView());
+			}
+			
+			for(CellView cellView : safeZone) {
+				if(cellView.getMarbleView().getMarble()!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
+					selectedMarblesView.add(cellView.getMarbleView());
+			}
+			
+			//to arrange the selectedMarblesViews
+			for(int i=0; i<selectedMarblesView.size(); i++) {
+				for(int j=0; j<selectedMarblesView.size(); j++) {
+					if(selectedMarbles.get(i)==selectedMarblesView.get(i).getMarble()) {
+						break;
+					}
+					
+					else {
+						selectedMarblesView.add(selectedMarblesView.remove(i));
+					}
+				}
+			}
+			
+			ArrayList<CardView> hand = view.getPlayerHandView(CPU).getHandCardsView();
+			CardView selectedCardView = null;
+			
+			for(CardView card : hand) {
+				if(card.getCard()==selectedCard) {
+					selectedCardView = card;
+					break;
+				}
+			}
+			
+			//finally, act on those marbles using this card
+			view.act(selectedCardView, selectedMarblesView);
+		}
+			
+	}
+	
+	
+	
 	 
 	public static void main(String[] args) {
 		launch(args);

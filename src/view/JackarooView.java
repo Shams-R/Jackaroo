@@ -73,6 +73,7 @@ public class JackarooView {
 	private Pane buttonPane;
 	private BorderPane splitDistancePane;
 	private Game game;
+	private ArrayList<PlayerView> playersView;
 	
 	
 	public String getPlayerName() {
@@ -382,12 +383,15 @@ public class JackarooView {
     }
    public void showPlayers(ArrayList<Player> players) {
 	    AnchorPane root = new AnchorPane();
-
+	    playersView = new ArrayList<>();
+	    
 	    for (int i = 0; i < 4; i++) {
 	        Player player = players.get(i);
 
 	        // Create PlayerView
 	        PlayerView playerView = new PlayerView(player, i == 0 ? getPlayerGender() : "");
+	        playersView.add(playerView);
+	        
 	        playerView.setPrefSize(100, 100);
 
 	        // Create label for the name
@@ -712,14 +716,6 @@ public class JackarooView {
 			else;
 				//save(selectedMarbles.get(0));
 		}
-	}
-	
-	public void playHuman() {
-		
-	}
-	
-	public void playCPU() {
-		
 	}
 	
 	public int getEntry(Colour colour){
@@ -1243,7 +1239,47 @@ public class JackarooView {
 
                 Platform.runLater(() -> nextPlayerView.highlightNextPlayer(false)); 
             }).start();
-        } 
+        }
+        
+        public HomeZoneView getHomeZoneView(PlayerView playerView) {
+        	int index = 0;
+        	
+        	for(int i=0; i<playersView.size(); i++) {
+        		if(playersView.get(i)==playerView) {
+        			index = i;
+        			break;
+        		}
+        	}
+        	
+        	return homeZonesView.get(index);
+        }
+        
+        public SafeZoneView getSafeZoneView(PlayerView playerView) {
+        	int index = 0;
+        	
+        	for(int i=0; i<playersView.size(); i++) {
+        		if(playersView.get(i)==playerView) {
+        			index = i;
+        			break;
+        		}
+        	}
+        	
+        	return safeZonesView.get(index);
+        }
+        
+       public PlayerHandView getPlayerHandView(PlayerView playerView) {
+    	   int index = 0;
+       	
+       		for(int i=0; i<playersView.size(); i++) {
+       			if(playersView.get(i)==playerView) {
+       				index = i;
+       				break;
+       			}
+       		}
+       		
+       		return playersHandsView.get(index);
+       }
+        
         
 }
 	
