@@ -33,6 +33,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,6 +46,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -812,6 +815,102 @@ public class JackarooView {
 	    QuadCurveTo curve = new QuadCurveTo(controlX, controlY, endX, endY);
 	    path.getElements().add(curve);
 	    return path;
+	}
+	public void destroy(MarbleView marbleView) {
+		Pane overlayPane = new Pane();
+		mainLayout.getChildren().add(overlayPane);
+	    int index = getPositionInTrackView(marbleView);
+	    ArrayList<CellView> mainTrack = trackView.getMainTrack();
+	    mainTrack.get(index).setMarbleView(null);
+
+	    Colour colour = marbleView.getMarble().getColour();
+	    HomeZoneView homeZoneView = getHomeZoneView(colour);
+
+	    int row = homeZoneView.getNumberOfMarbles() / 2;
+	    int col = homeZoneView.getNumberOfMarbles() % 2;
+
+	    // Get scene coordinates before moving
+	    Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
+
+	    // Remove from original parent
+	    Parent originalParent = marbleView.getParent();
+	    if (originalParent instanceof Pane) {
+	        ((Pane) originalParent).getChildren().remove(marbleView);
+	    } else if (originalParent instanceof GridPane) {
+	        ((GridPane) originalParent).getChildren().remove(marbleView);
+	    }
+
+	    // Add to overlay pane (assume you have a transparent Pane above everything)
+	     // <- You must implement this or pass it in
+	    overlayPane.getChildren().add(marbleView);
+
+	    // Set position on overlay
+	    marbleView.setLayoutX(startBounds.getMinX());
+	    marbleView.setLayoutY(startBounds.getMinY());
+
+	    // Get destination bounds
+	    homeZoneView.getGrid().add(new Region(), col, row); // Temp placeholder
+	    Node targetCell = getNodeByRowColumnIndex(row, col, homeZoneView.getGrid());
+	    Bounds endBounds = targetCell.localToScene(targetCell.getBoundsInLocal());
+
+	    // Create animation
+	    TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
+	    transition.setToX(endBounds.getMinX() - startBounds.getMinX());
+	    transition.setToY(endBounds.getMinY() - startBounds.getMinY());
+
+	    // Sound
+	    AudioClip boomSound = new AudioClip(getClass().getResource("/sounds/boom.wav").toExternalForm());
+	    boomSound.play();
+
+	    transition.setOnFinished(e -> {
+	    	overlayPane.getChildren().remove(marbleView);
+	    	mainLayout.getChildren().remove(overlayPane);
+	        marbleView.setTranslateX(0);
+	        marbleView.setTranslateY(0);
+	        marbleView.setLayoutX(0);
+	        marbleView.setLayoutY(0);
+	        homeZoneView.getGrid().add(marbleView, col, row);
+	    });
+
+	    transition.play();
+	}
+	public Node getNodeByRowColumnIndex(int row, int column, GridPane gridPane) {
+	    for (Node node : gridPane.getChildren()) {
+	        Integer r = GridPane.getRowIndex(node);
+	        Integer c = GridPane.getColumnIndex(node);
+	        if ((r == null ? 0 : r) == row && (c == null ? 0 : c) == column) {
+	            return node;
+	        }
+	    }
+	    return null;
+	}
+
+	public int getPositionInTrackView(MarbleView marbleView ){
+		ArrayList<CellView> mainTrack=trackView.getMainTrack();
+		for(int i=0; i<trackView.getMainTrack().size();i++){
+			
+			if(mainTrack.get(i).getMarbleView().equals(marbleView)){
+				return i;
+			}
+		}
+		return -1;
+	
+	}
+	
+	public HomeZoneView getHomeZoneView(Colour colour){
+		for(HomeZoneView homeZoneView: homeZonesView){
+			if(homeZoneView.getColour().equals(colour))
+				return homeZoneView;
+		}
+		return null;
+	}
+	
+	public void save (MarbleView marbleView){
+		
+	}
+	
+	public int updateSafeZone(){
+		
 	}
 	
 	
