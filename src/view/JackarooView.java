@@ -997,8 +997,6 @@ public class JackarooView {
            
             Scene scene = mainLayout.getScene();
 
-            Point2D sourceSceneCoords = source.localToScene(0, 0); // makes a vector from (0,0) on the scene to the cell  
-            Point2D targetSceneCoords = target.localToScene(0, 0);
 
             
             double deltaX = (target.getX() - source.getX());
