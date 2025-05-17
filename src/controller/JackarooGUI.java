@@ -40,10 +40,15 @@ public class JackarooGUI extends Application{
 	private static Game game; //Is this okay?
 	private static Stage primaryStage; //Is this okay?
 	private static CardView currentlySelectedCard;
-	private static ArrayList<MarbleView> selectedMarbles;
+	private static ArrayList<MarbleView> selectedMarbles=new ArrayList<>();
 	
 //	private static boolean 
-	
+	public static CardView getCurrentlySelectedCard(){
+		return currentlySelectedCard;
+	}
+	public static ArrayList<MarbleView> getSelectedMarbles(){
+		return selectedMarbles;
+	}
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		
@@ -52,7 +57,7 @@ public class JackarooGUI extends Application{
 		primaryStage.getIcons().add(icon);
 		
 		
-		view = new JackarooView();
+		view = new JackarooView(game);
 		
 		TextField nameField = new TextField();
 		AtomicReference<String> selectedGender = new AtomicReference<>(); 
@@ -137,7 +142,7 @@ public class JackarooGUI extends Application{
 
     	scene.setOnKeyPressed(event -> {
     	    if (event.getCode() == KeyCode.ENTER) {
-    	    	fieldingMechanism(mainTrack,homeZones,owner, view , game);
+    	    	view.fieldingView(homeZones, game);
     	    }
     	    }
     	) ;
@@ -145,6 +150,7 @@ public class JackarooGUI extends Application{
     	owner.setScene(scene);
     
  }
+
 	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
 		   
 		   Platform.runLater(() -> {
@@ -218,7 +224,7 @@ public class JackarooGUI extends Application{
 	 
 	 public static void selectMarble(MarbleView marble) {
 		 try {
-			 if(selectedMarbles==null) selectedMarbles = new ArrayList<>();
+			 //if(selectedMarbles==null) selectedMarbles = new ArrayList<>();
 			 
 			 if(selectedMarbles.contains(marble)) {
 				 selectedMarbles.remove(marble); //how to remove it from the model??

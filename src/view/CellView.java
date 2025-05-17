@@ -90,6 +90,9 @@ public class CellView extends StackPane{
 	    
 	    requestLayout();  // Force UI update
 	}
+	public MarbleView getWithOutRemove(){
+		return marbleView;
+	}
 
 	public boolean isFull(){
 		return marbleView!=null;

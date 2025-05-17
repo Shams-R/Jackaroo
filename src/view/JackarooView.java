@@ -10,18 +10,31 @@ import engine.board.SafeZone;
 import exception.CannotFieldException;
 import exception.IllegalDestroyException;
 import exception.SplitOutOfRangeException;
+import model.Colour;
 import model.card.Card;
 import model.card.standard.Ace;
+import model.card.standard.Five;
+import model.card.standard.Four;
+import model.card.standard.Jack;
+import model.card.standard.King;
+import model.card.standard.Queen;
+import model.card.standard.Seven;
+import model.card.standard.Standard;
+import model.card.standard.Ten;
 import model.card.wild.Burner;
 import model.player.Marble;
 import model.player.Player;
+import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,9 +46,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.QuadCurveTo;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -55,6 +72,8 @@ public class JackarooView {
 	private FirePitView firePit;
 	private Pane buttonPane;
 	private BorderPane splitDistancePane;
+	private Game game;
+	
 	
 	public String getPlayerName() {
 		return playerName;
@@ -75,6 +94,10 @@ public class JackarooView {
 	public StackPane getMainLayout() {
 		return mainLayout;
 	}
+	public JackarooView(Game game){
+		this.game=game;
+	}
+	
 
 	public Button onGameStart(Stage stage, TextField nameField, AtomicReference<String> selectedGender) {
 	    // Main container
@@ -357,46 +380,57 @@ public class JackarooView {
     	
     	mainLayout.getChildren().add(root);
     }
-   public void showPlayers(ArrayList<Player> players){
-	   	AnchorPane root=new AnchorPane();    
-	   	for(int i=0;i<4;i++){
-	          
-	           	//topLeft
-	               if(i==0 ){
-	            	PlayerView playerView=new PlayerView(players.get(i),getPlayerGender());
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setTopAnchor(playerView, 0.0);
-	               	AnchorPane.setLeftAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                   }
-	               if(i== 1){ 
-	            	PlayerView playerView=new PlayerView(players.get(i),"");
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setTopAnchor(playerView, 0.0);
-	               	AnchorPane.setRightAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                  
-	               }
-	               if(i==2){
-	               PlayerView playerView=new PlayerView(players.get(i),"");
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setBottomAnchor(playerView, 0.0);
-	               	AnchorPane.setRightAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                   }
-	               if(i==3){
-	            	PlayerView playerView=new PlayerView(players.get(i),"");
-	               	playerView.setPrefSize(100, 100);
-	               	AnchorPane.setBottomAnchor(playerView, 0.0);
-	               	AnchorPane.setLeftAnchor(playerView, 0.0);
-	               	root.getChildren().add(playerView);
-	                  
-	           }
-	   }
-	   	root.setPickOnBounds(false);
-		root.setMouseTransparent(false);
-	   	mainLayout.getChildren().add(root);
-	   }
+   public void showPlayers(ArrayList<Player> players) {
+	    AnchorPane root = new AnchorPane();
+
+	    for (int i = 0; i < 4; i++) {
+	        Player player = players.get(i);
+
+	        // Create PlayerView
+	        PlayerView playerView = new PlayerView(player, i == 0 ? getPlayerGender() : "");
+	        playerView.setPrefSize(100, 100);
+
+	        // Create label for the name
+	        Label nameLabel = new Label(player.getName());
+	        nameLabel.setStyle("-fx-text-fill: #5C3317; " +  // darker wooden brown
+	                           "-fx-font-weight: bold; " +
+	                           "-fx-font-size: 17px; " +
+	                           "-fx-font-family: 'Georgia', 'Garamond', serif;");
+	        StackPane.setAlignment(nameLabel, Pos.TOP_LEFT);
+	        nameLabel.setPadding(new Insets(10, 0, 0, 15)); // top, right, bottom, left
+
+	        // Wrap in a StackPane
+	        StackPane wrapper = new StackPane();
+	        wrapper.setPrefSize(100, 100);
+	        wrapper.getChildren().addAll(playerView, nameLabel);
+
+	        // Anchor it to the root pane
+	        switch (i) {
+	            case 0:
+	                AnchorPane.setTopAnchor(wrapper, 0.0);
+	                AnchorPane.setLeftAnchor(wrapper, 0.0);
+	                break;
+	            case 1:
+	                AnchorPane.setTopAnchor(wrapper, 0.0);
+	                AnchorPane.setRightAnchor(wrapper, 0.0);
+	                break;
+	            case 2:
+	                AnchorPane.setBottomAnchor(wrapper, 0.0);
+	                AnchorPane.setRightAnchor(wrapper, 0.0);
+	                break;
+	            case 3:
+	                AnchorPane.setBottomAnchor(wrapper, 0.0);
+	                AnchorPane.setLeftAnchor(wrapper, 0.0);
+	                break;
+	        }
+
+	        root.getChildren().add(wrapper);
+	    }
+
+	    root.setPickOnBounds(false);
+	    root.setMouseTransparent(false);
+	    mainLayout.getChildren().add(root);
+	}
 
   
 
@@ -476,7 +510,9 @@ public class JackarooView {
 	    );
 
 	    playButton.setOnAction(e -> {
-	        // Call the method act in the GUI
+	    	CardView card=JackarooGUI.getCurrentlySelectedCard();
+	    	ArrayList<MarbleView>marbles=JackarooGUI.getSelectedMarbles();
+	    	act(card,marbles);
 	    });
 
 	    buttonPane = new Pane();
@@ -599,5 +635,468 @@ public class JackarooView {
 	        }
 	    });
 	}
+	public void act(CardView cardView ,ArrayList<MarbleView> selectedMarbles){
+		Card card=cardView.getCard();
+		if(card instanceof Standard ){
+			Standard card2=(Standard)card;
+			if(selectedMarbles.size()==1 && ! (card instanceof Four) && ! (card instanceof Five)){
+				
+				//move(selectedMarbles.get(0),card2.getRank(),true);
+			}
+			else{
+				if(card instanceof Ace || card instanceof King)
+					//field();
+				if(card instanceof Seven){
+				   // move(selectedMarbles.get(0),jackarooGUI.getSplitDistance(),true);
+					//move(selectedMarbles.get(1),7-jackarooGUI.getSplitDistance(),true);
+					
+				}
+				if(card instanceof Four)
+				  //  move(selectedMarbles.get(0),-(card2.getRank()));
+				if(card instanceof Five){
+					MarbleView marble=selectedMarbles.get(0);
+					int i=game.getCurrentPlayerIndex();
+					ArrayList<Player> players=game.getPlayers();
+					Player player=players.get(i); 
+					boolean f= (marble.getColour()==player.getColour());
+					//move(marble,5,f);
+				}
+				
+				if(card instanceof Jack)
+				swap(selectedMarbles.get(0),selectedMarbles.get(1));
+				if(card instanceof Ten)
+				{
+					int i=game.getCurrentPlayerIndex();
+					i=(i+1)%4;
+					updateHand(i);
+					
+				}
+					
+				if(card instanceof Queen){
+					int j=game.getCurrentPlayerIndex();
+					for(int i=0;i<4;i++)
+						if(j!=i){
+							updateHand(i);
+						}
+					
+				}
+					
+				
+			}
+		}
+		else{
+			if(card instanceof Burner);
+				//burn(selectedMarbles.get(0));
+			else;
+				//save(selectedMarbles.get(0));
+		}
+	}
+	public int getEntry(Colour colour){
+		int i=0;
+		ArrayList<Player> players=game.getPlayers();
+		for(int j=0;j<4;j++)
+			if(players.get(j).getColour()==colour){
+				i=j;
+				break;
+			}
+		return (i*25+99)%100;
+			
+		
+	}
+	public void updateHand(int i){
+		Player player=game.getPlayers().get(i);
+		PlayerHandView handView=playersHandsView.get(i);
+		ArrayList<Card> hand=player.getHand();
+		for(int j=0;j<handView.size();j++){
+			boolean f=false;
+			for(int r=0;r<hand.size();r++)
+				if(hand.get(r)==handView.get(j).getCard()){
+					f=true;
+					break;
+				}
+			if(!f){
+				CardView cardView=handView.get(j);
+				// Step 1: Get current position of cardView in scene
+			    Bounds cardBoundsInScene = cardView.localToScene(cardView.getBoundsInLocal());
+
+			    // Step 2: Convert to mainLayout coordinates
+			    Bounds cardBoundsInLayout = mainLayout.sceneToLocal(cardBoundsInScene);
+
+			    // Step 3: Remove from handView and add to mainLayout
+			    handView.remove(cardView);
+			    mainLayout.getChildren().add(cardView);
+
+			    // Step 4: Set its position in mainLayout based on where it was
+			    cardView.relocate(cardBoundsInLayout.getMinX(), cardBoundsInLayout.getMinY());
+
+			    // Step 5: Get firePit position in mainLayout
+			    Bounds firePitBounds = firePit.localToScene(firePit.getBoundsInLocal());
+			    Bounds firePitInLayout = mainLayout.sceneToLocal(firePitBounds);
+
+			    double targetX = firePitInLayout.getMinX();
+			    double targetY = firePitInLayout.getMinY();
+
+			    // Step 6: Animate movement from current position to firePit
+			    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), cardView);
+			    tt.setToX(targetX - cardBoundsInLayout.getMinX());
+			    tt.setToY(targetY - cardBoundsInLayout.getMinY());
+
+			    // Step 7: Cleanup after animation
+			    tt.setOnFinished(event -> {
+			        cardView.setTranslateX(0);
+			        cardView.setTranslateY(0);
+			        cardView.relocate(targetX, targetY);
+			        firePit.add(cardView); // Now officially place it in the firepit
+			        mainLayout.getChildren().remove(cardView);
+			    });
+
+			    tt.play();
+			    break;
+			}
+		}
+		
+		
+	}
+	public int getPosition(MarbleView marble,ArrayList<CellView>path){
+		for(int i=0;i<path.size();i++)
+			if(marble==path.get(i).getWithOutRemove())
+				return i;
+		return -1;
+		
+	}
 	
+    public void swap(MarbleView marble1, MarbleView marble2){
+    	ArrayList<CellView>path=trackView.getMainTrack();
+		int pos1=getPosition(marble1,path);
+		int pos2=getPosition(marble2,path);
+		ArrayList<CellView>track=trackView.getMainTrack();
+		CellView cell1=track.get(pos1);
+		CellView cell2=track.get(pos2);
+		
+		swapWithArcAnimation(marble1,marble2,cell1,cell2);
+		
+	}
+	public void swapWithArcAnimation(MarbleView marble1, MarbleView marble2,CellView cell1,CellView cell2) {
+	   
+
+	    double x1 = cell1.getX();
+	    double y1 = cell1.getY();
+	    double x2 = cell2.getX();
+	    double y2 = cell2.getY();
+
+	    // Detach from original cells and add to overlay pane
+	    cell1.getMarbleView();
+	    cell2.getMarbleView();
+	    mainLayout.getChildren().addAll(marble1, marble2);
+
+	    marble1.setLayoutX(x1);
+	    marble1.setLayoutY(y1);
+	    marble2.setLayoutX(x2);
+	    marble2.setLayoutY(y2);
+
+	    // Create arc paths
+	    Path path1 = createArcPath(x1, y1, x2, y2);
+	    Path path2 = createArcPath(x2, y2, x1, y1);
+
+	    PathTransition transition1 = new PathTransition(Duration.millis(700), path1, marble1);
+	    PathTransition transition2 = new PathTransition(Duration.millis(700), path2, marble2);
+
+	    transition1.setOrientation(PathTransition.OrientationType.NONE);
+	    transition2.setOrientation(PathTransition.OrientationType.NONE);
+
+	    transition1.setOnFinished(e -> {
+	        mainLayout.getChildren().remove(marble1);
+	        cell2.setMarbleView(marble1);
+	    });
+
+	    transition2.setOnFinished(e -> {
+	        mainLayout.getChildren().remove(marble2);
+	        cell1.setMarbleView(marble2);
+	    });
+
+	    transition1.play();
+	    transition2.play();
+	}
+
+	private Path createArcPath(double startX, double startY, double endX, double endY) {
+	    Path path = new Path();
+	    path.getElements().add(new MoveTo(startX, startY));
+
+	    double controlX = (startX + endX) / 2;
+	    double controlY = Math.min(startY, endY) - 50; // control point above to create an arc
+
+	    QuadCurveTo curve = new QuadCurveTo(controlX, controlY, endX, endY);
+	    path.getElements().add(curve);
+	    return path;
+	}
+	public void destroy(MarbleView marbleView) {
+		Pane overlayPane = new Pane();
+		mainLayout.getChildren().add(overlayPane);
+	    int index = getPositionInTrackView(marbleView);
+	    ArrayList<CellView> mainTrack = trackView.getMainTrack();
+	    mainTrack.get(index).setMarbleView(null);
+
+	    Colour colour = marbleView.getMarble().getColour();
+	    HomeZoneView homeZoneView = getHomeZoneView(colour);
+
+	    int row = homeZoneView.getNumberOfMarbles() / 2;
+	    int col = homeZoneView.getNumberOfMarbles() % 2;
+
+	    // Get scene coordinates before moving
+	    Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
+
+	    // Remove from original parent
+	    Parent originalParent = marbleView.getParent();
+	    if (originalParent instanceof Pane) {
+	        ((Pane) originalParent).getChildren().remove(marbleView);
+	    } else if (originalParent instanceof GridPane) {
+	        ((GridPane) originalParent).getChildren().remove(marbleView);
+	    }
+
+	    // Add to overlay pane (assume you have a transparent Pane above everything)
+	     // <- You must implement this or pass it in
+	    overlayPane.getChildren().add(marbleView);
+
+	    // Set position on overlay
+	    marbleView.setLayoutX(startBounds.getMinX());
+	    marbleView.setLayoutY(startBounds.getMinY());
+
+	    // Get destination bounds
+	    homeZoneView.getGrid().add(new Region(), col, row); // Temp placeholder
+	    Node targetCell = getNodeByRowColumnIndex(row, col, homeZoneView.getGrid());
+	    Bounds endBounds = targetCell.localToScene(targetCell.getBoundsInLocal());
+
+	    // Create animation
+	    TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
+	    transition.setToX(endBounds.getMinX() - startBounds.getMinX());
+	    transition.setToY(endBounds.getMinY() - startBounds.getMinY());
+
+	    // Sound
+	    AudioClip boomSound = new AudioClip(getClass().getResource("/sounds/boom.wav").toExternalForm());
+	    boomSound.play();
+
+	    transition.setOnFinished(e -> {
+	    	overlayPane.getChildren().remove(marbleView);
+	    	mainLayout.getChildren().remove(overlayPane);
+	        marbleView.setTranslateX(0);
+	        marbleView.setTranslateY(0);
+	        marbleView.setLayoutX(0);
+	        marbleView.setLayoutY(0);
+	        homeZoneView.getGrid().add(marbleView, col, row);
+	    });
+
+	    transition.play();
+	}
+	public Node getNodeByRowColumnIndex(int row, int column, GridPane gridPane) {
+	    for (Node node : gridPane.getChildren()) {
+	        Integer r = GridPane.getRowIndex(node);
+	        Integer c = GridPane.getColumnIndex(node);
+	        if ((r == null ? 0 : r) == row && (c == null ? 0 : c) == column) {
+	            return node;
+	        }
+	    }
+	    return null;
+	}
+
+	public int getPositionInTrackView(MarbleView marbleView ){
+		ArrayList<CellView> mainTrack=trackView.getMainTrack();
+		for(int i=0; i<trackView.getMainTrack().size();i++){
+			
+			if(mainTrack.get(i).getMarbleView().equals(marbleView)){
+				return i;
+			}
+		}
+		return -1;
+	
+	}
+	
+	public HomeZoneView getHomeZoneView(Colour colour){
+		for(HomeZoneView homeZoneView: homeZonesView){
+			if(homeZoneView.getColour().equals(colour))
+				return homeZoneView;
+		}
+		return null;
+	}
+	
+	public void save(MarbleView marbleView, Game game) {
+	    ArrayList<CellView> safeZoneView = getSafeZoneView(marbleView).getSafeZoneView();
+	    ArrayList<Cell> safeZone = getSafeZone(marbleView, game).getCells();
+
+	    for (int i = 0; i < 4; i++) {
+	        if (safeZone.get(i).getMarble() == marbleView.getMarble()) {
+	        	int index=i;
+	            // Get the scene position of marbleView and target safeZoneView
+	            Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
+	            Bounds endBounds = safeZoneView.get(i).localToScene(safeZoneView.get(i).getBoundsInLocal());
+
+	            double xStart = startBounds.getMinX();
+	            double yStart = startBounds.getMinY();
+	            double xEnd = endBounds.getMinX();
+	            double yEnd = endBounds.getMinY();
+
+	            Parent originalParent = marbleView.getParent();
+
+	            TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
+	            transition.setToX(xEnd - xStart);
+	            transition.setToY(yEnd - yStart);
+
+	            transition.setOnFinished(e -> {
+	                // Clean up the old location
+	                if (originalParent instanceof Pane) {
+	                    ((Pane) originalParent).getChildren().remove(marbleView);
+	                }
+
+	                
+	                marbleView.setTranslateX(0);
+	                marbleView.setTranslateY(0);
+
+	                // Let the target cell add it in the correct place
+	                safeZoneView.get(index).setMarbleView(marbleView);
+	            });
+
+	            transition.play();
+	            break; 
+	        }
+	    }
+	}
+	
+	public SafeZoneView getSafeZoneView(MarbleView marbleView){
+		for (SafeZoneView safeZoneView: safeZonesView){
+			if(safeZoneView.getColour().equals(marbleView.getColour().toString())){
+				return safeZoneView;
+			}
+		}
+		return null; 
+	}
+	public SafeZone getSafeZone(MarbleView marbleView,Game game){
+		for (SafeZone safeZone:game.getBoard().getSafeZones()){
+			if(safeZone.getColour().equals(marbleView.getColour())){
+				return safeZone;
+			}
+		}
+		return null;
+	}
+	
+	public void updateSafeZone(){
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	public void move (MarbleView marble, int steps){
+		int i=0;
+	if (steps >0 ){
+		 while (i < steps){
+			int pos = getPosition(marble,trackView.getMainTrack() );
+			
+			if ( isMarbleAtSafezoneEntry(marble,trackView.getMainTrack() , game.getPlayers() ) )
+				break ;
+			
+			animateMarbleMovement(trackView.getMainTrack().get(pos+1), trackView.getMainTrack().get(pos) );
+			trackView.getMainTrack().get(pos+1).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+			
+			i++;
+		}
+			}
+		else {
+			int absSteps= Math.abs(steps) ;
+			while (i < absSteps){
+				int pos= getPosition(marble,trackView.getMainTrack() );
+				if ( isMarbleAtSafezoneEntry(marble,trackView.getMainTrack() , game.getPlayers() ) )
+					break ;
+				animateMarbleMovement(trackView.getMainTrack().get((pos==0)? 99: pos-1 ), trackView.getMainTrack().get(pos) );
+				trackView.getMainTrack().get( (pos==0)? 99: pos-1 ).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+				i++;
+			}
+		}
+	
+	}
+	
+	
+
+	public int getPlayerSafezoneIndex(ArrayList<Player> players, MarbleView marble) {
+	    
+	    Colour marbleColour = marble.getMarble().getColour();
+
+	    
+	    boolean playerFound = false;
+	    int i=0;
+	    while (i < players.size()) {
+	        if (players.get(i).getColour().equals(marbleColour) ) {
+	            playerFound = true;
+	            break;
+	        }
+	        i++;
+	    }
+	    if (!playerFound) {
+	        return -1;
+	    }
+	    
+	    return (i==0)? i*25+98 : i*25+98-100 ;
+	}
+	
+	
+
+
+    public boolean isMarbleAtSafezoneEntry(MarbleView marble, ArrayList<CellView> path, ArrayList<Player> players) {
+        int currentPosition = getPosition(marble, path);
+        if (currentPosition == -1) {
+            return false; 
+        }
+        
+        int safezoneIndex = getPlayerSafezoneIndex(players, marble);
+        if (safezoneIndex == -1) {
+            return false; 
+        }
+        
+        return currentPosition == safezoneIndex;
+    }
+
+ 
+
+       
+        public void animateMarbleMovement(CellView source, CellView target) {
+            
+            MarbleView marble = source.getWithOutRemove();
+           
+            Scene scene = mainLayout.getScene();
+
+
+            
+            double deltaX = (target.getX() - source.getX());
+            double deltaY = (target.getY() - source.getY());
+
+           
+            TranslateTransition transition = new TranslateTransition(Duration.millis(1000), marble);
+            transition.setByX(deltaX);
+            transition.setByY(deltaY);
+            transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+
+     
+            transition.play();
+        }
+        
+        public void fieldingView(ArrayList<HomeZoneView> homeZones ,Game game){
+        	animateMarbleMovement(homeZones.get(0).getCells().get(3), trackView.getMainTrack().get(0) );
+        	
+        	Platform.runLater(() -> {
+ 			  
+ 			   int i= game.getCurrentPlayerIndex();
+ 			   HomeZoneView homeZone = homeZones.get(i);
+ 			   MarbleView marble=homeZone.fieldMarble() ;
+ 			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
+ 		  
+ 	   }
+ 		   );
+ 	   }
 }
+	
+	
+	
+	
+	
+	
