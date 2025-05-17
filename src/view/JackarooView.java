@@ -929,7 +929,7 @@ public class JackarooView {
 
 	    transition.play();
 	}
-<<<<<<< HEAD
+
 	public Node getNodeByRowColumnIndex(int row, int column, GridPane gridPane) {
 	    for (Node node : gridPane.getChildren()) {
 	        Integer r = GridPane.getRowIndex(node);
@@ -940,10 +940,7 @@ public class JackarooView {
 	    }
 	    return null;*/
 	}
-=======
 
-
->>>>>>> fa448000e985b4d50e2d2e8efc837c41d4a84c9c
 
 	public int getPositionInTrackView(MarbleView marbleView ){
 		ArrayList<CellView> mainTrack=trackView.getMainTrack();
