@@ -5,9 +5,11 @@ package view;
 
 import controller.JackarooGUI;
 import javafx.geometry.Insets;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import model.player.Player;
 public class PlayerView extends StackPane{
@@ -66,7 +68,29 @@ public class PlayerView extends StackPane{
 	    this.getChildren().add(imageWithBorder);
 	    this.setPrefSize(300, 300);
 	}
+	
+	public void highlightCurrentPlayer(boolean on) {
+	    if (on) {
+	        DropShadow blueGlow = new DropShadow();
+	        blueGlow.setRadius(30);
+	        blueGlow.setSpread(0.4);
+	        blueGlow.setColor(Color.DEEPSKYBLUE); // or Color.BLUE for a stronger effect
+	        this.setEffect(blueGlow);
+	    } else {
+	        this.setEffect(null); // remove the glow
+	    }
+	}
 
-
+	public void highlightNextPlayer(boolean on) {
+	    if (on) {
+	        DropShadow greenGlow = new DropShadow();
+	        greenGlow.setRadius(30);
+	        greenGlow.setSpread(0.4);
+	        greenGlow.setColor(Color.LIMEGREEN);
+	        this.setEffect(greenGlow);
+	    } else {
+	        this.setEffect(null); // remove the glow
+	    }
+	}
 	
 }

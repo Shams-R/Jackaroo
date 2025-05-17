@@ -142,14 +142,17 @@ public class JackarooGUI extends Application{
 
     	scene.setOnKeyPressed(event -> {
     	    if (event.getCode() == KeyCode.ENTER) {
-    	    	view.fieldingView(homeZones, game);
+    	    	
+    		view.field();
     	    }
     	    }
-    	) ;
+	);
+}
+
+    	    
+	
     	
-    	owner.setScene(scene);
-    
- }
+
 
 	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
 		   

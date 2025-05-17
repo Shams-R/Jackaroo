@@ -662,25 +662,26 @@ public class JackarooView {
 			Standard card2=(Standard)card;
 			if(selectedMarbles.size()==1 && ! (card instanceof Four) && ! (card instanceof Five)){
 				
-				//move(selectedMarbles.get(0),card2.getRank(),true);
+				move(selectedMarbles.get(0),card2.getRank(),true);
 			}
 			else{
-				if(card instanceof Ace || card instanceof King)
-					//field();
+				if(card instanceof Ace || card instanceof King){
+					field();
+				}
 				if(card instanceof Seven){
-				   // move(selectedMarbles.get(0),jackarooGUI.getSplitDistance(),true);
-					//move(selectedMarbles.get(1),7-jackarooGUI.getSplitDistance(),true);
+				    move(selectedMarbles.get(0),this.game.getBoard().getSplitDistance(),true);
+					move(selectedMarbles.get(1),7-this.game.getBoard().getSplitDistance(),true);
 					
 				}
 				if(card instanceof Four)
-				  //  move(selectedMarbles.get(0),-(card2.getRank()));
+				   move(selectedMarbles.get(0),-(card2.getRank()));
 				if(card instanceof Five){
 					MarbleView marble=selectedMarbles.get(0);
 					int i=game.getCurrentPlayerIndex();
 					ArrayList<Player> players=game.getPlayers();
 					Player player=players.get(i); 
 					boolean f= (marble.getColour()==player.getColour());
-					//move(marble,5,f);
+					move(marble,5,f);
 				}
 				
 				if(card instanceof Jack)
@@ -1080,40 +1081,170 @@ public class JackarooView {
  
 
        
-        public void animateMarbleMovement(CellView source, CellView target) {
-            
-            MarbleView marble = source.getWithOutRemove();
-           
-            Scene scene = mainLayout.getScene();
-
-
-            
-            double deltaX = (target.getX() - source.getX());
-            double deltaY = (target.getY() - source.getY());
-
-           
-            TranslateTransition transition = new TranslateTransition(Duration.millis(1000), marble);
-            transition.setByX(deltaX);
-            transition.setByY(deltaY);
-            transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+        public void move (MarbleView marble, int steps, boolean safeZoneAccess ){
+    		int i=0;
+    	if (steps >0 ){
+    		int pos = getPosition(marble,trackView.getMainTrack() ); 
+    		int entry = getEntry( marble.getColour() );
+    		 SafeZoneView safeZone = getSafeZoneView(marble) ;
+    		while (i < steps){
+    			
+    			if ( (pos == entry) && (safeZoneAccess) ){
+    				
+    				animateMarbleMovement(trackView.getMainTrack().get(pos) , safeZone.getCellView(0) );
+    				safeZone.getCellView(0).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+    				getSafeZoneView(marble); 
+    				break ;
+    		}
+    			
+    			
+    			animateMarbleMovement(trackView.getMainTrack().get( (pos) ), trackView.getMainTrack().get( (pos+1)%100 ) );
+    			trackView.getMainTrack().get((pos+1) %100 ).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+    			
+    			pos++ ;
+    			i++;
+    		}
+    			
+    		
+    		pos=0;
+    		while ( (i<steps) && (pos<3) ) {
+    			CellView safeCell_1 =safeZone.getCellView(pos) ;
+    			CellView safeCell_2 =safeZone.getCellView(pos+1) ;
+    			
+    			safeCell_1.setMarbleView( safeCell_1.getMarbleView() );
+    			pos++;
+    			i++;
+    			}
+    		
+    			}
+    	
+    		else {
+    			int absSteps= Math.abs(steps) ;
+    			int pos= getPosition(marble,trackView.getMainTrack() );
+    			while (i < absSteps){
+    				
+    				
+    			animateMarbleMovement(trackView.getMainTrack().get( pos ), trackView.getMainTrack().get( (pos+99)%100 ) );
+    			trackView.getMainTrack().get((pos+99)%100).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
+    			pos = (pos+99)%100 ;
+    			i++;
+    			}
+    		
+    		}
+    	
+    	}
 
      
-            transition.play();
-        }
+
+           
+            public void animateMarbleMovement(CellView source, CellView target ) {
+                
+                MarbleView marble = source.getWithOutRemove();
+               
+                Scene scene = mainLayout.getScene();
+
+
+                
+                double deltaX = (target.getX() - source.getX());
+                double deltaY = (target.getY() - source.getY());
+
+               
+                TranslateTransition transition = new TranslateTransition(Duration.millis(1000), marble);
+                transition.setByX(deltaX);
+                transition.setByY(deltaY);
+                transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+
+         
+                transition.play();
+            }
+            
+            public void field( ){
+            	int i=0 ;//game.getCurrentPlayerIndex();
+            	HomeZoneView homeZone=homeZonesView.get(i);
+            	CellView cell =homeZone.getCellView();
+            	
+            	
+            	animateField(cell, trackView.getMainTrack().get(i*25) );
+            	
+            	
+            	
+     		   
+     	   }
+            public void animateField( CellView sourceCell, CellView targetCell) {
+            	MarbleView marble=sourceCell.getWithOutRemove();
+                // 1. Get the marble’s current position in scene coordinates
+                Bounds startBounds = marble.localToScene(marble.getBoundsInLocal());
+                Bounds mainBounds = mainLayout.localToScene(mainLayout.getBoundsInLocal());
+
+                double startX = startBounds.getMinX() - mainBounds.getMinX();
+                double startY = startBounds.getMinY() - mainBounds.getMinY();
+
+                // 2. Get target position in scene coordinates
+                Bounds targetBounds = targetCell.localToScene(targetCell.getBoundsInLocal());
+                double endX = targetBounds.getMinX() - mainBounds.getMinX();
+                double endY = targetBounds.getMinY() - mainBounds.getMinY();
+
+                // 3. Remove marble from source cell (but not from scene)
+                sourceCell.getMarbleView();
+
+                // 4. Temporarily add marble to the main layout overlay
+                mainLayout.getChildren().add(marble);
+                marble.setTranslateX(startX);
+                marble.setTranslateY(startY);
+
+                // 5. Animate movement
+                TranslateTransition transition = new TranslateTransition(Duration.millis(500), marble);
+                transition.setToX(endX);
+                transition.setToY(endY);
+                transition.setOnFinished(e -> {
+                    // 6. After animation, remove from mainLayout and add to target cell
+                    mainLayout.getChildren().remove(marble);
+                    targetCell.setMarbleView(marble);
+                });
+
+                transition.play();
+            }
         
-        public void fieldingView(ArrayList<HomeZoneView> homeZones ,Game game){
-        	animateMarbleMovement(homeZones.get(0).getCells().get(3), trackView.getMainTrack().get(0) );
-        	
-        	Platform.runLater(() -> {
- 			  
- 			   int i= game.getCurrentPlayerIndex();
- 			   HomeZoneView homeZone = homeZones.get(i);
- 			   MarbleView marble=homeZone.fieldMarble() ;
- 			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
- 		  
- 	   }
- 		   );
- 	   }
+        public void showCurrentPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
+            int currentIndex = game.getCurrentPlayerIndex();
+            PlayerView currentPlayerView = playerViews.get(currentIndex);
+
+            // Highlight the current player
+            Platform.runLater(() -> currentPlayerView.highlightCurrentPlayer(true));
+
+            // Start a background thread to wait for the turn to change
+            new Thread(() -> {
+                while (game.getCurrentPlayerIndex() == currentIndex) {
+                    try {
+                        Thread.sleep(100); // avoid busy waiting
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Remove highlight once turn changes
+                Platform.runLater(() -> currentPlayerView.highlightCurrentPlayer(false));
+            }).start();
+        }
+        public void showNextPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
+            int nextIndex = (game.getCurrentPlayerIndex() + 1) % playerViews.size();
+            PlayerView nextPlayerView = playerViews.get(nextIndex);
+
+            Platform.runLater(() -> nextPlayerView.highlightNextPlayer(true));
+
+            new Thread(() -> {
+                while ((game.getCurrentPlayerIndex() + 1) % playerViews.size() == nextIndex) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                Platform.runLater(() -> nextPlayerView.highlightNextPlayer(false)); 
+            }).start();
+        } 
+        
 }
 	
 	

@@ -53,4 +53,11 @@ public class SafeZoneView {
 	public ArrayList<CellView> getSafeZoneView() {
 		return safeZoneView;
 	}
+	public CellView getCellView(int i){
+		return safeZoneView.get(i);
+	}
+	public void setCellView (int i){
+		safeZoneView.get(i);
+	}
+
 }
