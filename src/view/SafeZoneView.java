@@ -59,5 +59,6 @@ public class SafeZoneView {
 	public void setCellView (int i){
 		safeZoneView.get(i);
 	}
+	
 
 }

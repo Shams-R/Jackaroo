@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import controller.JackarooGUI;
 import engine.GameManager;
 import engine.board.BoardManager;
 import model.card.standard.Ace;
@@ -81,7 +80,7 @@ public class Deck {
         Collections.shuffle(cardsPool);
         ArrayList<Card> cards = new ArrayList<>(cardsPool.subList(0, 4));
         cardsPool.subList(0, 4).clear();
-        JackarooGUI.updateCardsPool(cardsPool.size());
+        // at deck  class at the end of drawcards method JackarooGUI.updateCardsPool(cardsPool.size());
         return cards;
     }
     

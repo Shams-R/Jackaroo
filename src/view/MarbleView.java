@@ -17,6 +17,8 @@ public class MarbleView extends StackPane {
 	
 	public MarbleView (Marble marble){
 		this.marble=marble;
+		if(marble==null)
+		System.out.print(marble);
 		String colour=marble.getColour().toString().toLowerCase();
 		Image image=new Image("view/" + colour + ".png");
 		imageView =new ImageView(image);

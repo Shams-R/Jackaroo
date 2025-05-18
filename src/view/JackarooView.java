@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import controller.JackarooGUI;
 import engine.Game;
+import engine.board.Board;
 import engine.board.Cell;
 import engine.board.SafeZone;
 import exception.CannotFieldException;
@@ -12,6 +13,7 @@ import exception.IllegalDestroyException;
 import exception.SplitOutOfRangeException;
 import model.Colour;
 import model.card.Card;
+import model.card.Deck;
 import model.card.standard.Ace;
 import model.card.standard.Five;
 import model.card.standard.Four;
@@ -257,6 +259,74 @@ public class JackarooView {
 	    addSafeZones(board, players, safeZones);
 	    addHomeZones(players);
 	}
+	public void updateView(){
+		Board board=game.getBoard();
+		//frist update the track
+		ArrayList<Cell>track=board.getTrack();
+		ArrayList<CellView> trackViewCells=trackView.getMainTrack();
+		update(trackViewCells,track);
+		
+		//second update safezones
+		ArrayList<SafeZone>safeZones=board.getSafeZones();
+		for(int i=0;i<4;i++){
+			SafeZone safeZone=safeZones.get(i);
+			SafeZoneView safeZoneView=safeZonesView.get(i);
+			ArrayList<CellView> safeZoneViewCells=safeZoneView.getSafeZoneView();
+			ArrayList<Cell> safeZoneCells=safeZone.getCells();
+			update(safeZoneViewCells,safeZoneCells);
+				}
+		//third update homezones
+		for(int i=0;i<4;i++){
+			HomeZoneView homeZoneView= homeZonesView.get(i);
+			Player player=game.getPlayers().get(i);
+			ArrayList<Marble> marbles=player.getMarbles();
+			homeZoneView.set(marbles);
+		}
+		//fourth handView
+		for(int i=0;i<4;i++)
+		{
+			updateHand(i);
+			/*PlayerHandView handView=playersHandsView.get(i);
+			ArrayList<Card>hand=game.getPlayers().get(i).getHand();
+			handView.setHandCardsView(hand);*/
+		}
+		
+		//cardspool
+		cardsPool.setCards(Deck.getPoolSize());
+		
+		
+		
+		//firepit
+		ArrayList<Card> firePitCards=game.getFirePit();
+		firePit.update(firePitCards);
+		
+		
+			
+			
+		
+		
+	}
+	public void update(ArrayList<CellView> cellsView,ArrayList<Cell>cells){
+		for(int i=0;i<cells.size();i++){
+			MarbleView marbleView=cellsView.get(i).getWithOutRemove();
+			Marble marble=cells.get(i).getMarble();
+			if(marble==null&&marbleView==null)
+				continue;
+			if(marble==null)
+				cellsView.get(i).getMarbleView(); //this removes the marble
+			if(marbleView==null &&marble !=null ){
+				MarbleView marbleView2=new MarbleView(marble);
+				cellsView.get(i).setMarbleView(marbleView2);
+			}
+			if(marbleView!=null&&marbleView.getMarble()!=marble &&marble!=null){
+				MarbleView marbleView2=new MarbleView(marble);
+				cellsView.get(i).setMarbleView(marbleView2);
+			}
+			
+		}
+	}
+	
+	
     
     private void addSafeZones(Pane board, ArrayList<Player> players, ArrayList<SafeZone> safeZones) {
     	safeZonesView = new ArrayList<SafeZoneView>();
@@ -1249,15 +1319,21 @@ public class JackarooView {
             }
             
             public void field(int i){
-            	//game.getCurrentPlayerIndex();
+            	
+            	HomeZoneView homeZone=homeZonesView.get(i);
+            	trackView.getMainTrack().get(i*25).setMarbleView(homeZone.fieldMarble ());
+            	
+
+            }
+           public void field(){
+            	int i=game.getCurrentPlayerIndex();
             	HomeZoneView homeZone=homeZonesView.get(i);
             	CellView cell =homeZone.getCellView();
             	trackView.getMainTrack().get(i*25).setMarbleView(cell.getMarbleView());
-            	
-            //	animateField(cell, trackView.getMainTrack().get(i*25) );
-            	
-     		   
-     	   }
+
+            }
+         
+            
             public void animateField( CellView sourceCell, CellView targetCell) {
             	MarbleView marble = sourceCell.getMarbleView(); // removes from source
                 if (marble == null) return;
@@ -1388,6 +1464,8 @@ public class JackarooView {
   	     for(int i=0;i<4;i++){
   	         ArrayList<Card>hand=game.getPlayers().get(i).getHand();
   	         playersHandsView.get(i).setHandCardsView(hand);
+  	         if(i!=0)
+  	        	playersHandsView.get(i).showBack();
   	     
   	     
   	     }

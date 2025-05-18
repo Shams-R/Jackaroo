@@ -165,7 +165,7 @@ public class JackarooGUI extends Application{
 				case DIGIT0:
 						try {	
 							game.fieldMarble(0);
-							view.field(0) ;
+							view.updateView();
 						} catch (CannotFieldException | IllegalDestroyException e) {
 							
 							view.showPopMessage(primaryStage, e) ;
@@ -175,7 +175,7 @@ public class JackarooGUI extends Application{
 					
 						try {
 							game.fieldMarble(1);
-							view.field(1);
+							view.updateView();
 						}
 						catch (CannotFieldException | IllegalDestroyException e) {
 							
@@ -186,7 +186,7 @@ public class JackarooGUI extends Application{
 					
 						try {
 							game.fieldMarble(2);
-							view.field(2);
+							view.updateView();
 						} catch (CannotFieldException | IllegalDestroyException e) {
 							
 							view.showPopMessage(primaryStage, e) ;
@@ -196,7 +196,7 @@ public class JackarooGUI extends Application{
 					
 					try {
 						game.fieldMarble(3);
-						view.field(3);
+						view.updateView();
 					} catch (CannotFieldException | IllegalDestroyException e) {
 						
 						view.showPopMessage(primaryStage, e) ;
@@ -330,7 +330,8 @@ public class JackarooGUI extends Application{
 		try {
 			game.playPlayerTurn();
 			
-			view.act(currentlySelectedCard, selectedMarbles);
+		//	view.act(currentlySelectedCard, selectedMarbles);
+			
 			
 			return true;
 		}
@@ -424,8 +425,9 @@ public class JackarooGUI extends Application{
 		catch (GameException e) {
 			view.showPopMessage(primaryStage, e);
 		}
+		
+	/*	if(cpu.isPlayed()) {
 			
-		if(cpu.isPlayed()) {
 			ArrayList<Marble> selectedMarbles = cpu.getSelectedMarbles();
 			Card selectedCard = cpu.getSelectedCard();
 			
@@ -436,6 +438,7 @@ public class JackarooGUI extends Application{
 				ArrayList<MarbleView> selectedMarblesView = new ArrayList<>();
 				
 				for(CellView cellView : mainTrack) {
+					System.out.println(cellView);
 					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
 						selectedMarblesView.add(cellView.getMarbleView());
 				}
@@ -444,6 +447,7 @@ public class JackarooGUI extends Application{
 				ArrayList<CellView> safeZone = view.getHomeZoneView(CPU).getCells();
 				
 				for(CellView cellView : homeZone) {
+					System.out.println(cellView);
 					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
 						selectedMarblesView.add(cellView.getMarbleView());
 				}
@@ -479,7 +483,7 @@ public class JackarooGUI extends Application{
 				//finally, act on those marbles using this card
 				view.act(selectedCardView, selectedMarblesView);
 			}
-		}
+		}*/
 			
 	}
 	
@@ -495,7 +499,8 @@ public class JackarooGUI extends Application{
 		//end player turn 
 		game.endPlayerTurn();
 		//update hand 
-		view.updateHand(0);
+		view.updateView();
+		//view.updateHand(0);
 		
 		//deselectAll
 		deselectAll();
@@ -512,7 +517,8 @@ public class JackarooGUI extends Application{
 			//end player turn
 			game.endPlayerTurn();
 			//update hand
-			view.updateHand(1);
+			//view.updateHand(1);
+			view.updateView();
 			//check win
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
@@ -526,7 +532,8 @@ public class JackarooGUI extends Application{
 			//end player turn
 			game.endPlayerTurn();
 			//update hand
-			view.updateHand(2);
+			//view.updateHand(2);
+			view.updateView();
 			//check win
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
@@ -540,7 +547,8 @@ public class JackarooGUI extends Application{
 			//end player turn
 			game.endPlayerTurn();
 			//update hand
-			view.updateHand(3);
+			//view.updateHand(3);
+			view.updateView();
 			//check win
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
@@ -557,8 +565,8 @@ public class JackarooGUI extends Application{
 //				Player player = view.getPlayersView().get(i).getPlayer();
 //				hand.setHandCardsView(player.getHand());
 //			}
-			
 			view.setHands();
+			//view.setHands();
 		}
 		
 		//human player can play turn?

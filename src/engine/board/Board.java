@@ -2,7 +2,6 @@ package engine.board;
 
 import java.util.ArrayList;
 
-import controller.JackarooGUI;
 import engine.GameManager;
 import exception.CannotFieldException;
 import exception.IllegalDestroyException;
@@ -111,9 +110,10 @@ public class Board implements BoardManager {
 
         ArrayList<Cell> fullPath = new ArrayList<>();
         
-        if (positionOnTrack == -1 && positionInSafeZone == -1)
+        if (positionOnTrack == -1 && positionInSafeZone == -1){
+        	
             throw new IllegalMovementException("Cannot move a marble that is not on track nor Safe Zone");
-        
+        }
         if (positionOnTrack != -1) {
             int distanceToEntry = entryPosition - positionOnTrack;
 
@@ -227,7 +227,7 @@ public class Board implements BoardManager {
             destroyMarble(marble);
             targetCell.setTrap(false);
             assignTrapCell();
-            JackarooGUI.handleTrap(marble);
+            
         }
         
 	}
@@ -321,6 +321,8 @@ public class Board implements BoardManager {
     	}
     	
     	baseCell.setMarble(marble);
+    	
+    	
 	}
 
 	@Override

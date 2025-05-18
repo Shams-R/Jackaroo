@@ -10,12 +10,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 public class CardsPoolView extends StackPane {
+	ArrayList<CardView>cards;
    
     public CardsPoolView(int numberOfCards) {
         setPrefSize(120, 180); // Adjust as needed
         setPickOnBounds(false); // So you don’t block clicks
         double yOffsetStep=3;//make small distance
         numberOfCards/=10;
+        cards=new ArrayList<>();
         
         for (int i = 0; i < numberOfCards; i++) {
         	
@@ -25,6 +27,7 @@ public class CardsPoolView extends StackPane {
             cardView.setTranslateY(-i * yOffsetStep); // Slight vertical shift
             cardView.setTranslateX(i*yOffsetStep);
             getChildren().add(cardView);
+            cards.add(cardView);
         }
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     }
@@ -41,8 +44,8 @@ public class CardsPoolView extends StackPane {
             if(numberOfCards==1)numberOfCards++;
         }
         for (int i = 0; i < numberOfCards; i++) {
-        	Card card=new Standard("Ace","",1,Suit.SPADE,null,null);
-            CardView cardview =new CardView(card); // null or dummy card
+        	
+            CardView cardview =cards.get(i);// null or dummy card
             cardview.showBack(); // make sure it's the back image
             cardview.setTranslateY(-i * yOffsetStep);  
             cardview.setTranslateX(i * yOffsetStep);// Slight vertical shift

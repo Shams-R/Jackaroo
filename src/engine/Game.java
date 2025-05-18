@@ -80,6 +80,8 @@ public class Game implements GameManager {
 
     public void selectMarble(Marble marble) throws InvalidMarbleException {
         players.get(currentPlayerIndex).selectMarble(marble);
+        
+     //   System.out.println(marble);
     }
 
     public void deselectAll() {
@@ -136,8 +138,10 @@ public class Game implements GameManager {
         	throw new CannotFieldException("No marbles left in the Home Zone to field.");
         
         board.sendToBase(marble);
-        players.get(i).getMarbles().remove(marble) ;
-    }
+        players.get(i).getMarbles().remove(marble);
+    }
+     
+  
 
     public Colour checkWin() {
         for(SafeZone safeZone : board.getSafeZones()) 
