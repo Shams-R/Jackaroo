@@ -41,7 +41,11 @@ public class PlayerHandView extends HBox{
 	            getChildren().add(cardView);
 	        }
 	    }
-	 public void showBack(){
+	 
+	 public ArrayList<CardView> getHandCardsView() {
+		return handCardsView;
+	}
+	public void showBack(){
 		 for(int i=0;i<handCardsView.size();i++)
 			 handCardsView.get(i).showBack();
 	 }
