@@ -44,7 +44,7 @@ import javafx.util.Duration;
 
 public class JackarooGUI extends Application{
 	private static JackarooView view;
-	private static Game game; //Is this okay?
+	private static Game game; //Is this okay?0
 	private static Stage primaryStage; //Is this okay?
 	private static CardView currentlySelectedCard;
 	private static ArrayList<MarbleView> selectedMarbles=new ArrayList<>();
@@ -140,52 +140,104 @@ public class JackarooGUI extends Application{
 	    //Exception e= new CannotFieldException("vrbebverb rvrebeaw rvewrvbrev vwrvwervwa vwvwreav");  
 	   // view.showPopMessage(primaryStage , e); 
 	}
+	public static void handleTrap(Marble marble){
+		 MarbleView marbleView =view.getMarbleView(marble);
+		 view.destroy(marbleView);
+		 
+		 }
+	 public static void updateCardsPool(int n){
+		 view.getCardsPool().setCards(n);
+		 
+		 }
+		  public static void clearFirePit(){
+		 view.getFirePit().clear();
+		 
+		 }
+
+
 	   
 	
-	
-	
-	
-	public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game) {
-		Scene scene = owner.getScene();
+		  public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view,Game game) {
+				Scene scene = owner.getScene();
 
-    	scene.setOnKeyPressed(event -> {
-    	    if (event.getCode() == KeyCode.ENTER) {
-    	    	
-    		view.field();
-    	    }
-    	    }
-	);
-}
+					scene.setOnKeyPressed(event -> {
+					switch (event.getCode()) {
+				case DIGIT0:
+						try {	
+							game.fieldMarble(0);
+							view.field(0) ;
+						} catch (CannotFieldException | IllegalDestroyException e) {
+							
+							view.showPopMessage(primaryStage, e) ;
+						}
+					break;
+				case DIGIT1:
+					
+						try {
+							game.fieldMarble(1);
+							view.field(1);
+						}
+						catch (CannotFieldException | IllegalDestroyException e) {
+							
+							view.showPopMessage(primaryStage, e) ;
+						}
+					break;
+				case DIGIT2:
+					
+						try {
+							game.fieldMarble(2);
+							view.field(2);
+						} catch (CannotFieldException | IllegalDestroyException e) {
+							
+							view.showPopMessage(primaryStage, e) ;
+						}
+					break;
+				case DIGIT3:
+					
+					try {
+						game.fieldMarble(3);
+						view.field(3);
+					} catch (CannotFieldException | IllegalDestroyException e) {
+						
+						view.showPopMessage(primaryStage, e) ;
+					}
+					break;
+					}
+					});
+		}
 
     	    
 	
     	
 
 
-	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
-		   
-		   Platform.runLater(() -> {
-			   
-		   try{ 
-			
-			   
-			   game.fieldMarble();
-			   int i= game.getCurrentPlayerIndex();
-			   HomeZoneView homeZone = homeZones.get(i);
-			   MarbleView marble=homeZone.fieldMarble() ;
-			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
-		   
-		
-			} catch (CannotFieldException | IllegalDestroyException e) {
-				view.showPopMessage(owner, e);
-			}
-		  
-	   }
-		   );
-	   }
+//	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
+//		   
+//		   Platform.runLater(() -> {
+//			   
+//		   try{ 
+//			
+//			   
+//			   game.fieldMarble();
+//			   int i= game.getCurrentPlayerIndex();
+//			   HomeZoneView homeZone = homeZones.get(i);
+//			   MarbleView marble=homeZone.fieldMarble() ;
+//			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
+//		   
+//		
+//			} catch (CannotFieldException | IllegalDestroyException e) {
+//				view.showPopMessage(owner, e);
+//			}
+//		  
+//	   }
+//		   );
+//	   }
 	 
 	
-	 public static void selectCard(CardView card) {
+	 public static void main(String[] args) {
+		launch(args);
+	}
+	public static void selectCard(CardView card) {
 		 try {
 			 game.selectCard(card.getCard());
 			 
@@ -223,7 +275,10 @@ public class JackarooGUI extends Application{
 				scaleUp.setToY(1.1);
 		        scaleUp.play();
 		        
-		        view.showPlayButton();
+		        //Only if its the turn of the current play
+		        if(game.getCurrentPlayerIndex()==0)
+		        	view.showPlayButton();
+		        
 		        
 		        if(card.getCard().getName().equals("Seven"))
 		        	view.showSplitDistance(game, primaryStage);
@@ -280,70 +335,83 @@ public class JackarooGUI extends Application{
 			return true;
 		}
 		catch(GameException e) {
-			view.showPopMessage(primaryStage, e);
-			
-		    Label msg = new Label("Do you want to discard this card?");
-		    msg.setWrapText(true);
-		    msg.setMaxWidth(380);
-		    msg.setTextAlignment(TextAlignment.CENTER);
-		    msg.setAlignment(Pos.CENTER);
-		    msg.setTextFill(Color.web("#fdf6e3")); // soft ivory
-		    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+			    // Exception message label
+			    Label exceptionLabel = new Label(e.getMessage());
+			    exceptionLabel.setWrapText(true);
+			    exceptionLabel.setMaxWidth(380);
+			    exceptionLabel.setTextAlignment(TextAlignment.CENTER);
+			    exceptionLabel.setAlignment(Pos.CENTER);
+			    exceptionLabel.setTextFill(Color.web("#fdf6e3")); // soft ivory
+			    exceptionLabel.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+			    
+			    // Discard prompt label
+			    Label discardLabel = new Label("Do you want to discard this card?");
+			    discardLabel.setWrapText(true);
+			    discardLabel.setMaxWidth(380);
+			    discardLabel.setTextAlignment(TextAlignment.CENTER);
+			    discardLabel.setAlignment(Pos.CENTER);
+			    discardLabel.setTextFill(Color.web("#fdf6e3")); // soft ivory
+			    discardLabel.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
 
-		    // Buttons
-		    Button yesButton = new Button("Yes");
-		    Button noButton = new Button("No");
+			    // Create the buttons
+			    Button yesButton = new Button("Yes");
+			    Button noButton = new Button("No");
 
-		    yesButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
-		    noButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
+			    yesButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
+			    noButton.setStyle("-fx-background-color: #fdf6e3; -fx-text-fill: #5c3b24; -fx-font-weight: bold;");
 
-		    HBox buttonBox = new HBox(10, yesButton, noButton);
-		    buttonBox.setAlignment(Pos.CENTER);
+			    // Layout for the buttons (side by side)
+			    HBox buttonBox = new HBox(10, yesButton, noButton);
+			    buttonBox.setAlignment(Pos.CENTER);
 
-		    // Content layout
-		    VBox content = new VBox(20, msg, buttonBox);
-		    content.setAlignment(Pos.CENTER);
+			    // Combine both messages and the buttons in a VBox
+			    VBox content = new VBox(20, exceptionLabel, discardLabel, buttonBox);
+			    content.setAlignment(Pos.CENTER);
 
-		    // Background
-		    Rectangle background = new Rectangle(400, 180);
-		    background.setArcWidth(40);
-		    background.setArcHeight(40);
-		    background.setFill(Color.web("#8b5e3c")); // rich brown
-		    background.setStroke(Color.web("#5c3b24")); // deep brown
-		    background.setStrokeWidth(3);
+			    // Create the background rectangle
+			    Rectangle background = new Rectangle(400, 180);
+			    background.setArcWidth(40);
+			    background.setArcHeight(40);
+			    background.setFill(Color.web("#8b5e3c")); // rich brown
+			    background.setStroke(Color.web("#5c3b24")); // deep brown
+			    background.setStrokeWidth(3);
 
-		    StackPane root = new StackPane(background, content);
-		    root.setPadding(new Insets(20));
+			    // Use a StackPane to layer the background and content
+			    StackPane root = new StackPane(background, content);
+			    root.setPadding(new Insets(20));
 
-		    // Popup stage
-		    Stage popup = new Stage();
-		    popup.initOwner(primaryStage);
-		    popup.initModality(Modality.WINDOW_MODAL);
-		    popup.setResizable(false);
-		    popup.setTitle("Discard Card");
+			    // Create the popup stage
+			    Stage popup = new Stage();
+			    popup.initOwner(primaryStage);
+			    popup.initModality(Modality.WINDOW_MODAL);
+			    popup.setResizable(false);
+			    popup.setTitle("Discard Card");
 
-		    Scene scene = new Scene(root, 400, 180);
-		    popup.setScene(scene);
+			    Scene scene = new Scene(root, 400, 180);
+			    popup.setScene(scene);
+			    	
+			    // icon 
+			    Image icon = new Image("icon.png");
+			    popup.getIcons().add(icon);
 
-		    // Optional icon
-		    Image icon = new Image("icon.png");
-		    popup.getIcons().add(icon);
+			   
+			    AtomicBoolean returnValue = new AtomicBoolean(false);
 
-		    AtomicBoolean returnValue = new AtomicBoolean(false);
+			    // Button actions
+			    yesButton.setOnAction(event -> {
+			        returnValue.set(true);
+			        popup.close();
+			    });
+			    noButton.setOnAction(event -> {
+			        returnValue.set(false);
+			        popup.close();
+			    });
 
-		    yesButton.setOnMouseClicked(event -> {
-		        returnValue.set(true);
-		        popup.close();
-		    });
+			    // Shows the popup and waits until the user closes it
+			    popup.showAndWait();
 
-		    noButton.setOnMouseClicked(event -> {
-		        returnValue.set(false);
-		        popup.close();
-		    });
-
-		    popup.showAndWait(); // Waits here until popup closes
-
-		    return returnValue.get();
+			    // Return true if "Yes" was clicked; false otherwise
+			    return returnValue.get();
 		}
 	}
 		
@@ -361,115 +429,167 @@ public class JackarooGUI extends Application{
 			ArrayList<Marble> selectedMarbles = cpu.getSelectedMarbles();
 			Card selectedCard = cpu.getSelectedCard();
 			
-			ArrayList<CellView> mainTrack = view.getTrackView().getMainTrack();
-			
-			ArrayList<MarbleView> selectedMarblesView = new ArrayList<>();
-			
-			for(CellView cellView : mainTrack) {
-				if(cellView.getMarbleView().getMarble()!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
-					selectedMarblesView.add(cellView.getMarbleView());
-			}
-			
-			ArrayList<CellView> homeZone = view.getHomeZoneView(CPU).getCells();
-			ArrayList<CellView> safeZone = view.getHomeZoneView(CPU).getCells();
-			
-			for(CellView cellView : homeZone) {
-				if(cellView.getMarbleView().getMarble()!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
-					selectedMarblesView.add(cellView.getMarbleView());
-			}
-			
-			for(CellView cellView : safeZone) {
-				if(cellView.getMarbleView().getMarble()!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
-					selectedMarblesView.add(cellView.getMarbleView());
-			}
-			
-			//to arrange the selectedMarblesViews
-			for(int i=0; i<selectedMarblesView.size(); i++) {
-				for(int j=0; j<selectedMarblesView.size(); j++) {
-					if(selectedMarbles.get(i)==selectedMarblesView.get(i).getMarble()) {
+			if(selectedMarbles!=null && selectedCard!=null) {
+				
+				ArrayList<CellView> mainTrack = view.getTrackView().getMainTrack();
+				
+				ArrayList<MarbleView> selectedMarblesView = new ArrayList<>();
+				
+				for(CellView cellView : mainTrack) {
+					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
+						selectedMarblesView.add(cellView.getMarbleView());
+				}
+				
+				ArrayList<CellView> homeZone = view.getHomeZoneView(CPU).getCells();
+				ArrayList<CellView> safeZone = view.getHomeZoneView(CPU).getCells();
+				
+				for(CellView cellView : homeZone) {
+					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
+						selectedMarblesView.add(cellView.getMarbleView());
+				}
+				
+				for(CellView cellView : safeZone) {
+					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
+						selectedMarblesView.add(cellView.getMarbleView());
+				}
+				
+				//to arrange the selectedMarblesViews
+				for(int i=0; i<selectedMarblesView.size(); i++) {
+					for(int j=0; j<selectedMarblesView.size(); j++) {
+						if(selectedMarbles.get(i)==selectedMarblesView.get(i).getMarble()) {
+							break;
+						}
+						
+						else {
+							selectedMarblesView.add(selectedMarblesView.remove(i));
+						}
+					}
+				}
+				
+				ArrayList<CardView> hand = view.getPlayerHandView(CPU).getHandCardsView();
+				CardView selectedCardView = null;
+				
+				for(CardView card : hand) {
+					if(card.getCard()==selectedCard) {
+						selectedCardView = card;
 						break;
 					}
-					
-					else {
-						selectedMarblesView.add(selectedMarblesView.remove(i));
-					}
 				}
+				
+				//finally, act on those marbles using this card
+				view.act(selectedCardView, selectedMarblesView);
 			}
-			
-			ArrayList<CardView> hand = view.getPlayerHandView(CPU).getHandCardsView();
-			CardView selectedCardView = null;
-			
-			for(CardView card : hand) {
-				if(card.getCard()==selectedCard) {
-					selectedCardView = card;
-					break;
-				}
-			}
-			
-			//finally, act on those marbles using this card
-			view.act(selectedCardView, selectedMarblesView);
 		}
 			
 	}
 	
-	public void Playengine() {
-	    Thread gameThread = new Thread(() -> {
-	        while (game.checkWin() == null) {
-	            Player currentPlayer = game.getPlayers().get(game.getCurrentPlayerIndex());
-
-	            // Run UI updates on the JavaFX Application Thread
-	            Platform.runLater(() -> {
-	                view.showCurrentPlayerTurn(game, view.getPlayersView());
-	                view.showNextPlayerTurn(game, view.getPlayersView());
-	            });
-
-	            if (!(currentPlayer instanceof CPU)) {
-	                // Human player: wait until they play
-	                while (!view.isPlayed()) {
-	                    try {
-	                        Thread.sleep(100); // Polling delay (not ideal but works)
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-	                }
-
-	                // After human plays
-	                game.endPlayerTurn();
-	                Platform.runLater(() -> {
-	                    view.setPlayed(false);
-	                    view.updateHand(game.getCurrentPlayerIndex());
-	                });
-
-	            } else {
-	                // CPU turn
-	                if (((CPU) currentPlayer).isPlayed()) {
-	                    // Optional delay to simulate CPU thinking
-	                    try {
-	                        Thread.sleep(1000); // 1 second delay
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-
-	                    Platform.runLater(() -> playCPU(view.getPlayersView().get(game.getCurrentPlayerIndex())));
-	                    game.endPlayerTurn();
-	                    Platform.runLater(() -> view.updateHand(game.getCurrentPlayerIndex()));
-	                } else {
-	                    game.endPlayerTurn();
-	                    Platform.runLater(() -> view.updateHand(game.getCurrentPlayerIndex()));
-	                }
-	            }
-	        }
-
-	        // Game is over
-	        Colour winner = game.checkWin();
-	        showWinnerPopup(primaryStage, winner, game);
-	    });
-
-	    gameThread.setDaemon(true); // So it doesn't block app from closing
-	    gameThread.start();
+	//play human once and the 3 CPUs and then wait for it to be called again by the human player and the play button
+	public static void playEngine() {
+		
+		//can play turn??
+		if(game.canPlayTurn())
+			if(!playHuman()) return;
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			
+		//delay
+		
+		//end player turn 
+		game.endPlayerTurn();
+		//update hand 
+		view.updateHand(0);
+		
+		//deselectAll
+		deselectAll();
+		
+		//check win
+		if(game.checkWin()!=null) 
+			showWinnerPopup(primaryStage, game.checkWin(), game);
+		
+		//cpu1 can play turn
+		if(game.canPlayTurn()) {
+			//play cpu1
+			playCPU(view.getPlayersView().get(1));
+			//delay
+			//end player turn
+			game.endPlayerTurn();
+			//update hand
+			view.updateHand(1);
+			//check win
+			if(game.checkWin()!=null) 
+				showWinnerPopup(primaryStage, game.checkWin(), game);
+		}
+		
+		//cpu2 can play turn
+		if(game.canPlayTurn()) {
+			//play cpu2
+			playCPU(view.getPlayersView().get(2));
+			//delay
+			//end player turn
+			game.endPlayerTurn();
+			//update hand
+			view.updateHand(2);
+			//check win
+			if(game.checkWin()!=null) 
+				showWinnerPopup(primaryStage, game.checkWin(), game);
+		}
+		
+		//cpu3 can play turn
+		if(game.canPlayTurn()) {
+			//play cpu3
+			playCPU(view.getPlayersView().get(3));
+			//delay
+			//end player turn
+			game.endPlayerTurn();
+			//update hand
+			view.updateHand(3);
+			//check win
+			if(game.checkWin()!=null) 
+				showWinnerPopup(primaryStage, game.checkWin(), game);
+		}
+		
+		
+		//turn==0? --> set hand
+		if(game.getTurn()==0) {
+//			//should be replaced by set hand 
+//			ArrayList<PlayerHandView> hands = view.getPlayersHandsView();
+//			
+//			for(int i=0; i<hands.size(); i++) {
+//				PlayerHandView hand = hands.get(0);
+//				Player player = view.getPlayersView().get(i).getPlayer();
+//				hand.setHandCardsView(player.getHand());
+//			}
+			
+			view.setHands();
+		}
+		
+		//human player can play turn?
+		//if no, call play engine
+		if(!game.canPlayTurn())
+			playEngine();
+		
+		//if yes exit
 	}
 	
-	public void showWinnerPopup(Stage owner, Colour winnerColour, Game game) {
+	public static void deselectAll() {
+		if(currentlySelectedCard!=null) {
+			currentlySelectedCard.setEffect(null);
+			ScaleTransition scaleDown1 = new ScaleTransition(Duration.millis(100), currentlySelectedCard);
+			scaleDown1.setToX(1.0);
+			scaleDown1.setToY(1.0);
+			scaleDown1.play();
+		}
+        currentlySelectedCard = null;
+        
+        for(MarbleView marble : selectedMarbles) {
+	 		 ScaleTransition scaleDown2 = new ScaleTransition(Duration.millis(100), marble);
+			 scaleDown2.setToX(1.0);
+			 scaleDown2.setToY(1.0);
+	         scaleDown2.play();
+        }
+        
+        selectedMarbles.clear();
+	}
+	
+	public static void showWinnerPopup(Stage owner, Colour winnerColour, Game game) {
 	    // Label announcing the winner
 	    Label msg = new Label("🏆 " + getName(winnerColour) + " (" + winnerColour + ") wins the game!");
 	    msg.setWrapText(true);
@@ -480,7 +600,7 @@ public class JackarooGUI extends Application{
 	    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
 
 	    // "Play Again" button
-	    Button playAgainButton = new Button("Play Again");
+	    Button playAgainButton = new Button("Exist");
 	    playAgainButton.setStyle(
 	        "-fx-background-color: #fdf6e3; " +
 	        "-fx-text-fill: #5c3b24; " +
@@ -491,6 +611,7 @@ public class JackarooGUI extends Application{
 	    // Leave onAction empty for now
 	    playAgainButton.setOnAction(e -> {
 	        // TODO: Define behavior to restart game
+	    	primaryStage.close();
 	    });
 
 	    // VBox to hold content
@@ -532,18 +653,13 @@ public class JackarooGUI extends Application{
 	    popup.show();
 	}  
 	
-	public String getName(Colour colour){
+	public static String getName(Colour colour){
 		for(PlayerView playerView: view.getPlayersView()){
 			if(colour.equals(playerView.getPlayer().getColour())){
 				return playerView.getPlayer().getName();
 			}
 		}
 		return "";
-	}
-	
-	 
-	public static void main(String[] args) {
-		launch(args);
 	}
 
 }

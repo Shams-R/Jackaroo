@@ -77,12 +77,23 @@ public class JackarooView {
 	private ArrayList<PlayerView> playersView;
 	private boolean played;
 	
+	public CardsPoolView getCardsPool(){
+		return cardsPool;
+	}
+	public FirePitView getFirePit(){
+		return firePit;
+	}
+	
 	public boolean isPlayed() {
 		return played;
 	}
 
 	public void setPlayed(boolean played) {
 		this.played = played;
+	}
+
+	public ArrayList<PlayerHandView> getPlayersHandsView() {
+		return playersHandsView;
 	}
 
 	public ArrayList<PlayerView> getPlayersView() {
@@ -550,10 +561,6 @@ public class JackarooView {
 	        "-fx-border-radius: 10;"
 	    );
 
-	    playButton.setOnAction(e -> {
-	    	played = JackarooGUI.playHuman();
-	    });
-
 	    buttonPane = new Pane();
 	    buttonPane.setPickOnBounds(false);
 	    buttonPane.getChildren().add(playButton);
@@ -561,6 +568,10 @@ public class JackarooView {
 	    playButton.setTranslateY(500);
 	    playButton.setTranslateX(100);
 	    playButton.setPrefSize(180, 80);
+	    
+	    playButton.setOnAction(e -> {
+	    	JackarooGUI.playEngine();
+	    });
 
 	    // Border glow effect
 	    DropShadow borderGlow = new DropShadow();
@@ -596,7 +607,7 @@ public class JackarooView {
 	            scaleDown.playFromStart();
 	        }
 	    });
-
+	    
 	    mainLayout.getChildren().add(buttonPane);
 	}
 
@@ -1237,18 +1248,16 @@ public class JackarooView {
 
             }
             
-            public void field( ){
-            	int i=0 ;//game.getCurrentPlayerIndex();
+            public void field(int i){
+            	//game.getCurrentPlayerIndex();
             	HomeZoneView homeZone=homeZonesView.get(i);
             	CellView cell =homeZone.getCellView();
             	trackView.getMainTrack().get(i*25).setMarbleView(cell.getMarbleView());
             	
             //	animateField(cell, trackView.getMainTrack().get(i*25) );
             	
-            	
-            	
-     		   
-     	   }
+     		   
+     	   }
             public void animateField( CellView sourceCell, CellView targetCell) {
             	MarbleView marble = sourceCell.getMarbleView(); // removes from source
                 if (marble == null) return;
@@ -1362,8 +1371,29 @@ public class JackarooView {
        		
        		return playersHandsView.get(index);
        }
+       public MarbleView getMarbleView(Marble marble){
+    		 ArrayList<CellView> track=trackView.getMainTrack();
+    		 for(int i=0;i<track.size();i++){
+    		 CellView cell=track.get(i);
+    		 if( cell.getMarbleView()!=null)
+    		    if(cell.getMarbleView().getMarble()==marble)
+    		       return cell.getMarbleView();
+    		 }
+    		 return null;
+
         
         
+}
+       public void setHands(){
+  	     for(int i=0;i<4;i++){
+  	         ArrayList<Card>hand=game.getPlayers().get(i).getHand();
+  	         playersHandsView.get(i).setHandCardsView(hand);
+  	     
+  	     
+  	     }
+  	 
+  	 }
+
 }
 	
 	

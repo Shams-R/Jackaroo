@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import controller.JackarooGUI;
 import engine.board.Board;
 import engine.board.SafeZone;
 import exception.CannotDiscardException;
@@ -103,7 +104,8 @@ public class Game implements GameManager {
     public void endPlayerTurn() {
         Card selected = players.get(currentPlayerIndex).getSelectedCard();
         players.get(currentPlayerIndex).getHand().remove(selected);
-        firePit.add(selected);
+        if(selected!=null)
+        	firePit.add(selected);
         players.get(currentPlayerIndex).deselectAll();
         
         currentPlayerIndex = (currentPlayerIndex + 1) % 4;
@@ -117,6 +119,8 @@ public class Game implements GameManager {
               if(Deck.getPoolSize() < 4) {
 	              Deck.refillPool(firePit);
 	              firePit.clear();
+	              JackarooGUI.clearFirePit();
+
               }
               ArrayList<Card> newHand = Deck.drawCards();
               p.setHand(newHand);
@@ -125,6 +129,15 @@ public class Game implements GameManager {
         }
         
     }
+    public void fieldMarble(int i) throws CannotFieldException, IllegalDestroyException {
+        Marble marble = players.get(i).getOneMarble();
+        
+        if (marble == null)
+        	throw new CannotFieldException("No marbles left in the Home Zone to field.");
+        
+        board.sendToBase(marble);
+        players.get(i).getMarbles().remove(marble) ;
+    }
 
     public Colour checkWin() {
         for(SafeZone safeZone : board.getSafeZones()) 

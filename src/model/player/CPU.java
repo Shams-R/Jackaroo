@@ -23,6 +23,7 @@ public class CPU extends Player {
 
 	@Override
     public void play() throws GameException {
+		
         // Retrieve a list of actionable marbles from the board manager.
         ArrayList<Marble> actionableMarbles = boardManager.getActionableMarbles();
         

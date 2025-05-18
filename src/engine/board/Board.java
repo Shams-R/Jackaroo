@@ -2,6 +2,7 @@ package engine.board;
 
 import java.util.ArrayList;
 
+import controller.JackarooGUI;
 import engine.GameManager;
 import exception.CannotFieldException;
 import exception.IllegalDestroyException;
@@ -226,6 +227,7 @@ public class Board implements BoardManager {
             destroyMarble(marble);
             targetCell.setTrap(false);
             assignTrapCell();
+            JackarooGUI.handleTrap(marble);
         }
         
 	}
