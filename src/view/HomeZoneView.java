@@ -56,6 +56,9 @@ public class HomeZoneView extends StackPane{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	public void add(MarbleView marbleView){
+		cells.get(numberOfMarbles).setMarbleView(marbleView);
+	}
 	
 	
 	
