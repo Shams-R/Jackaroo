@@ -131,6 +131,7 @@ public class JackarooGUI extends Application{
 	            	view.putFirePit();
 	                fieldShortcut(view.getTrackView(),view.getHomeZonesView(),primaryStage, view  ,game);
 	            	startGame();
+	            	view.updatePlayerHighlights(game.getCurrentPlayerIndex());
 	            	
 	            }
 	            catch(IOException exception) {
@@ -150,19 +151,7 @@ public class JackarooGUI extends Application{
 		
 		
 	}
-	public static void handleTrap(Marble marble){
-		 MarbleView marbleView =view.getMarbleView(marble);
-		 view.destroy(marbleView);
-		 
-		 }
-	 public static void updateCardsPool(int n){
-		 view.getCardsPool().setCards(n);
-		 
-		 }
-		  public static void clearFirePit(){
-		 view.getFirePit().clear();
-		 
-		 }
+	
 
 
 	   
@@ -217,6 +206,7 @@ public class JackarooGUI extends Application{
 		}
 		  
 	public static void selectCard(CardView card) {
+		if(game.getCurrentPlayerIndex()!=0)return ;
 		 try {
 			 game.selectCard(card.getCard());
 			 
@@ -268,6 +258,7 @@ public class JackarooGUI extends Application{
 	 }
 	 
 	 public static void selectMarble(MarbleView marble, CellView cell) {
+		 if(game.getCurrentPlayerIndex()!=0)return ;
 		 try {
 			 //if(selectedMarbles==null) selectedMarbles = new ArrayList<>();
 			 
@@ -405,10 +396,12 @@ public class JackarooGUI extends Application{
 	
 	//play human once and the 3 CPUs and then wait for it to be called again by the human player and the play button
 	public static void playEngine() {
+		
 		if (game.canPlayTurn() && !playHuman()) return;
 
-		game.endPlayerTurn();
+		game.endPlayerTurn();          // Human's turn ends
 		view.updateView();
+		view.updatePlayerHighlights(game.getCurrentPlayerIndex());  // 🌟 Now show it's CPU1's turn
 		deselectAll();
 
 		if (game.checkWin() != null) {
@@ -417,54 +410,60 @@ public class JackarooGUI extends Application{
 		}
 
 		PauseTransition pause1 = new PauseTransition(Duration.seconds(2));
+
 		pause1.setOnFinished(e1 -> {
 			if (game.canPlayTurn()) {
 				playCPU();
+			}
+			
+			game.endPlayerTurn(); // CPU1 ends turn
+			view.updateView();
+			view.updatePlayerHighlights(game.getCurrentPlayerIndex()); // 🌟 Show it's CPU2's turn
+
+			if (game.checkWin() != null) {
+				showWinnerPopup(primaryStage, game.checkWin(), game);
+				return;
+			}
+			
+			PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
+
+			pause2.setOnFinished(e2 -> {
+				if (game.canPlayTurn()) {
+					playCPU();
+				}
+				
+				game.endPlayerTurn(); // CPU2 ends turn
 				view.updateView();
+				view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's CPU3's turn
+
 				if (game.checkWin() != null) {
 					showWinnerPopup(primaryStage, game.checkWin(), game);
 					return;
 				}
-			}
 
-			game.endPlayerTurn();
-			view.updateView();
+				PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
 
-			PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
-			pause2.setOnFinished(e2 -> {
-				if (game.canPlayTurn()) {
-					playCPU();
+				pause3.setOnFinished(e3 -> {
+					if (game.canPlayTurn()) {
+						playCPU();
+					}
+					
+					game.endPlayerTurn(); // CPU3 ends turn
 					view.updateView();
+					view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's Human's turn
+					
 					if (game.checkWin() != null) {
 						showWinnerPopup(primaryStage, game.checkWin(), game);
 						return;
 					}
-				}
-
-				game.endPlayerTurn();
-				view.updateView();
-
-				PauseTransition pause3 = new PauseTransition(Duration.seconds(2
-					));
-				pause3.setOnFinished(e3 -> {
-					if (game.canPlayTurn()) {
-						playCPU();
-						view.updateView();
-						if (game.checkWin() != null) {
-							showWinnerPopup(primaryStage, game.checkWin(), game);
-							return;
-						}
-					}
-
-					game.endPlayerTurn();
-					view.updateView();
 
 					if (game.getTurn() == 0) {
 						view.setHands();
 					}
 
 					if (!game.canPlayTurn()) {
-						playEngine(); // restart the cycle
+						playEngine(); // restart the cycle						
+						view.updateView();
 					}
 				});
 				pause3.play();

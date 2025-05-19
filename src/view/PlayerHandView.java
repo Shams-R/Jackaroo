@@ -6,6 +6,7 @@ import controller.JackarooGUI;
 import model.card.Card;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
@@ -21,12 +22,13 @@ public class PlayerHandView extends HBox{
             getChildren().add(cardView);
             handCardsView.add(cardView);
         }
+        
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);//not to take the whole screen
     }
 	 public void setHandCardsView(ArrayList<Card> newCards) {
 	        getChildren().clear();
 	        handCardsView.clear();
-
+	        
 	        for (Card card : newCards) {
 	            CardView cardView = new CardView(card);
 	            handCardsView.add(cardView);
@@ -52,6 +54,7 @@ public class PlayerHandView extends HBox{
 		 getChildren().remove(card);
 		 
 	 }
+	 
 	 
 
 }
