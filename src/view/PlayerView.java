@@ -5,6 +5,7 @@ package view;
 
 import controller.JackarooGUI;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,6 +17,8 @@ public class PlayerView extends StackPane{
 	private final Player player;
 	private final ImageView imageView;
 	private final String gender;
+	private boolean isCurrent = false;
+	private boolean isNext=false;
     public String getGender() {
 		return gender;
 	}
@@ -68,29 +71,52 @@ public class PlayerView extends StackPane{
 	    this.getChildren().add(imageWithBorder);
 	    this.setPrefSize(300, 300);
 	}
-	
 	public void highlightCurrentPlayer(boolean on) {
-	    if (on) {
-	        DropShadow blueGlow = new DropShadow();
-	        blueGlow.setRadius(30);
-	        blueGlow.setSpread(0.4);
-	        blueGlow.setColor(Color.DEEPSKYBLUE); // or Color.BLUE for a stronger effect
-	        this.setEffect(blueGlow);
-	    } else {
-	        this.setEffect(null); // remove the glow
-	    }
+		isCurrent = on;
+		applyHighlightEffect();
 	}
 
 	public void highlightNextPlayer(boolean on) {
-	    if (on) {
-	        DropShadow greenGlow = new DropShadow();
-	        greenGlow.setRadius(30);
-	        greenGlow.setSpread(0.4);
-	        greenGlow.setColor(Color.LIMEGREEN);
-	        this.setEffect(greenGlow);
-	    } else {
-	        this.setEffect(null); // remove the glow
-	    }
+		isNext = on;
+		applyHighlightEffect();
 	}
+
+	private void applyHighlightEffect() {
+		if (!isCurrent && !isNext) {
+			this.setEffect(null);
+			return;
+		}
+
+		// Combine glows if both are on
+		Group effectGroup = new Group();
+		if (isCurrent && isNext) {
+			DropShadow blueGlow = new DropShadow();
+			blueGlow.setRadius(30);
+			blueGlow.setSpread(0.4);
+			blueGlow.setColor(Color.DEEPSKYBLUE);
+
+			DropShadow greenGlow = new DropShadow();
+			greenGlow.setRadius(30);
+			greenGlow.setSpread(0.4);
+			greenGlow.setColor(Color.LIMEGREEN);
+			greenGlow.setInput(blueGlow); // stack them
+
+			this.setEffect(greenGlow);
+		} else if (isCurrent) {
+			DropShadow blueGlow = new DropShadow();
+			blueGlow.setRadius(30);
+			blueGlow.setSpread(0.4);
+			blueGlow.setColor(Color.DEEPSKYBLUE);
+			this.setEffect(blueGlow);
+		} else if (isNext) {
+			DropShadow greenGlow = new DropShadow();
+			greenGlow.setRadius(30);
+			greenGlow.setSpread(0.4);
+			greenGlow.setColor(Color.LIMEGREEN);
+			this.setEffect(greenGlow);
+		}
+	}
+	
+
 	
 }

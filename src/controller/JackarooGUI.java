@@ -130,6 +130,7 @@ public class JackarooGUI extends Application{
 	            	view.putFirePit();
 	                fieldShortcut(view.getTrackView(),view.getHomeZonesView(),primaryStage, view  ,game);
 	            	startGame();
+	            	view.updatePlayerHighlights(game.getCurrentPlayerIndex());
 	            	
 	            }
 	            catch(IOException exception) {
@@ -394,10 +395,12 @@ public class JackarooGUI extends Application{
 	
 	//play human once and the 3 CPUs and then wait for it to be called again by the human player and the play button
 	public static void playEngine() {
-		if (game.canPlayTurn() && !playHuman()) return;
+		
+		  if (game.canPlayTurn() && !playHuman()) return;
 
-		game.endPlayerTurn();
+		game.endPlayerTurn();          // Human's turn ends
 		view.updateView();
+		view.updatePlayerHighlights(game.getCurrentPlayerIndex());  // 🌟 Now show it's CPU1's turn
 		deselectAll();
 
 		if (game.checkWin() != null) {
@@ -405,54 +408,56 @@ public class JackarooGUI extends Application{
 			return;
 		}
 
-		PauseTransition pause1 = new PauseTransition(Duration.seconds(2.5));
+		PauseTransition pause1 = new PauseTransition(Duration.seconds(5));
 		pause1.setOnFinished(e1 -> {
 			if (game.canPlayTurn()) {
 				playCPU();
 				view.updateView();
+				game.endPlayerTurn(); // CPU1 ends turn
+				view.updatePlayerHighlights(game.getCurrentPlayerIndex()); // 🌟 Show it's CPU2's turn
+
 				if (game.checkWin() != null) {
 					showWinnerPopup(primaryStage, game.checkWin(), game);
 					return;
 				}
 			}
 
-			game.endPlayerTurn();
-			view.updateView();
-
-			PauseTransition pause2 = new PauseTransition(Duration.seconds(2.5));
+			PauseTransition pause2 = new PauseTransition(Duration.seconds(3));
 			pause2.setOnFinished(e2 -> {
 				if (game.canPlayTurn()) {
 					playCPU();
 					view.updateView();
+					game.endPlayerTurn(); // CPU2 ends turn
+					view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's CPU3's turn
+
 					if (game.checkWin() != null) {
 						showWinnerPopup(primaryStage, game.checkWin(), game);
 						return;
 					}
 				}
 
-				game.endPlayerTurn();
-				view.updateView();
-
-				PauseTransition pause3 = new PauseTransition(Duration.seconds(2.5));
+				PauseTransition pause3 = new PauseTransition(Duration.seconds(3));
 				pause3.setOnFinished(e3 -> {
 					if (game.canPlayTurn()) {
 						playCPU();
 						view.updateView();
+						game.endPlayerTurn(); // CPU3 ends turn
+						view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's Human's turn
+
 						if (game.checkWin() != null) {
 							showWinnerPopup(primaryStage, game.checkWin(), game);
 							return;
 						}
 					}
 
-					game.endPlayerTurn();
-					view.updateView();
-
 					if (game.getTurn() == 0) {
 						view.setHands();
 					}
 
+					view.updateView();
+
 					if (!game.canPlayTurn()) {
-						playEngine(); // restart the cycle
+						playEngine(); // restart the cycle for next human turn
 					}
 				});
 				pause3.play();
@@ -460,6 +465,8 @@ public class JackarooGUI extends Application{
 			pause2.play();
 		});
 		pause1.play();
+
+		 
 
 	}
 	
