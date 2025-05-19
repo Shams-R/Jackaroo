@@ -149,19 +149,7 @@ public class JackarooGUI extends Application{
 		
 		
 	}
-	public static void handleTrap(Marble marble){
-		 MarbleView marbleView =view.getMarbleView(marble);
-		 view.destroy(marbleView);
-		 
-		 }
-	 public static void updateCardsPool(int n){
-		 view.getCardsPool().setCards(n);
-		 
-		 }
-		  public static void clearFirePit(){
-		 view.getFirePit().clear();
-		 
-		 }
+	
 
 
 	   
