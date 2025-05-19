@@ -13,7 +13,10 @@ import model.player.Marble;
 import model.player.Player;
 import engine.Game;
 import exception.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -50,7 +53,6 @@ public class JackarooGUI extends Application{
 	private static ArrayList<MarbleView> selectedMarbles=new ArrayList<>();
 	private static ArrayList<CellView> selectedCellViews = new ArrayList<>();
 	
-//	private static boolean 
 	public static CardView getCurrentlySelectedCard(){
 		return currentlySelectedCard;
 	}
@@ -403,71 +405,75 @@ public class JackarooGUI extends Application{
 	
 	//play human once and the 3 CPUs and then wait for it to be called again by the human player and the play button
 	public static void playEngine() {
-		
-		//can play turn??
-		if(game.canPlayTurn())
-			if(!playHuman()) return;
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			
-		//delay
-		
-		//end player turn 
+		if (game.canPlayTurn() && !playHuman()) return;
+
 		game.endPlayerTurn();
-		
-		//update view
 		view.updateView();
-		
-		//deselectAll
 		deselectAll();
-		
-		
-		//check win
-		if(game.checkWin()!=null) 
+
+		if (game.checkWin() != null) {
 			showWinnerPopup(primaryStage, game.checkWin(), game);
-		
-		//cpu1 can play turn
-		if(game.canPlayTurn()) {
-			playCPU();
-			if(game.checkWin()!=null) 
-				showWinnerPopup(primaryStage, game.checkWin(), game);
+			return;
 		}
-		
-		game.endPlayerTurn();
-		view.updateView();
-		
-		
-		//cpu2 can play turn
-		if(game.canPlayTurn()) {
-			playCPU();
-			if(game.checkWin()!=null) 
-				showWinnerPopup(primaryStage, game.checkWin(), game);
-		}
-		
-		game.endPlayerTurn();
-		view.updateView();
-		
-		
-		//cpu3 can play turn
-		if(game.canPlayTurn()) {
-			playCPU();
-			if(game.checkWin()!=null) 
-				showWinnerPopup(primaryStage, game.checkWin(), game);
-		}
-		
-		game.endPlayerTurn();
-		view.updateView();
-		
-		//turn==0? --> set hand
-		if(game.getTurn()==0) {
-			view.setHands();
-		}
-		
-		//human player can play turn?
-		//if no, call play engine
-		if(!game.canPlayTurn())
-			playEngine();
-		
-		//if yes exit
+
+		PauseTransition pause1 = new PauseTransition(Duration.seconds(2));
+		pause1.setOnFinished(e1 -> {
+			if (game.canPlayTurn()) {
+				playCPU();
+				view.updateView();
+				if (game.checkWin() != null) {
+					showWinnerPopup(primaryStage, game.checkWin(), game);
+					return;
+				}
+			}
+
+			game.endPlayerTurn();
+			view.updateView();
+
+			PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
+			pause2.setOnFinished(e2 -> {
+				if (game.canPlayTurn()) {
+					playCPU();
+					view.updateView();
+					if (game.checkWin() != null) {
+						showWinnerPopup(primaryStage, game.checkWin(), game);
+						return;
+					}
+				}
+
+				game.endPlayerTurn();
+				view.updateView();
+
+				PauseTransition pause3 = new PauseTransition(Duration.seconds(2
+					));
+				pause3.setOnFinished(e3 -> {
+					if (game.canPlayTurn()) {
+						playCPU();
+						view.updateView();
+						if (game.checkWin() != null) {
+							showWinnerPopup(primaryStage, game.checkWin(), game);
+							return;
+						}
+					}
+
+					game.endPlayerTurn();
+					view.updateView();
+
+					if (game.getTurn() == 0) {
+						view.setHands();
+					}
+
+					if (!game.canPlayTurn()) {
+						playEngine(); // restart the cycle
+					}
+				});
+				pause3.play();
+			});
+			pause2.play();
+		});
+		pause1.play();
 	}
+	
 	
 	public static void deselectAll() {
 		if(currentlySelectedCard!=null) {
