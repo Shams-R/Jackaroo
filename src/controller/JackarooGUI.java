@@ -264,15 +264,15 @@ public class JackarooGUI extends Application{
 		 }
 	 }
 	 
-	 public static void selectMarble(MarbleView marble) {
+	 public static void selectMarble(MarbleView marble, CellView cell) {
 		 try {
 			 //if(selectedMarbles==null) selectedMarbles = new ArrayList<>();
 			 
 			 if(selectedMarbles.contains(marble)) {
 				 selectedMarbles.remove(marble); //how to remove it from the model??
 				 game.getSelectedMarbles().remove(marble.getMarble());
-		 		 marble.setEffect(null);
-		 		 ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), marble);
+		 		 cell.setEffect(null);
+		 		 ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), cell);
 				 scaleDown.setToX(1.0);
 				 scaleDown.setToY(1.0);
 		         scaleDown.play();
@@ -291,8 +291,8 @@ public class JackarooGUI extends Application{
 		        strongShadow.setColor(Color.valueOf(marble.getMarble().getColour().toString())); // Strong SaddleBrown
 
 		        // Apply effect and pop-up
-		        marble.setEffect(strongShadow);
-				ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), marble);
+		        cell.setEffect(strongShadow);
+				ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), cell);
 				scaleUp.setToX(1.1);
 				scaleUp.setToY(1.1);
 		        scaleUp.play();

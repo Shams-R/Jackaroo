@@ -1,10 +1,14 @@
 package view;
 
+import controller.JackarooGUI;
 import model.Colour;
 import model.player.Marble;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import engine.board.Cell;
 
@@ -25,6 +29,14 @@ public class CellView extends StackPane{
         circle.setStrokeWidth(4);
         getChildren().add(circle);
         this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        
+		 setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					if(marbleView!=null)
+						JackarooGUI.selectMarble(marbleView, CellView.this);
+				}
+      });
 	}
 	
 	public CellView (String colour, Cell cell, int x, int y){//Safezone cells
@@ -42,6 +54,14 @@ public class CellView extends StackPane{
         circle.setStrokeWidth(4);
         getChildren().add(circle);
         this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        
+		 setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					if(marbleView!=null)
+						JackarooGUI.selectMarble(marbleView, CellView.this);
+				}
+   });
 	}
 	
 	public CellView (Cell cell, int x, int y){ //Main track cells
@@ -64,6 +84,14 @@ public class CellView extends StackPane{
         
         
         this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        
+		 setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					if(marbleView!=null)
+						JackarooGUI.selectMarble(marbleView, CellView.this);
+				}
+   });
 	}
 	
 	public MarbleView getMarbleView() {
@@ -72,6 +100,8 @@ public class CellView extends StackPane{
 		MarbleView m=marbleView;
 		marbleView=null;
 		
+		circle.setFill(Color.BEIGE);
+		
 		return m;
 	}
 	
@@ -79,10 +109,13 @@ public class CellView extends StackPane{
 	    if (this.marbleView != null) {
 	        getChildren().remove(this.marbleView);  // Remove previous marble
 	    }
+	    
 	    this.marbleView = marbleView;
+	    
 	    if (marbleView != null) {
-	        getChildren().add(marbleView);// Add new marble
-	        
+	         // Add new marble
+	    	ImagePattern marbleImage = new ImagePattern(marbleView.getImageView().getImage());
+	        circle.setFill(marbleImage);
 	        marbleView.toFront();  // Ensure visibility on top
 	    }
 	    
