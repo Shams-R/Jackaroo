@@ -212,38 +212,7 @@ public class JackarooGUI extends Application{
 					}
 					});
 		}
-
-    	    
-	
-    	
-
-
-//	 public static void fieldingMechanism(TrackView trackView ,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view  ,Game game){
-//		   
-//		   Platform.runLater(() -> {
-//			   
-//		   try{ 
-//			
-//			   
-//			   game.fieldMarble();
-//			   int i= game.getCurrentPlayerIndex();
-//			   HomeZoneView homeZone = homeZones.get(i);
-//			   MarbleView marble=homeZone.fieldMarble() ;
-//			   trackView.getMainTrack().get(i*25).setMarbleView(marble) ;
-//		   
-//		
-//			} catch (CannotFieldException | IllegalDestroyException e) {
-//				view.showPopMessage(owner, e);
-//			}
-//		  
-//	   }
-//		   );
-//	   }
-	 
-	
-	 public static void main(String[] args) {
-		launch(args);
-	}
+		  
 	public static void selectCard(CardView card) {
 		 try {
 			 game.selectCard(card.getCard());
@@ -337,9 +306,6 @@ public class JackarooGUI extends Application{
 		try {
 			game.playPlayerTurn();
 			
-		//	view.act(currentlySelectedCard, selectedMarbles);
-			
-			
 			return true;
 		}
 		catch(GameException e) {
@@ -423,75 +389,13 @@ public class JackarooGUI extends Application{
 		}
 	}
 		
-	public static void playCPU(PlayerView CPU) {
-		CPU cpu = (CPU) CPU.getPlayer();
-		
+	public static void playCPU() {
 		try {
 			game.playPlayerTurn(); //play the current player turn which is the CPU 
 		} 
 		catch (GameException e) {
 			view.showPopMessage(primaryStage, e);
 		}
-		
-	/*	if(cpu.isPlayed()) {
-			
-			ArrayList<Marble> selectedMarbles = cpu.getSelectedMarbles();
-			Card selectedCard = cpu.getSelectedCard();
-			
-			if(selectedMarbles!=null && selectedCard!=null) {
-				
-				ArrayList<CellView> mainTrack = view.getTrackView().getMainTrack();
-				
-				ArrayList<MarbleView> selectedMarblesView = new ArrayList<>();
-				
-				for(CellView cellView : mainTrack) {
-					System.out.println(cellView);
-					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
-						selectedMarblesView.add(cellView.getMarbleView());
-				}
-				
-				ArrayList<CellView> homeZone = view.getHomeZoneView(CPU).getCells();
-				ArrayList<CellView> safeZone = view.getHomeZoneView(CPU).getCells();
-				
-				for(CellView cellView : homeZone) {
-					System.out.println(cellView);
-					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
-						selectedMarblesView.add(cellView.getMarbleView());
-				}
-				
-				for(CellView cellView : safeZone) {
-					if(cellView.getMarbleView()!=null && cellView.getMarbleView().getMarble()!=null && selectedMarbles!=null && selectedMarbles.contains(cellView.getMarbleView().getMarble()))
-						selectedMarblesView.add(cellView.getMarbleView());
-				}
-				
-				//to arrange the selectedMarblesViews
-				for(int i=0; i<selectedMarblesView.size(); i++) {
-					for(int j=0; j<selectedMarblesView.size(); j++) {
-						if(selectedMarbles.get(i)==selectedMarblesView.get(i).getMarble()) {
-							break;
-						}
-						
-						else {
-							selectedMarblesView.add(selectedMarblesView.remove(i));
-						}
-					}
-				}
-				
-				ArrayList<CardView> hand = view.getPlayerHandView(CPU).getHandCardsView();
-				CardView selectedCardView = null;
-				
-				for(CardView card : hand) {
-					if(card.getCard()==selectedCard) {
-						selectedCardView = card;
-						break;
-					}
-				}
-				
-				//finally, act on those marbles using this card
-				view.act(selectedCardView, selectedMarblesView);
-			}
-		}*/
-			
 	}
 	
 	//play human once and the 3 CPUs and then wait for it to be called again by the human player and the play button
@@ -504,14 +408,14 @@ public class JackarooGUI extends Application{
 		//delay
 		
 		//end player turn 
-		
 		game.endPlayerTurn();
-		//update hand 
+		
+		//update view
 		view.updateView();
-		//view.updateHand(0);
 		
 		//deselectAll
 		deselectAll();
+		
 		
 		//check win
 		if(game.checkWin()!=null) 
@@ -519,87 +423,39 @@ public class JackarooGUI extends Application{
 		
 		//cpu1 can play turn
 		if(game.canPlayTurn()) {
-			//play cpu1
-			//playCPU(view.getPlayersView().get(1));
-			//delay
-			//end player turn
-			try {
-				game.playPlayerTurn(); //play the current player turn which is the CPU 
-			} 
-			catch (GameException e) {
-				view.showPopMessage(primaryStage, e);
-			}
-			//game.endPlayerTurn();
-			//update hand
-			//view.updateHand(1);
-			view.updateView();
-			//check win
+			playCPU();
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 		}
+		
 		game.endPlayerTurn();
+		view.updateView();
 		
 		
 		//cpu2 can play turn
 		if(game.canPlayTurn()) {
-			//play cpu2
-			//playCPU(view.getPlayersView().get(2));
-			//delay
-			//end player turn
-			try {
-				game.playPlayerTurn(); //play the current player turn which is the CPU 
-			} 
-			catch (GameException e) {
-				view.showPopMessage(primaryStage, e);
-			}
-			//game.endPlayerTurn();
-			//update hand
-			//view.updateHand(2);
-			view.updateView();
-			//check win
+			playCPU();
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 		}
+		
 		game.endPlayerTurn();
+		view.updateView();
 		
 		
 		//cpu3 can play turn
 		if(game.canPlayTurn()) {
-			//play cpu3
-			//playCPU(view.getPlayersView().get(3));
-			//delay
-			//end player turn
-			try {
-				game.playPlayerTurn(); //play the current player turn which is the CPU 
-			} 
-			catch (GameException e) {
-				view.showPopMessage(primaryStage, e);
-			}
-			//game.endPlayerTurn();
-			//update hand
-			//view.updateHand(3);
-			view.updateView();
-			//check win
+			playCPU();
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 		}
+		
 		game.endPlayerTurn();
-		
-		
+		view.updateView();
 		
 		//turn==0? --> set hand
 		if(game.getTurn()==0) {
-//			//should be replaced by set hand 
-//			ArrayList<PlayerHandView> hands = view.getPlayersHandsView();
-//			
-//			for(int i=0; i<hands.size(); i++) {
-//				PlayerHandView hand = hands.get(0);
-//				Player player = view.getPlayersView().get(i).getPlayer();
-//				hand.setHandCardsView(player.getHand());
-//			}
-			System.out.println("turn");
 			view.setHands();
-			//view.setHands();
 		}
 		
 		//human player can play turn?
@@ -628,6 +484,8 @@ public class JackarooGUI extends Application{
         }
         
         selectedMarbles.clear();
+        
+        view.removePlayButton();
 	}
 	
 	public static void showWinnerPopup(Stage owner, Colour winnerColour, Game game) {
@@ -641,7 +499,7 @@ public class JackarooGUI extends Application{
 	    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
 
 	    // "Play Again" button
-	    Button playAgainButton = new Button("Exist");
+	    Button playAgainButton = new Button("Exit");
 	    playAgainButton.setStyle(
 	        "-fx-background-color: #fdf6e3; " +
 	        "-fx-text-fill: #5c3b24; " +
@@ -702,5 +560,10 @@ public class JackarooGUI extends Application{
 		}
 		return "";
 	}
+	
+	
+	 public static void main(String[] args) {
+		launch(args);
+	 }
 
 }

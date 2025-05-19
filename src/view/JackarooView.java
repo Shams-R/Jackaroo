@@ -127,7 +127,10 @@ public class JackarooView {
 	public void setGame(Game game){
 		this.game=game;
 	}
-	
+
+	public ArrayList<HomeZoneView> getHomeZonesView() {
+		return homeZonesView;
+	}
 
 	public Button onGameStart(Stage stage, TextField nameField, AtomicReference<String> selectedGender) {
 	    // Main container
@@ -259,22 +262,26 @@ public class JackarooView {
 	    addSafeZones(board, players, safeZones);
 	    addHomeZones(players);
 	}
+	
 	public void updateView(){
 		Board board=game.getBoard();
-		//frist update the track
+		
+		//first update the track
 		ArrayList<Cell>track=board.getTrack();
 		ArrayList<CellView> trackViewCells=trackView.getMainTrack();
 		update(trackViewCells,track);
 		
 		//second update safezones
 		ArrayList<SafeZone>safeZones=board.getSafeZones();
+		
 		for(int i=0;i<4;i++){
 			SafeZone safeZone=safeZones.get(i);
 			SafeZoneView safeZoneView=safeZonesView.get(i);
 			ArrayList<CellView> safeZoneViewCells=safeZoneView.getSafeZoneView();
 			ArrayList<Cell> safeZoneCells=safeZone.getCells();
 			update(safeZoneViewCells,safeZoneCells);
-				}
+		}
+		
 		//third update homezones
 		for(int i=0;i<4;i++){
 			HomeZoneView homeZoneView= homeZonesView.get(i);
@@ -282,9 +289,9 @@ public class JackarooView {
 			ArrayList<Marble> marbles=player.getMarbles();
 			homeZoneView.set(marbles);
 		}
+		
 		//fourth handView
-		for(int i=0;i<4;i++)
-		{
+		for(int i=0;i<4;i++){
 			updateHand(i);
 			/*PlayerHandView handView=playersHandsView.get(i);
 			ArrayList<Card>hand=game.getPlayers().get(i).getHand();
@@ -294,18 +301,11 @@ public class JackarooView {
 		//cardspool
 		cardsPool.setCards(Deck.getPoolSize());
 		
-		
-		
 		//firepit
 		ArrayList<Card> firePitCards=game.getFirePit();
 		firePit.update(firePitCards);
-		
-		
-			
-			
-		
-		
 	}
+	
 	public void update(ArrayList<CellView> cellsView,ArrayList<Cell>cells){
 		for(int i=0;i<cells.size();i++){
 			MarbleView marbleView=cellsView.get(i).getWithOutRemove();
@@ -320,12 +320,8 @@ public class JackarooView {
 			}
 			
 			}
-			
-		
 	}
-	
-	
-    
+
     private void addSafeZones(Pane board, ArrayList<Player> players, ArrayList<SafeZone> safeZones) {
     	safeZonesView = new ArrayList<SafeZoneView>();
     	
@@ -407,6 +403,7 @@ public class JackarooView {
 		 root.setMouseTransparent(false);
          mainLayout.getChildren().add(root);    	
     }
+    
     public void createCardsPool(int numberOfCards){
     	 cardsPool=new CardsPoolView(numberOfCards);
     	 StackPane.setAlignment(cardsPool, Pos.CENTER_RIGHT);
@@ -550,13 +547,6 @@ public class JackarooView {
 	    root.setPickOnBounds(false);
 	    root.setMouseTransparent(false);
 	    mainLayout.getChildren().add(root);
-	}
-
-  
-
-
-	public ArrayList<HomeZoneView> getHomeZonesView() {
-		return homeZonesView;
 	}
 	
 	public static void showPopMessage(Stage owner, Exception e) {
@@ -1118,47 +1108,6 @@ public class JackarooView {
 		return null;
 	}
 	
-	public void updateSafeZone(){
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/*public void move (MarbleView marble, int steps){
-		int i=0;
-	if (steps >0 ){
-		 while (i < steps){
-			int pos = getPosition(marble,trackView.getMainTrack() );
-			
-			if ( isMarbleAtSafezoneEntry(marble,trackView.getMainTrack() , game.getPlayers() ) )
-				break ;
-			
-			//animateMarbleMovement(trackView.getMainTrack().get(pos+1), trackView.getMainTrack().get(pos) );
-			trackView.getMainTrack().get(pos+1).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
-			
-			i++;
-		}
-			}
-		else {
-			int absSteps= Math.abs(steps) ;
-			while (i < absSteps){
-				int pos= getPosition(marble,trackView.getMainTrack() );
-				if ( isMarbleAtSafezoneEntry(marble,trackView.getMainTrack() , game.getPlayers() ) )
-					break ;
-			//	animateMarbleMovement(trackView.getMainTrack().get((pos==0)? 99: pos-1 ), trackView.getMainTrack().get(pos) );
-				trackView.getMainTrack().get( (pos==0)? 99: pos-1 ).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
-				i++;
-			}
-		}
-	
-	}*/
-	
-	
-
 	public int getPlayerSafezoneIndex(ArrayList<Player> players, MarbleView marble) {
 	    
 	    Colour marbleColour = marble.getMarble().getColour();
