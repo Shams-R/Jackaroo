@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import engine.board.Cell;
+import engine.board.CellType;
 
 public class CellView extends StackPane{
 	private final Cell cell;

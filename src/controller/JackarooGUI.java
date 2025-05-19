@@ -48,6 +48,7 @@ public class JackarooGUI extends Application{
 	private static Stage primaryStage; //Is this okay?
 	private static CardView currentlySelectedCard;
 	private static ArrayList<MarbleView> selectedMarbles=new ArrayList<>();
+	private static ArrayList<CellView> selectedCellViews = new ArrayList<>();
 	
 //	private static boolean 
 	public static CardView getCurrentlySelectedCard(){
@@ -270,6 +271,7 @@ public class JackarooGUI extends Application{
 			 
 			 if(selectedMarbles.contains(marble)) {
 				 selectedMarbles.remove(marble); //how to remove it from the model??
+				 selectedCellViews.remove(cell);
 				 game.getSelectedMarbles().remove(marble.getMarble());
 		 		 cell.setEffect(null);
 		 		 ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), cell);
@@ -282,6 +284,7 @@ public class JackarooGUI extends Application{
 			 game.selectMarble(marble.getMarble());
 		      
 		     selectedMarbles.add(marble);
+		     selectedCellViews.add(cell);
 		     
 		     
 			 DropShadow strongShadow = new DropShadow();
@@ -476,14 +479,16 @@ public class JackarooGUI extends Application{
 		}
         currentlySelectedCard = null;
         
-        for(MarbleView marble : selectedMarbles) {
-	 		 ScaleTransition scaleDown2 = new ScaleTransition(Duration.millis(100), marble);
+        for(CellView cell : selectedCellViews) {
+        	cell.setEffect(null);
+	 		 ScaleTransition scaleDown2 = new ScaleTransition(Duration.millis(100), cell);
 			 scaleDown2.setToX(1.0);
 			 scaleDown2.setToY(1.0);
 	         scaleDown2.play();
         }
         
         selectedMarbles.clear();
+        selectedCellViews.clear();
         
         view.removePlayButton();
 	}
