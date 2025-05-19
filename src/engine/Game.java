@@ -75,6 +75,7 @@ public class Game implements GameManager {
 	}
     
     public void selectCard(Card card) throws InvalidCardException {
+    	//System.out.println(currentPlayerIndex);
         players.get(currentPlayerIndex).selectCard(card);
     }
 
@@ -100,6 +101,7 @@ public class Game implements GameManager {
     }
 
     public void playPlayerTurn() throws GameException {
+    	System.out.println(currentPlayerIndex);
         players.get(currentPlayerIndex).play();
     }
 
@@ -181,6 +183,7 @@ public class Game implements GameManager {
                     throw new CannotDiscardException("Player has no cards to discard.");
                 int randIndex = (int) (Math.random() * handSize);
                 this.firePit.add(player.getHand().remove(randIndex));
+                System.out.println("skipped "+ player);
             }
         }
     }
@@ -188,8 +191,10 @@ public class Game implements GameManager {
     @Override
     public void discardCard() throws CannotDiscardException {
         int randIndex = (int) (Math.random() * 4);
-        while(randIndex == currentPlayerIndex)
+        while(randIndex == currentPlayerIndex){
             randIndex = (int) (Math.random() * 4);
+            System.out.println("skipped :"+ randIndex);
+        }
 
         discardCard(players.get(randIndex).getColour());
     }

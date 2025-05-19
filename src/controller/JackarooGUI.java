@@ -126,9 +126,8 @@ public class JackarooGUI extends Application{
 	            	int numberOfCards=Deck.getPoolSize();
 	            	view.createCardsPool(numberOfCards);
 	            	view.putFirePit();
-	            
-	            	fieldShortcut(view.getTrackView(),view.getHomeZonesView(),primaryStage, view  ,game);
-	            	
+	                fieldShortcut(view.getTrackView(),view.getHomeZonesView(),primaryStage, view  ,game);
+	            	startGame();
 	            	
 	            }
 	            catch(IOException exception) {
@@ -139,6 +138,14 @@ public class JackarooGUI extends Application{
 	    // this was to test the popup message
 	    //Exception e= new CannotFieldException("vrbebverb rvrebeaw rvewrvbrev vwrvwervwa vwvwreav");  
 	   // view.showPopMessage(primaryStage , e); 
+	}
+	public void startGame(){
+		if(game.canPlayTurn()){
+			
+		}
+		
+		
+		
 	}
 	public static void handleTrap(Marble marble){
 		 MarbleView marbleView =view.getMarbleView(marble);
@@ -249,7 +256,7 @@ public class JackarooGUI extends Application{
 		         scaleDown.play();
 		     }
 		     
-		     else if(currentlySelectedCard == card) {
+		     else  if(currentlySelectedCard == card) {
 		         currentlySelectedCard.setEffect(null);
 		 		 ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), currentlySelectedCard);
 				 scaleDown.setToX(1.0);
@@ -497,6 +504,7 @@ public class JackarooGUI extends Application{
 		//delay
 		
 		//end player turn 
+		
 		game.endPlayerTurn();
 		//update hand 
 		view.updateView();
@@ -521,7 +529,7 @@ public class JackarooGUI extends Application{
 			catch (GameException e) {
 				view.showPopMessage(primaryStage, e);
 			}
-			game.endPlayerTurn();
+			//game.endPlayerTurn();
 			//update hand
 			//view.updateHand(1);
 			view.updateView();
@@ -529,6 +537,8 @@ public class JackarooGUI extends Application{
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 		}
+		game.endPlayerTurn();
+		
 		
 		//cpu2 can play turn
 		if(game.canPlayTurn()) {
@@ -542,7 +552,7 @@ public class JackarooGUI extends Application{
 			catch (GameException e) {
 				view.showPopMessage(primaryStage, e);
 			}
-			game.endPlayerTurn();
+			//game.endPlayerTurn();
 			//update hand
 			//view.updateHand(2);
 			view.updateView();
@@ -550,6 +560,8 @@ public class JackarooGUI extends Application{
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 		}
+		game.endPlayerTurn();
+		
 		
 		//cpu3 can play turn
 		if(game.canPlayTurn()) {
@@ -563,7 +575,7 @@ public class JackarooGUI extends Application{
 			catch (GameException e) {
 				view.showPopMessage(primaryStage, e);
 			}
-			game.endPlayerTurn();
+			//game.endPlayerTurn();
 			//update hand
 			//view.updateHand(3);
 			view.updateView();
@@ -571,6 +583,8 @@ public class JackarooGUI extends Application{
 			if(game.checkWin()!=null) 
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 		}
+		game.endPlayerTurn();
+		
 		
 		
 		//turn==0? --> set hand

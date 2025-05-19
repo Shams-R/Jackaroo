@@ -58,7 +58,18 @@ public class HomeZoneView extends StackPane{
 		return 0;
 	}
 	public void set(ArrayList<Marble>marbles){
-		if(numberOfMarbles==marbles.size())return;
+		while(numberOfMarbles>0){
+			cells.get(numberOfMarbles-1).getMarbleView();
+			numberOfMarbles--;
+		}
+		for(int i=0;i<marbles.size();i++)
+		{
+			MarbleView marbleView=new MarbleView(marbles.get(i));
+			cells.get(numberOfMarbles).setMarbleView(marbleView);
+			numberOfMarbles++;
+		}
+		
+	/*	if(numberOfMarbles==marbles.size())return;
 		if(numberOfMarbles>marbles.size()){
 			cells.get(numberOfMarbles-1).getMarbleView();
 			numberOfMarbles--;
@@ -66,7 +77,7 @@ public class HomeZoneView extends StackPane{
 		else{
 			MarbleView marble=new MarbleView(marbles.get(marbles.size()-1));
 			cells.get(numberOfMarbles).setMarbleView(marble);
-		}
+		}*/
 		
 		
 	}

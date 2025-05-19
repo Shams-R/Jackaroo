@@ -1,5 +1,6 @@
 package view;
 
+import controller.JackarooGUI;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
@@ -8,6 +9,8 @@ import model.card.Card;
 import model.card.standard.Standard;
 import javafx.animation.ScaleTransition;
 import javafx.animation.PauseTransition;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
@@ -104,6 +107,13 @@ public class CardView extends StackPane{
 		        scaleDown.playFromStart();
 		    }
 		});
+		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		 setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					JackarooGUI.selectCard(CardView.this);
+				}
+        });
 			
 	}
 	public void showBack(){

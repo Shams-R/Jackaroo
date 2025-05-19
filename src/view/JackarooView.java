@@ -428,12 +428,12 @@ public class JackarooView {
     		{
     			CellView cell=new CellView(players.get(i).getColour().toString());
     			MarbleView marbleview=new MarbleView(marbles.get(j));
-                marbleview.setOnMouseClicked(new EventHandler<Event>() {
+             /*   marbleview.setOnMouseClicked(new EventHandler<Event>() {
     				@Override
     				public void handle(Event event) {
     					JackarooGUI.selectMarble(marbleview);
     				}
-                });
+                });*/
     			cell.setMarbleView(marbleview);
     			cellsview.add(cell);
     		}
@@ -874,7 +874,7 @@ public class JackarooView {
 			    });
 
 			    tt.play();*/
-			    break;
+			    
 			}
 		}
 		

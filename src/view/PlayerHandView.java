@@ -18,16 +18,8 @@ public class PlayerHandView extends HBox{
 
         for (Card card : handCards) {
             CardView cardView = new CardView(card);
-            
-            cardView.setOnMouseClicked(new EventHandler<Event>() {
-				@Override
-				public void handle(Event event) {
-					JackarooGUI.selectCard(cardView);
-				}
-            });
-     
             getChildren().add(cardView);
-            this.handCardsView.add(cardView);
+            handCardsView.add(cardView);
         }
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);//not to take the whole screen
     }

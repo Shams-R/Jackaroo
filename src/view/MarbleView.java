@@ -1,5 +1,8 @@
 package view;
 
+import controller.JackarooGUI;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -27,7 +30,13 @@ public class MarbleView extends StackPane {
 		imageView.setFitWidth(40);
         imageView.setFitHeight(40);
 		getChildren().add(imageView);
-		this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		 setOnMouseClicked(new EventHandler<Event>() {
+				@Override
+				public void handle(Event event) {
+					JackarooGUI.selectMarble(MarbleView.this);
+				}
+         });
 	}
 
 	public Marble getMarble() {
