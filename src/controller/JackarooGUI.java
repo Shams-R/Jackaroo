@@ -133,6 +133,8 @@ public class JackarooGUI extends Application{
 	            	startGame();
 	            	view.updatePlayerHighlights(game.getCurrentPlayerIndex());
 	            	
+	            	view.showPopMessage(primaryStage, new Exception("For shortcut keys, click (?) on the top right"));
+	            	
 	            }
 	            catch(IOException exception) {
 	            }
@@ -409,7 +411,7 @@ public class JackarooGUI extends Application{
 			return;
 		}
 
-		PauseTransition pause1 = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause1 = new PauseTransition(Duration.seconds(4));
 
 		pause1.setOnFinished(e1 -> {
 			if (game.canPlayTurn()) {
@@ -425,7 +427,7 @@ public class JackarooGUI extends Application{
 				return;
 			}
 			
-			PauseTransition pause2 = new PauseTransition(Duration.seconds(2));
+			PauseTransition pause2 = new PauseTransition(Duration.seconds(4));
 
 			pause2.setOnFinished(e2 -> {
 				if (game.canPlayTurn()) {
@@ -441,7 +443,7 @@ public class JackarooGUI extends Application{
 					return;
 				}
 
-				PauseTransition pause3 = new PauseTransition(Duration.seconds(2));
+				PauseTransition pause3 = new PauseTransition(Duration.seconds(4));
 
 				pause3.setOnFinished(e3 -> {
 					if (game.canPlayTurn()) {
