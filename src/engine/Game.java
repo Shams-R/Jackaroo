@@ -101,7 +101,7 @@ public class Game implements GameManager {
     }
 
     public void playPlayerTurn() throws GameException {
-    	System.out.println(currentPlayerIndex);
+    	
         players.get(currentPlayerIndex).play();
     }
 
@@ -183,7 +183,7 @@ public class Game implements GameManager {
                     throw new CannotDiscardException("Player has no cards to discard.");
                 int randIndex = (int) (Math.random() * handSize);
                 this.firePit.add(player.getHand().remove(randIndex));
-                System.out.println("skipped "+ player);
+                
             }
         }
     }
