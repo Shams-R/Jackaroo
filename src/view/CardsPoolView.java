@@ -33,6 +33,7 @@ public class CardsPoolView extends StackPane {
     }
     public void setCards(int numberOfCards){
     	getChildren().clear();
+    	setPickOnBounds(false);
     	numberOfCards/=10;
         double yOffsetStep;
         if (numberOfCards > 5) {

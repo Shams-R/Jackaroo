@@ -512,9 +512,15 @@ public class JackarooGUI extends Application{
 		//cpu1 can play turn
 		if(game.canPlayTurn()) {
 			//play cpu1
-			playCPU(view.getPlayersView().get(1));
+			//playCPU(view.getPlayersView().get(1));
 			//delay
 			//end player turn
+			try {
+				game.playPlayerTurn(); //play the current player turn which is the CPU 
+			} 
+			catch (GameException e) {
+				view.showPopMessage(primaryStage, e);
+			}
 			game.endPlayerTurn();
 			//update hand
 			//view.updateHand(1);
@@ -527,9 +533,15 @@ public class JackarooGUI extends Application{
 		//cpu2 can play turn
 		if(game.canPlayTurn()) {
 			//play cpu2
-			playCPU(view.getPlayersView().get(2));
+			//playCPU(view.getPlayersView().get(2));
 			//delay
 			//end player turn
+			try {
+				game.playPlayerTurn(); //play the current player turn which is the CPU 
+			} 
+			catch (GameException e) {
+				view.showPopMessage(primaryStage, e);
+			}
 			game.endPlayerTurn();
 			//update hand
 			//view.updateHand(2);
@@ -542,9 +554,15 @@ public class JackarooGUI extends Application{
 		//cpu3 can play turn
 		if(game.canPlayTurn()) {
 			//play cpu3
-			playCPU(view.getPlayersView().get(3));
+			//playCPU(view.getPlayersView().get(3));
 			//delay
 			//end player turn
+			try {
+				game.playPlayerTurn(); //play the current player turn which is the CPU 
+			} 
+			catch (GameException e) {
+				view.showPopMessage(primaryStage, e);
+			}
 			game.endPlayerTurn();
 			//update hand
 			//view.updateHand(3);
@@ -565,6 +583,7 @@ public class JackarooGUI extends Application{
 //				Player player = view.getPlayersView().get(i).getPlayer();
 //				hand.setHandCardsView(player.getHand());
 //			}
+			System.out.println("turn");
 			view.setHands();
 			//view.setHands();
 		}

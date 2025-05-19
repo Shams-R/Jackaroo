@@ -314,16 +314,14 @@ public class JackarooView {
 				continue;
 			if(marble==null)
 				cellsView.get(i).getMarbleView(); //this removes the marble
-			if(marbleView==null &&marble !=null ){
-				MarbleView marbleView2=new MarbleView(marble);
-				cellsView.get(i).setMarbleView(marbleView2);
-			}
-			if(marbleView!=null&&marbleView.getMarble()!=marble &&marble!=null){
+			else if(marbleView==null ||marbleView.getMarble()!=marble ){
 				MarbleView marbleView2=new MarbleView(marble);
 				cellsView.get(i).setMarbleView(marbleView2);
 			}
 			
-		}
+			}
+			
+		
 	}
 	
 	
@@ -610,6 +608,7 @@ public class JackarooView {
 		firePit=new FirePitView();
 		firePit.setTranslateX(-25);
 		mainLayout.getChildren().add(firePit);
+		
 	}
 	
 	public TrackView getTrackView() {
@@ -838,8 +837,10 @@ public class JackarooView {
 				}
 			if(!f){
 				CardView cardView=handView.get(j);
+				handView.remove(cardView);
+				
 				// Step 1: Get current position of cardView in scene
-			    Bounds cardBoundsInScene = cardView.localToScene(cardView.getBoundsInLocal());
+			/*    Bounds cardBoundsInScene = cardView.localToScene(cardView.getBoundsInLocal());
 
 			    // Step 2: Convert to mainLayout coordinates
 			    Bounds cardBoundsInLayout = mainLayout.sceneToLocal(cardBoundsInScene);
@@ -872,7 +873,7 @@ public class JackarooView {
 			        mainLayout.getChildren().remove(cardView);
 			    });
 
-			    tt.play();
+			    tt.play();*/
 			    break;
 			}
 		}

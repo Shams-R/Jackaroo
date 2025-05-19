@@ -121,7 +121,7 @@ public class Game implements GameManager {
               if(Deck.getPoolSize() < 4) {
 	              Deck.refillPool(firePit);
 	              firePit.clear();
-	              JackarooGUI.clearFirePit();
+	             // JackarooGUI.clearFirePit();
 
               }
               ArrayList<Card> newHand = Deck.drawCards();
