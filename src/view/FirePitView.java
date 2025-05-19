@@ -44,6 +44,7 @@ public class FirePitView extends StackPane{
     	if(cards.size()==0)
     	{
     		clear();
+    		return;
     	}
     	if(firePit.size()>0&&firePit.get(firePit.size()-1).getCard()==cards.get(cards.size()-1))
     		return ;

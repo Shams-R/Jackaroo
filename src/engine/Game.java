@@ -193,7 +193,7 @@ public class Game implements GameManager {
         int randIndex = (int) (Math.random() * 4);
         while(randIndex == currentPlayerIndex){
             randIndex = (int) (Math.random() * 4);
-            System.out.println("skipped :"+ randIndex);
+            
         }
 
         discardCard(players.get(randIndex).getColour());
