@@ -41,14 +41,16 @@ public class FirePitView extends StackPane{
     	 setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     }
     public void update(ArrayList<Card> cards){
+    	if(cards.size()==0||firePit.contains(cards.get(cards.size()-1)))
+    		return;
     	if(firePit.size()>3){
     		getChildren().remove(firePit.get(0));
     		firePit.remove(0);
     	}
-    	if(cards.size()>1){
+    	
     	CardView cardview=new CardView(cards.get(cards.size()-1));
     	add(cardview);
-    	}
+    	
     	
     }
 	

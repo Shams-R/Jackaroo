@@ -292,11 +292,10 @@ public class JackarooView {
 		
 		//fourth handView
 		for(int i=0;i<4;i++){
+			
 			updateHand(i);
-			/*PlayerHandView handView=playersHandsView.get(i);
-			ArrayList<Card>hand=game.getPlayers().get(i).getHand();
-			handView.setHandCardsView(hand);*/
-		}
+			
+	}
 		
 		//cardspool
 		cardsPool.setCards(Deck.getPoolSize());
@@ -363,9 +362,10 @@ public class JackarooView {
     	
   
          PlayerHandView bottomPlayer = playersHandsView.get(0);
-         PlayerHandView rightPlayer  = playersHandsView.get(1);
+         PlayerHandView leftPlayer   = playersHandsView.get(1);
          PlayerHandView topPlayer    = playersHandsView.get(2);
-         PlayerHandView leftPlayer   = playersHandsView.get(3);
+         PlayerHandView rightPlayer  = playersHandsView.get(3);
+         
          
          for(int i=1;i<4;i++){
         	 playersHandsView.get(i).showBack();;
@@ -378,6 +378,8 @@ public class JackarooView {
          BorderPane root = new BorderPane();
          root.setPrefSize(1200,1200); 
   	     root.setMaxSize(1200,1200);
+  	    
+  	     
          
          root.setBottom(bottomPlayer);
 		 BorderPane.setAlignment(bottomPlayer, Pos.CENTER);
@@ -744,76 +746,7 @@ public class JackarooView {
 	        }
 	    });
 	}
-	public void act(CardView cardView ,ArrayList<MarbleView> selectedMarbles){
-		Card card=cardView.getCard();
-		if(card instanceof Standard ){
-			Standard card2=(Standard)card;
-			if(selectedMarbles.size()==1 && ! (card instanceof Four) && ! (card instanceof Five)){
-				
-				move(selectedMarbles.get(0),card2.getRank(),true);
-			}
-			else{
-				if(card instanceof Ace || card instanceof King){
-					field();
-				}
-				if(card instanceof Seven){
-				    move(selectedMarbles.get(0),this.game.getBoard().getSplitDistance(),true);
-					move(selectedMarbles.get(1),7-this.game.getBoard().getSplitDistance(),true);
-					
-				}
-				if(card instanceof Four)
-				   move(selectedMarbles.get(0),-(card2.getRank()),false);
-				if(card instanceof Five){
-					MarbleView marble=selectedMarbles.get(0);
-					int i=game.getCurrentPlayerIndex();
-					ArrayList<Player> players=game.getPlayers();
-					Player player=players.get(i); 
-					boolean f= (marble.getColour()==player.getColour());
-					move(marble,5,f);
-				}
-				
-				if(card instanceof Jack)
-				swap(selectedMarbles.get(0),selectedMarbles.get(1));
-				if(card instanceof Ten)
-				{
-					int i=game.getCurrentPlayerIndex();
-					i=(i+1)%4;
-					updateHand(i);
-					
-				}
-					
-				if(card instanceof Queen){
-					int j=game.getCurrentPlayerIndex();
-					for(int i=0;i<4;i++)
-						if(j!=i){
-							updateHand(i);
-						}
-					
-				}
-					
-				
-			}
-		}
-		else{
-			if(card instanceof Burner)
-				destroy(selectedMarbles.get(0));
-			else
-				save(selectedMarbles.get(0),game);
-		}
-	}
 	
-	public int getEntry(Colour colour){
-		int i=0;
-		ArrayList<Player> players=game.getPlayers();
-		for(int j=0;j<4;j++)
-			if(players.get(j).getColour()==colour){
-				i=j;
-				break;
-			}
-		return (i*25+99)%100;
-			
-		
-	}
 	public void updateHand(int i){
 		Player player=game.getPlayers().get(i);
 		PlayerHandView handView=playersHandsView.get(i);
@@ -828,446 +761,10 @@ public class JackarooView {
 			if(!f){
 				CardView cardView=handView.get(j);
 				handView.remove(cardView);
-				
-				// Step 1: Get current position of cardView in scene
-			/*    Bounds cardBoundsInScene = cardView.localToScene(cardView.getBoundsInLocal());
-
-			    // Step 2: Convert to mainLayout coordinates
-			    Bounds cardBoundsInLayout = mainLayout.sceneToLocal(cardBoundsInScene);
-
-			    // Step 3: Remove from handView and add to mainLayout
-			    handView.remove(cardView);
-			    mainLayout.getChildren().add(cardView);
-
-			    // Step 4: Set its position in mainLayout based on where it was
-			    cardView.relocate(cardBoundsInLayout.getMinX(), cardBoundsInLayout.getMinY());
-
-			    // Step 5: Get firePit position in mainLayout
-			    Bounds firePitBounds = firePit.localToScene(firePit.getBoundsInLocal());
-			    Bounds firePitInLayout = mainLayout.sceneToLocal(firePitBounds);
-
-			    double targetX = firePitInLayout.getMinX();
-			    double targetY = firePitInLayout.getMinY();
-
-			    // Step 6: Animate movement from current position to firePit
-			    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), cardView);
-			    tt.setToX(targetX - cardBoundsInLayout.getMinX());
-			    tt.setToY(targetY - cardBoundsInLayout.getMinY());
-
-			    // Step 7: Cleanup after animation
-			    tt.setOnFinished(event -> {
-			        cardView.setTranslateX(0);
-			        cardView.setTranslateY(0);
-			        cardView.relocate(targetX, targetY);
-			        firePit.add(cardView); // Now officially place it in the firepit
-			        mainLayout.getChildren().remove(cardView);
-			    });
-
-			    tt.play();*/
-			    
 			}
 		}
-		
-		
 	}
-	public int getPosition(MarbleView marble,ArrayList<CellView>path){
-		for(int i=0;i<path.size();i++)
-			if(marble==path.get(i).getWithOutRemove())
-				return i;
-		return -1;
-		
-	}
-	
-    public void swap(MarbleView marble1, MarbleView marble2){
-    	ArrayList<CellView>path=trackView.getMainTrack();
-		int pos1=getPosition(marble1,path);
-		int pos2=getPosition(marble2,path);
-		ArrayList<CellView>track=trackView.getMainTrack();
-		CellView cell1=track.get(pos1);
-		CellView cell2=track.get(pos2);
-		cell1.setMarbleView(marble2);
-		cell2.setMarbleView(marble1);
-		
-		//swapWithArcAnimation(marble1,marble2,cell1,cell2);
-		
-	}
-	public void swapWithArcAnimation(MarbleView marble1, MarbleView marble2,CellView cell1,CellView cell2) {
-	   
-
-	    double x1 = cell1.getX();
-	    double y1 = cell1.getY();
-	    double x2 = cell2.getX();
-	    double y2 = cell2.getY();
-
-	    // Detach from original cells and add to overlay pane
-	    cell1.getMarbleView();
-	    cell2.getMarbleView();
-	    mainLayout.getChildren().addAll(marble1, marble2);
-
-	    marble1.setLayoutX(x1);
-	    marble1.setLayoutY(y1);
-	    marble2.setLayoutX(x2);
-	    marble2.setLayoutY(y2);
-
-	    // Create arc paths
-	    Path path1 = createArcPath(x1, y1, x2, y2);
-	    Path path2 = createArcPath(x2, y2, x1, y1);
-
-	    PathTransition transition1 = new PathTransition(Duration.millis(700), path1, marble1);
-	    PathTransition transition2 = new PathTransition(Duration.millis(700), path2, marble2);
-
-	    transition1.setOrientation(PathTransition.OrientationType.NONE);
-	    transition2.setOrientation(PathTransition.OrientationType.NONE);
-
-	    transition1.setOnFinished(e -> {
-	        mainLayout.getChildren().remove(marble1);
-	        cell2.setMarbleView(marble1);
-	    });
-
-	    transition2.setOnFinished(e -> {
-	        mainLayout.getChildren().remove(marble2);
-	        cell1.setMarbleView(marble2);
-	    });
-
-	    transition1.play();
-	    transition2.play();
-	}
-
-	private Path createArcPath(double startX, double startY, double endX, double endY) {
-	    Path path = new Path();
-	    path.getElements().add(new MoveTo(startX, startY));
-
-	    double controlX = (startX + endX) / 2;
-	    double controlY = Math.min(startY, endY) - 50; // control point above to create an arc
-
-	    QuadCurveTo curve = new QuadCurveTo(controlX, controlY, endX, endY);
-	    path.getElements().add(curve);
-	    return path;
-	}
-	public void destroy(MarbleView marbleView) {
-		int pos=getPosition(marbleView,trackView.getMainTrack());
-		trackView.getMainTrack().get(pos).getMarbleView();
-		HomeZoneView homeZone=getHomeZoneView(marbleView.getColour());
-		homeZone.add(marbleView);
-		
-		
-	/*	Pane overlayPane = new Pane();
-		mainLayout.getChildren().add(overlayPane);
-	    int index = getPositionInTrackView(marbleView);
-	    ArrayList<CellView> mainTrack = trackView.getMainTrack();
-	    mainTrack.get(index).setMarbleView(null);
-
-	    Colour colour = marbleView.getMarble().getColour();
-	    ArrayList<CellView> homeZoneView = getHomeZoneView(colour).getCells();
-
-	    int row = getHomeZoneView(colour).getNumberOfMarbles() / 2;
-	    int col = getHomeZoneView(colour).getNumberOfMarbles() % 2;
-	    CellView finalCell=null;
-	    for(CellView cellView: homeZoneView){
-	    	if(cellView.getMarbleView()==null){
-	    		finalCell=cellView;
-	    		break;
-	    	}
-	    		
-	    }
-
-	    // Get scene coordinates before moving
-	    Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
-
-	    // Add to overlay pane (assume you have a transparent Pane above everything)
-
-	    overlayPane.getChildren().add(marbleView);
-
-	    // Set position on overlay
-	    marbleView.setLayoutX(startBounds.getMinX());
-	    marbleView.setLayoutY(startBounds.getMinY());
-
-	    // Get destination bounds
-	 
-	    Bounds endBounds = finalCell.localToScene(finalCell.getBoundsInLocal());
-
-	    // Create animation
-	    TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
-	    transition.setToX(endBounds.getMinX() - startBounds.getMinX());
-	    transition.setToY(endBounds.getMinY() - startBounds.getMinY());
-
-	    // Sound
-	    AudioClip boomSound = new AudioClip(getClass().getResource("/sounds/boom.wav").toExternalForm());
-	    boomSound.play();
-
-	    transition.setOnFinished(e -> {
-	    	overlayPane.getChildren().remove(marbleView);
-	    	mainLayout.getChildren().remove(overlayPane);
-	        marbleView.setTranslateX(0);
-	        marbleView.setTranslateY(0);
-	        marbleView.setLayoutX(0);
-	        marbleView.setLayoutY(0);
-	        getHomeZoneView(colour).getGrid().add(marbleView, col, row);
-	    });
-
-	    transition.play();
-	}
-
-	public Node getNodeByRowColumnIndex(int row, int column, GridPane gridPane) {
-	    for (Node node : gridPane.getChildren()) {
-	        Integer r = GridPane.getRowIndex(node);
-	        Integer c = GridPane.getColumnIndex(node);
-	        if ((r == null ? 0 : r) == row && (c == null ? 0 : c) == column) {
-	            return node;
-	        }
-	    }
-	    return null;*/
-	}
-
-
-	public int getPositionInTrackView(MarbleView marbleView ){
-		ArrayList<CellView> mainTrack=trackView.getMainTrack();
-		for(int i=0; i<trackView.getMainTrack().size();i++){
-			
-			if(mainTrack.get(i).getMarbleView().equals(marbleView)){
-				return i;
-			}
-		}
-		return -1;
-	
-	}
-	
-	public HomeZoneView getHomeZoneView(Colour colour){
-		for(HomeZoneView homeZoneView: homeZonesView){
-			if(homeZoneView.getColour().equals(colour))
-				return homeZoneView;
-		}
-		return null;
-	}
-	
-	public void save(MarbleView marbleView, Game game) {
-	    ArrayList<CellView> safeZoneView = getSafeZoneView(marbleView).getSafeZoneView();
-	    ArrayList<Cell> safeZone = getSafeZone(marbleView, game).getCells();
-	    int pos=getPosition(marbleView,trackView.getMainTrack());
-	    int i=0;
-	    while(safeZoneView.get(i).getWithOutRemove()!=null)
-	    	i++;
-	    CellView safeCell= safeZoneView.get(i);
-	    CellView trackCell=trackView.getMainTrack().get(pos);
-	    safeCell.setMarbleView(trackCell.getMarbleView());
-	    
-	    
-
-/*	    for (int i = 0; i < 4; i++) {
-	        if (safeZone.get(i).getMarble() == marbleView.getMarble()) {
-	        	int index=i;
-	            // Get the scene position of marbleView and target safeZoneView
-	            Bounds startBounds = marbleView.localToScene(marbleView.getBoundsInLocal());
-	            Bounds endBounds = safeZoneView.get(i).localToScene(safeZoneView.get(i).getBoundsInLocal());
-
-	            double xStart = startBounds.getMinX();
-	            double yStart = startBounds.getMinY();
-	            double xEnd = endBounds.getMinX();
-	            double yEnd = endBounds.getMinY();
-
-	            Parent originalParent = marbleView.getParent();
-
-	            TranslateTransition transition = new TranslateTransition(Duration.seconds(1), marbleView);
-	            transition.setToX(xEnd - xStart);
-	            transition.setToY(yEnd - yStart);
-
-	            transition.setOnFinished(e -> {
-	                // Clean up the old location
-	                if (originalParent instanceof Pane) {
-	                    ((Pane) originalParent).getChildren().remove(marbleView);
-	                }
-
-	                
-	                marbleView.setTranslateX(0);
-	                marbleView.setTranslateY(0);
-
-	                // Let the target cell add it in the correct place
-	                safeZoneView.get(index).setMarbleView(marbleView);
-	            });
-
-	            transition.play();
-	            break; 
-	        }
-	    }*/
-	}
-	
-	public SafeZoneView getSafeZoneView(MarbleView marbleView){
-		for (SafeZoneView safeZoneView: safeZonesView){
-			if(safeZoneView.getColour().equals(marbleView.getColour().toString())){
-				return safeZoneView;
-			}
-		}
-		return null; 
-	}
-	public SafeZone getSafeZone(MarbleView marbleView,Game game){
-		for (SafeZone safeZone:game.getBoard().getSafeZones()){
-			if(safeZone.getColour().equals(marbleView.getColour())){
-				return safeZone;
-			}
-		}
-		return null;
-	}
-	
-	public int getPlayerSafezoneIndex(ArrayList<Player> players, MarbleView marble) {
-	    
-	    Colour marbleColour = marble.getMarble().getColour();
-
-	    
-	    boolean playerFound = false;
-	    int i=0;
-	    while (i < players.size()) {
-	        if (players.get(i).getColour().equals(marbleColour) ) {
-	            playerFound = true;
-	            break;
-	        }
-	        i++;
-	    }
-	    if (!playerFound) {
-	        return -1;
-	    }
-	    
-	    return (i==0)? i*25+98 : i*25+98-100 ;
-	}
-	
-	
-
-
-    public boolean isMarbleAtSafezoneEntry(MarbleView marble, ArrayList<CellView> path, ArrayList<Player> players) {
-        int currentPosition = getPosition(marble, path);
-        if (currentPosition == -1) {
-            return false; 
-        }
-        
-        int safezoneIndex = getPlayerSafezoneIndex(players, marble);
-        if (safezoneIndex == -1) {
-            return false; 
-        }
-        
-        return currentPosition == safezoneIndex;
-    }
-
- 
-
-       
-        public void move (MarbleView marble, int steps, boolean safeZoneAccess ){
-    		int i=0;
-    		int pos = getPosition(marble,trackView.getMainTrack() ); 
-    		int entry = getEntry( marble.getColour() );
-    		SafeZoneView safeZone = getSafeZoneView(marble) ;
-    		int pos2=getPosition(marble,safeZone.getSafeZoneView());
-    		
-    	if(pos>=0){
-    	if (steps >0 ){
-    		
-    		
-    		while (i < steps){
-    			
-    			if ( (pos == entry) && (safeZoneAccess) ){
-    				 CellView cell1=trackView.getMainTrack().get( (pos) );
-    				 CellView cell2=safeZone.getCellView(0);
-    				 cell2.setMarbleView(cell1.getMarbleView());
-    				 
-    				 i++;
-    				 
-    				break ;
-    		}
-    			
-    			
-    			//animateMarbleMovement(trackView.getMainTrack().get( (pos) ), trackView.getMainTrack().get( (pos+1)%100 ) ,() -> {
-    		        // Code after animation
-    		      CellView cell1=trackView.getMainTrack().get( (pos) );
-    		      CellView cell2=trackView.getMainTrack().get( (pos+1)%100 );
-    		      cell2.setMarbleView(cell1.getMarbleView());
-    			
-    			
-    			//trackView.getMainTrack().get((pos+1) %100 ).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
-    			
-    			pos++ ;
-    			i++;
-    		}
-    			
-    		
-    		pos=0;
-    		while ( (i<steps) && (pos<3) ) {
-    			CellView safeCell_1 =safeZone.getCellView(pos) ;
-    			CellView safeCell_2 =safeZone.getCellView(pos+1) ;
-    			
-    			safeCell_2.setMarbleView( safeCell_1.getMarbleView() );
-    			pos++;
-    			i++;
-    			}
-    		
-    			}
-    	
-    		else {
-    			int absSteps= Math.abs(steps) ;
-    			
-    			while (i < absSteps){
-    				
-    				
-    		//	animateMarbleMovement(trackView.getMainTrack().get( pos ), trackView.getMainTrack().get( (pos+99)%100 ) );
-    			trackView.getMainTrack().get((pos+99)%100).setMarbleView(trackView.getMainTrack().get(pos).getMarbleView()) ;
-    			pos = (pos+99)%100 ;
-    			i++;
-    			}
-    		
-    		}
-    	}
-    	else if(pos2>=0){
-    		ArrayList<CellView>safeZoneCells=safeZone.getSafeZoneView();
-    		while(i<steps){
-    		
-    		CellView cell1=safeZoneCells.get(pos2);
-    		CellView cell2=safeZoneCells.get(pos2+1);
-    		cell2.setMarbleView(cell1.getMarbleView());
-    		pos2++;
-    		i++;
-    		}
-    		
-    	}
-    	
-    	
-    	}
-
      
-
-           
-            public void animateMarbleMovement(CellView source, CellView target ,Runnable afterAnimation) {
-                
-            	
-            	MarbleView marble = source.getMarbleView(); // Removes from source cell
-
-                double startX = source.getX();
-                double startY = source.getY();
-                double endX = target.getX();
-                double endY = target.getY();
-
-                marble.setTranslateX(startX);
-                marble.setTranslateY(startY);
-                mainLayout.getChildren().add(marble);
-
-                TranslateTransition transition = new TranslateTransition(Duration.millis(500), marble);
-                transition.setToX(endX);
-                transition.setToY(endY);
-                transition.setInterpolator(Interpolator.EASE_BOTH);
-
-                transition.setOnFinished(e -> {
-                    mainLayout.getChildren().remove(marble);
-                    marble.setTranslateX(0);
-                    marble.setTranslateY(0);
-                    target.setMarbleView(marble);
-
-                    // Call the extra callback after animation finishes
-                    if (afterAnimation != null) {
-                        afterAnimation.run();
-                    }
-                });
-
-                transition.play();
-            	 
-
-            }
-            
             public void field(int i){
             	
             	HomeZoneView homeZone=homeZonesView.get(i);
@@ -1284,40 +781,7 @@ public class JackarooView {
             }
          
             
-            public void animateField( CellView sourceCell, CellView targetCell) {
-            	MarbleView marble = sourceCell.getMarbleView(); // removes from source
-                if (marble == null) return;
-
-                // Wait until layout is ready
-                Platform.runLater(() -> {
-                    Bounds startBounds = marble.localToScene(marble.getBoundsInLocal());
-                    Bounds targetBounds = targetCell.localToScene(targetCell.getBoundsInLocal());
-                    Bounds mainBounds = mainLayout.localToScene(mainLayout.getBoundsInLocal());
-
-                    double startX = startBounds.getMinX() - mainBounds.getMinX();
-                    double startY = startBounds.getMinY() - mainBounds.getMinY();
-                    double endX = targetBounds.getMinX() - mainBounds.getMinX();
-                    double endY = targetBounds.getMinY() - mainBounds.getMinY();
-
-                    // Place marble in main layout
-                    marble.setTranslateX(startX);
-                    marble.setTranslateY(startY);
-                    mainLayout.getChildren().add(marble);
-
-                    // Animate to destination
-                    TranslateTransition transition = new TranslateTransition(Duration.millis(500), marble);
-                    transition.setToX(endX);
-                    transition.setToY(endY);
-                    transition.setOnFinished(e -> {
-                        mainLayout.getChildren().remove(marble);
-                        marble.setTranslateX(0);
-                        marble.setTranslateY(0);
-                        targetCell.setMarbleView(marble);
-                    });
-
-                    transition.play();
-                });
-            }
+            
         
         public void showCurrentPlayerTurn(Game game, ArrayList<PlayerView> playerViews) {
             int currentIndex = game.getCurrentPlayerIndex();
@@ -1359,57 +823,11 @@ public class JackarooView {
             }).start();
         }
         
-        public HomeZoneView getHomeZoneView(PlayerView playerView) {
-        	int index = 0;
-        	
-        	for(int i=0; i<playersView.size(); i++) {
-        		if(playersView.get(i)==playerView) {
-        			index = i;
-        			break;
-        		}
-        	}
-        	
-        	return homeZonesView.get(index);
-        }
+      
         
-        public SafeZoneView getSafeZoneView(PlayerView playerView) {
-        	int index = 0;
-        	
-        	for(int i=0; i<playersView.size(); i++) {
-        		if(playersView.get(i)==playerView) {
-        			index = i;
-        			break;
-        		}
-        	}
-        	
-        	return safeZonesView.get(index);
-        }
-        
-       public PlayerHandView getPlayerHandView(PlayerView playerView) {
-    	   int index = 0;
-       	
-       		for(int i=0; i<playersView.size(); i++) {
-       			if(playersView.get(i)==playerView) {
-       				index = i;
-       				break;
-       			}
-       		}
-       		
-       		return playersHandsView.get(index);
-       }
-       public MarbleView getMarbleView(Marble marble){
-    		 ArrayList<CellView> track=trackView.getMainTrack();
-    		 for(int i=0;i<track.size();i++){
-    		 CellView cell=track.get(i);
-    		 if( cell.getMarbleView()!=null)
-    		    if(cell.getMarbleView().getMarble()==marble)
-    		       return cell.getMarbleView();
-    		 }
-    		 return null;
+      
+   
 
-        
-        
-}
        public void setHands(){
   	     for(int i=0;i<4;i++){
   	         ArrayList<Card>hand=game.getPlayers().get(i).getHand();
