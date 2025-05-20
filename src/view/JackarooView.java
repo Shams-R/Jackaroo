@@ -855,6 +855,24 @@ public class JackarooView {
 			if(!f){
 				CardView cardView=handView.get(j);
 				handView.remove(cardView);
+				if(i==1){
+					if(hand.size()==3)
+						handView.setTranslateX(-95);
+					if(hand.size()==2)
+						handView.setTranslateX(-30);
+					if(hand.size()==1)
+						handView.setTranslateX(35);
+				}
+				if(i==3){
+					if(hand.size()==3)
+						handView.setTranslateX(35);
+					if(hand.size()==2)
+						handView.setTranslateX(-30);
+					if(hand.size()==1)
+						handView.setTranslateX(-95);
+					
+				}
+
 			}
 		}
 	}
@@ -892,8 +910,11 @@ public class JackarooView {
   	     for(int i=0;i<4;i++){
   	         ArrayList<Card>hand=game.getPlayers().get(i).getHand();
   	         playersHandsView.get(i).setHandCardsView(hand);
+  	         if(i==1)playersHandsView.get(i).setTranslateX(-160);
+	         if(i==3)playersHandsView.get(i).setTranslateX(100);
   	         if(i!=0)
   	        	playersHandsView.get(i).showBack();
+  	         
   	     
   	     
   	     }
