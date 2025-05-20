@@ -598,7 +598,7 @@ public class JackarooView {
 	
 	public void showNotification(Stage primaryStage) {
 	    // Label with styled text
-	    Label msg = new Label("For shortcut keys, click (?) on the top right");
+	    Label msg = new Label("For shortcut keys, click (?) on the top left");
 	    msg.setWrapText(true);
 	    msg.setMaxWidth(380);
 	    msg.setTextAlignment(TextAlignment.CENTER);

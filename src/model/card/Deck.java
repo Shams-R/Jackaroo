@@ -33,13 +33,14 @@ public class Deck {
 
 		while (br.ready()) {
 			String nextLine = br.readLine();
-			String[] data = nextLine.split(",");
+			String[] data = nextLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 			
 			if (data.length == 0) 
 				throw new IOException(nextLine);
 
             String name = data[2];
             String description = data[3];
+            description = description.replaceAll("\"", "");
 			
 			int code = Integer.parseInt(data[0]);
 			int frequency = Integer.parseInt(data[1]);
