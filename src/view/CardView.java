@@ -48,7 +48,7 @@ public class CardView extends StackPane{
 		}
 		else{
 			//System.out.print(card.getName());
-			faceImage=new Image("view/"+card.getName()+".png");
+			faceImage=new Image("view/"+card.getName()+".jpg");
 		}
 		imageView =new ImageView(faceImage);
 		imageView.setSmooth(true);
