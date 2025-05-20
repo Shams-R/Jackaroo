@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -13,7 +14,9 @@ import model.player.Marble;
 import model.player.Player;
 import engine.Game;
 import exception.*;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
@@ -24,6 +27,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,18 +36,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import view.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 public class JackarooGUI extends Application{
@@ -56,6 +66,11 @@ public class JackarooGUI extends Application{
 	public static CardView getCurrentlySelectedCard(){
 		return currentlySelectedCard;
 	}
+	
+	public static Stage getPrimaryStage() {
+		return primaryStage;
+	}
+	
 	public static ArrayList<MarbleView> getSelectedMarbles(){
 		return selectedMarbles;
 	}
@@ -130,33 +145,18 @@ public class JackarooGUI extends Application{
 	            	view.createCardsPool(numberOfCards);
 	            	view.putFirePit();
 	                fieldShortcut(view.getTrackView(),view.getHomeZonesView(),primaryStage, view  ,game);
-	            	startGame();
 	            	view.updatePlayerHighlights(game.getCurrentPlayerIndex());
 	            	
-	            	view.showPopMessage(primaryStage, new Exception("For shortcut keys, click (?) on the top right"));
+	            	addShowShortcutsButton(primaryStage);
+	            	
+	            	view.showNotification(primaryStage);
 	            	
 	            }
 	            catch(IOException exception) {
 	            }
 	        }
 	    }  );
-	 
-	    // this was to test the popup message
-	    //Exception e= new CannotFieldException("vrbebverb rvrebeaw rvewrvbrev vwrvwervwa vwvwreav");  
-	   // view.showPopMessage(primaryStage , e); 
 	}
-	public void startGame(){
-		if(game.canPlayTurn()){
-			
-		}
-		
-		
-		
-	}
-	
-
-
-	   
 	
 		  public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view,Game game) {
 				Scene scene = owner.getScene();
@@ -500,70 +500,262 @@ public class JackarooGUI extends Application{
         view.removePlayButton();
 	}
 	
-	public static void showWinnerPopup(Stage owner, Colour winnerColour, Game game) {
-	    // Label announcing the winner
-	    Label msg = new Label("🏆 " + getName(winnerColour) + " (" + winnerColour + ") wins the game!");
+public static void showWinnerPopup(Stage owner, Colour winnerColour, Game game) {
+	    
+	    Label msg = new Label("🏆 " + getName(winnerColour) + " " + winnerColour + " wins!");
 	    msg.setWrapText(true);
 	    msg.setMaxWidth(380);
 	    msg.setTextAlignment(TextAlignment.CENTER);
 	    msg.setAlignment(Pos.CENTER);
-	    msg.setTextFill(Color.web("#fdf6e3")); // soft ivory
-	    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+	    msg.setStyle("-fx-font-size: 60px; -fx-font-family: 'Georgia';");
 
-	    // "Play Again" button
-	    Button playAgainButton = new Button("Exit");
-	    playAgainButton.setStyle(
+	    // Set text colour to the winner's colour using a helper method
+	    msg.setTextFill(mapWinnerColour(winnerColour));
+
+	    DropShadow dropShadow = new DropShadow(3, Color.color(0, 0, 0, 0.5));
+	    msg.setEffect(dropShadow);
+
+	    // --- Buttons Setup ---
+	    Button exitButton = new Button("Exit");
+	    exitButton.setStyle(
 	        "-fx-background-color: #fdf6e3; " +
 	        "-fx-text-fill: #5c3b24; " +
 	        "-fx-font-weight: bold; " +
-	        "-fx-font-size: 16px;"
+	        "-fx-font-size: 24px;"
 	    );
+	    exitButton.setOnAction(e -> owner.close());
 
-	    // Leave onAction empty for now
-	    playAgainButton.setOnAction(e -> {
-	        // TODO: Define behavior to restart game
-	    	primaryStage.close();
-	    });
+	    HBox buttonBox = new HBox(20, exitButton);
+	    buttonBox.setAlignment(Pos.CENTER);
+	    BorderPane.setMargin(buttonBox, new Insets(0, 0, 30, 0));
 
-	    // VBox to hold content
-	    VBox content = new VBox(msg, playAgainButton);
-	    content.setAlignment(Pos.CENTER);
-	    content.setSpacing(20);
+	    // Fireworks Pane 
+	    Pane fireworksPane = new Pane();
+	    fireworksPane.setPrefHeight(150);
 
-	    // Styled background rectangle
-	    Rectangle background = new Rectangle(400, 200);
+	    // Background Setup
+	    Rectangle background = new Rectangle(420, 360);
 	    background.setArcWidth(40);
 	    background.setArcHeight(40);
-	    background.setFill(Color.web("#8b5e3c")); // rich brown
-	    background.setStroke(Color.web("#5c3b24")); // deeper brown
+	    background.setFill(Color.web("#8b5e3c"));
+	    background.setStroke(Color.web("#5c3b24"));
 	    background.setStrokeWidth(3);
 
-	    // StackPane for layering rectangle and content
-	    StackPane root = new StackPane(background, content);
+	    //  Root Layout as BorderPane
+	    BorderPane root = new BorderPane();
 	    root.setPadding(new Insets(20));
+	    root.setTop(msg);
+	    root.setCenter(fireworksPane);
+	    root.setBottom(buttonBox);
 
-	    // Create the popup window
+	    // Layer background behind everything
+	    StackPane stack = new StackPane(background, root);
+
+	    //  Popup Stage Setup 
+	    Scene scene = new Scene(stack, 420, 360);
 	    Stage popup = new Stage();
 	    popup.initOwner(owner);
 	    popup.initModality(Modality.WINDOW_MODAL);
 	    popup.setResizable(false);
 	    popup.setTitle("Game Over");
-
-	    Scene scene = new Scene(root, 400, 200);
 	    popup.setScene(scene);
-
-	    // Optional icon
 	    try {
-	        Image icon = new Image("icon.png");
-	        popup.getIcons().add(icon);
+	        popup.getIcons().add(new Image("icon.png"));
 	    } catch (Exception e) {
 	        System.out.println("Icon not found.");
 	    }
-
-	    popup.setOnCloseRequest(evt -> popup.hide());
 	    popup.show();
-	}  
+
+	    // Launch Fireworks after layout 
+	    Platform.runLater(() -> {
+	        PauseTransition delay = new PauseTransition(Duration.millis(500));
+	        delay.setOnFinished(evt -> playFireworks(fireworksPane));
+	        delay.play();
+	    });
+	}
+
+	// Helper method to map the winner's Colour
+	private static Color mapWinnerColour(Colour winnerColour) {
+	    
+	    switch (winnerColour) {
+	        case RED:
+	            return Color.RED;
+	        case BLUE:
+	            return Color.BLUE;
+	        case GREEN:
+	            return Color.GREEN;
+	        case YELLOW:
+	            return Color.YELLOW;
+	       
+	        default:
+	            return Color.web("#fdf6e3");
+	    }
+	}
+
+
+    private static void playFireworks(Pane fireworksPane) {
+        Group fireworksGroup = new Group();
+        fireworksPane.getChildren().add(fireworksGroup);
+
+        Timeline timeline = new Timeline(
+            new KeyFrame(Duration.seconds(0),   e -> createExplosion(fireworksPane, fireworksGroup)),
+            new KeyFrame(Duration.seconds(0.5), e -> createExplosion(fireworksPane, fireworksGroup))
+        );
+        timeline.setCycleCount(5);
+        timeline.play();
+    }
+
+    private static void createExplosion(Pane pane, Group grp) {
+        Random random = new Random();
+        double width  = pane.getWidth();
+        double height = pane.getHeight();
+        double x = random.nextDouble() * width;
+        double y = random.nextDouble() * height;
+        int numParticles = 20 + random.nextInt(10);
+
+        for (int i = 0; i < numParticles; i++) {
+            Circle particle = new Circle(3, Color.hsb(random.nextDouble() * 360, 1, 1));
+            particle.setCenterX(x);
+            particle.setCenterY(y);
+            grp.getChildren().add(particle);
+
+            double angle    = 2 * Math.PI * i / numParticles;
+            double distance = 50 + random.nextDouble() * 50;
+            double dx       = distance * Math.cos(angle);
+            double dy       = distance * Math.sin(angle);
+
+            TranslateTransition translate = new TranslateTransition(Duration.seconds(1.5), particle);
+            translate.setByX(dx);
+            translate.setByY(dy);
+
+            FadeTransition fade = new FadeTransition(Duration.seconds(1.5), particle);
+            fade.setFromValue(1.0);
+            fade.setToValue(0.0);
+
+            ParallelTransition pt = new ParallelTransition(translate, fade);
+            pt.setOnFinished(ev -> grp.getChildren().remove(particle));
+            pt.play();
+        }
+    }
 	
+    public static void addShowShortcutsButton(Stage owner) {
+	    Scene scene = owner.getScene();
+	    Parent root = scene.getRoot();
+	    if (!(root instanceof Pane)) {
+	        System.err.println("Cannot add shortcuts button: root is not a Pane.");
+	        return;
+	    }
+	    Pane pane = (Pane) root;
+
+	    // 1) Create and style the button to match the board theme
+	    Button showShortcuts = new Button("?");
+	    showShortcuts.setStyle(
+	        "-fx-background-color: #fdf6e3; " +      // soft ivory
+	        "-fx-text-fill: #5c3b24; " +             // rich brown
+	        "-fx-font-family: 'Georgia'; " +
+	        "-fx-font-size: 24px; " +
+	        "-fx-font-weight: bold; " +
+	        "-fx-background-radius: 20; " +          // pill shape
+	        "-fx-border-color: #5c3b24; " +          // border same brown
+	        "-fx-border-width: 2;"
+	    );
+	    DropShadow borderGlow = new DropShadow();
+	    borderGlow.setColor(Color.SADDLEBROWN);
+	    borderGlow.setWidth(20);
+	    borderGlow.setHeight(20);
+	    
+	    // Hover animations
+	    ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), showShortcuts);
+	    scaleUp.setToX(1.1);
+	    scaleUp.setToY(1.1);
+
+	    ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), showShortcuts);
+	    scaleDown.setToX(1.0);
+	    scaleDown.setToY(1.0);
+	    
+	    PauseTransition delay = new PauseTransition(Duration.millis(50));
+	    
+	    showShortcuts.setOnMouseEntered((MouseEvent e) -> {
+	        if (showShortcuts.getEffect() == null) {
+	            delay.setOnFinished(event -> {
+	            	showShortcuts.setEffect(borderGlow);
+	                scaleUp.playFromStart();
+	            });
+	            delay.playFromStart();
+	        }
+	    });
+
+	    showShortcuts.setOnMouseExited((MouseEvent e) -> {
+	        if (showShortcuts.getEffect() == borderGlow) {
+	            delay.stop();
+	            showShortcuts.setEffect(null);
+	            scaleDown.playFromStart();
+	        }
+	    });
+	   
+	    showShortcuts.setTranslateX(-900);
+	    showShortcuts.setTranslateY(-490);
+
+	    // 3) Wire up the custom popup (no Alert)
+	    showShortcuts.setOnAction(e -> {
+	        Label info = new Label(
+	            "0 → Field a marble for player 0\n" +
+	            "1 → Field a marble for player 1\n" +
+	            "2 → Field a marble for player 2\n" +
+	            "3 → Field a marble for player 3\n\n"+
+	            "Blue is the highlight of the current player\n"+
+	            "Green is the highlight of the next player\n\n"
+	        );
+	        info.setStyle(
+	            "-fx-text-alignment: center; " +
+	            "-fx-font-family: 'Georgia'; " +
+	            "-fx-font-size: 22px;"
+	        );
+	        info.setWrapText(true);
+
+	        Button close = new Button("Close");
+	        close.setStyle(
+	            "-fx-background-color: #fdf6e3; " +
+	            "-fx-text-fill: #5c3b24; " +
+	            "-fx-font-family: 'Georgia'; " +
+	            "-fx-font-size: 20px; " +
+	            "-fx-background-radius: 15; " +
+	            "-fx-border-color: #5c3b24; " +
+	            "-fx-border-width: 2;"
+	        );
+
+	        VBox box = new VBox(15, info, close);
+	        box.setAlignment(Pos.CENTER);
+	        box.setPadding(new Insets(20));
+
+	        Rectangle bg = new Rectangle(450, 350);
+	        bg.setArcWidth(30);
+	        bg.setArcHeight(30);
+	        bg.setFill(Color.web("#8b5e3c"));   // rich brown fill
+	        bg.setStroke(Color.web("#5c3b24"));
+	        bg.setStrokeWidth(3);
+
+	        StackPane content = new StackPane(bg, box);
+
+	        Stage popup = new Stage(StageStyle.TRANSPARENT);
+	        popup.initOwner(owner);
+	        popup.initModality(Modality.WINDOW_MODAL);
+
+	        Scene popupScene = new Scene(content, 450, 350);
+	        popupScene.setFill(Color.TRANSPARENT);
+	        popup.setScene(popupScene);
+
+	        // Center the popup over the owner window
+	        popup.setX(owner.getX() + (owner.getWidth() - 450) / 2);
+	        popup.setY(owner.getY() + (owner.getHeight() - 350) / 2);
+
+	        close.setOnAction(ev -> popup.close());
+	        popup.show();
+	    });
+
+	    pane.getChildren().add(showShortcuts);
+	}
+    
 	public static String getName(Colour colour){
 		for(PlayerView playerView: view.getPlayersView()){
 			if(colour.equals(playerView.getPlayer().getColour())){

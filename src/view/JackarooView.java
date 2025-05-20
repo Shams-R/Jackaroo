@@ -64,7 +64,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import view.PlayerView.*;
 public class JackarooView {
-	private String playerName;
+	private static String playerName;
 	private String playerGender;
 	private StackPane mainLayout;
 	private TrackView trackView;
@@ -75,8 +75,8 @@ public class JackarooView {
 	private FirePitView firePit;
 	private Pane buttonPane;
 	private BorderPane splitDistancePane;
-	private Game game;
-	private ArrayList<PlayerView> playersView;
+	private static Game game;
+	private static ArrayList<PlayerView> playersView;
 	private boolean played;
 	
 	public CardsPoolView getCardsPool(){
@@ -596,6 +596,99 @@ public class JackarooView {
 	    popup.show();
 	}
 	
+	public void showNotification(Stage primaryStage) {
+	    // Label with styled text
+	    Label msg = new Label("For shortcut keys, click (?) on the top right");
+	    msg.setWrapText(true);
+	    msg.setMaxWidth(380);
+	    msg.setTextAlignment(TextAlignment.CENTER);
+	    msg.setAlignment(Pos.CENTER);
+	    msg.setTextFill(Color.web("#fdf6e3")); // soft ivory
+	    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+	
+	    // VBox to hold content
+	    VBox content = new VBox(msg);
+	    content.setAlignment(Pos.CENTER);
+	    content.setSpacing(20);
+	
+	    // Styled background rectangle
+	    Rectangle background = new Rectangle(400, 180);
+	    background.setArcWidth(40);
+	    background.setArcHeight(40);
+	    background.setFill(Color.web("#8b5e3c")); // rich brown
+	    background.setStroke(Color.web("#5c3b24")); // deeper brown
+	    background.setStrokeWidth(3);
+	
+	    // StackPane for layering rectangle and text
+	    StackPane root = new StackPane(background, content);
+	    root.setPadding(new Insets(20));
+	
+	    // Create the popup window
+	    Stage popup = new Stage();
+	    popup.initOwner(primaryStage);
+	    popup.initModality(Modality.WINDOW_MODAL);
+	    popup.setResizable(false);
+	    popup.setTitle("Notification");
+	
+	    Scene scene = new Scene(root, 400, 180);
+	    popup.setScene(scene);
+	
+	    // Optional icon
+	    Image icon = new Image("icon.png");
+	    popup.getIcons().add(icon);
+	
+	    popup.setOnCloseRequest(evt -> popup.hide());
+	    popup.show();
+	}
+	
+	public static void showTrapCell() {
+	    // Label with styled text
+		String name = playersView.get(game.getCurrentPlayerIndex()).getPlayer().getName();
+		if(name.equals(playerName))
+			name = "You";
+		
+	    Label msg = new Label(name + " fell for a trap cell!");
+	    msg.setWrapText(true);
+	    msg.setMaxWidth(380);
+	    msg.setTextAlignment(TextAlignment.CENTER);
+	    msg.setAlignment(Pos.CENTER);
+	    msg.setTextFill(Color.web("#fdf6e3")); // soft ivory
+	    msg.setStyle("-fx-font-size: 18px; -fx-font-family: 'Georgia';");
+	
+	    // VBox to hold content
+	    VBox content = new VBox(msg);
+	    content.setAlignment(Pos.CENTER);
+	    content.setSpacing(20);
+	
+	    // Styled background rectangle
+	    Rectangle background = new Rectangle(400, 180);
+	    background.setArcWidth(40);
+	    background.setArcHeight(40);
+	    background.setFill(Color.web("#8b5e3c")); // rich brown
+	    background.setStroke(Color.web("#5c3b24")); // deeper brown
+	    background.setStrokeWidth(3);
+	
+	    // StackPane for layering rectangle and text
+	    StackPane root = new StackPane(background, content);
+	    root.setPadding(new Insets(20));
+	
+	    // Create the popup window
+	    Stage popup = new Stage();
+	    popup.initOwner(JackarooGUI.getPrimaryStage());
+	    popup.initModality(Modality.WINDOW_MODAL);
+	    popup.setResizable(false);
+	    popup.setTitle("Sorry");
+	
+	    Scene scene = new Scene(root, 400, 180);
+	    popup.setScene(scene);
+	
+	    // Optional icon
+	    Image icon = new Image("icon.png");
+	    popup.getIcons().add(icon);
+	
+	    popup.setOnCloseRequest(evt -> popup.hide());
+	    popup.show();
+	}
 	public void putFirePit(){
 		firePit=new FirePitView();
 		firePit.setTranslateX(-25);
@@ -674,6 +767,7 @@ public class JackarooView {
 
 	
 	public void removePlayButton() {
+		buttonPane.getChildren().clear();
 		mainLayout.getChildren().remove(buttonPane);
 	}
 	
