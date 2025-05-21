@@ -91,7 +91,7 @@ public class Game implements GameManager {
 
     public void editSplitDistance(int splitDistance) throws SplitOutOfRangeException {
         if(splitDistance < 1 || splitDistance > 6)
-            throw new SplitOutOfRangeException();
+            throw new SplitOutOfRangeException("invalid split distance , hint : should be from 1 to 6");
 
         board.setSplitDistance(splitDistance);
     }
@@ -139,7 +139,7 @@ public class Game implements GameManager {
         if (marble == null)
         	throw new CannotFieldException("No marbles left in the Home Zone to field.");
         
-        board.sendToBase(marble);
+        board.sendToBase(marble,marble.getColour());
         players.get(i).getMarbles().remove(marble);
     }
      

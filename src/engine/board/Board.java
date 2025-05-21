@@ -265,6 +265,11 @@ public class Board implements BoardManager {
     	if (occupiedBaseCell.getMarble().getColour() == gameManager.getActivePlayerColour())
             throw new CannotFieldException("One of your marbles is already on your Base Cell");
 	}
+    private void validateFielding(Cell occupiedBaseCell,Colour colour) throws CannotFieldException {
+    	if (occupiedBaseCell.getMarble().getColour() == colour)
+            throw new CannotFieldException("One of your marbles is already on your Base Cell");
+	}
+    
     
     private void validateSaving(int positionInSafeZone, int positionOnTrack) throws InvalidMarbleException {
     	if(positionInSafeZone != -1)
@@ -318,6 +323,19 @@ public class Board implements BoardManager {
     	
     	if(baseCell.getMarble() != null) {
     		validateFielding(baseCell);
+            destroyMarble(baseCell.getMarble());
+    	}
+    	
+    	baseCell.setMarble(marble);
+    	
+    	
+	}
+    public void sendToBase(Marble marble,Colour colour) throws CannotFieldException, IllegalDestroyException {
+    	int basePosition = getBasePosition(marble.getColour());
+    	Cell baseCell = this.track.get(basePosition);
+    	
+    	if(baseCell.getMarble() != null) {
+    		validateFielding(baseCell,colour);
             destroyMarble(baseCell.getMarble());
     	}
     	
