@@ -52,11 +52,8 @@ public class FirePitView extends StackPane{
     		getChildren().remove(firePit.get(0));
     		firePit.remove(0);
     	}
-    	
     	CardView cardview=new CardView(cards.get(cards.size()-1));
     	add(cardview);
-    	
-    	
     }
 	
 	

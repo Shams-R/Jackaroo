@@ -230,7 +230,7 @@ public class Board implements BoardManager {
             destroyMarble(marble);
             targetCell.setTrap(false);
             assignTrapCell();
-            JackarooView.showTrapCell();
+            JackarooView.showTrapCell(marble.getColour());
         }
         
 	}

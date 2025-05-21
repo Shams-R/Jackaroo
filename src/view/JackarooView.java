@@ -494,10 +494,11 @@ public class JackarooView {
 
 	        // Create label for the name
 	        Label nameLabel = new Label(player.getName());
-	        nameLabel.setStyle("-fx-text-fill: #5C3317; " +
+	        nameLabel.setStyle("-fx-text-fill: " + player.getColour().toString().toLowerCase() + "; " +
 	                           "-fx-font-weight: bold; " +
 	                           "-fx-font-size: 24px; " +
 	                           "-fx-font-family: 'Georgia', 'Garamond', serif;");
+	        
 
 	        // Create a wooden frame around the name label
 	        StackPane nameFrame = new StackPane(nameLabel);
@@ -645,9 +646,10 @@ public class JackarooView {
 	    popup.show();
 	}
 	
-	public static void showTrapCell() {
+	public static void showTrapCell(Colour colour) {
 	    // Label with styled text
-		String name = playersView.get(game.getCurrentPlayerIndex()).getPlayer().getName();
+		String name = "";
+		for(int i=0; i<playersView.size(); i++) if(playersView.get(i).getPlayer().getColour()==colour) name = playersView.get(i).getPlayer().getName();
 		if(name.equals(playerName))
 			name = "You";
 		
@@ -766,7 +768,8 @@ public class JackarooView {
 	        }
 	    });
 	    
-	    mainLayout.getChildren().add(buttonPane);
+	    if(!mainLayout.getChildren().contains(buttonPane))
+	    	mainLayout.getChildren().add(buttonPane);
 	}
 
 	
