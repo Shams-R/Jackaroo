@@ -23,7 +23,7 @@ public class MarbleView extends StackPane {
 		if(marble==null)
 		System.out.print(marble);
 		String colour=marble.getColour().toString().toLowerCase();
-		Image image=new Image("view/" + colour + ".png");
+		Image image=new Image(colour + ".png");
 		imageView =new ImageView(image);
 		imageView.setSmooth(true);
 		imageView.setPreserveRatio(true);

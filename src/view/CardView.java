@@ -20,7 +20,7 @@ import javafx.util.Duration;
 public class CardView extends StackPane{
 	final private Card card;
 	final private Image faceImage;
-	final private Image backImage=new Image("view/"+"back.jpg");
+	final private Image backImage=new Image("back.jpg");
     private final ImageView imageView;	
     private Tooltip tooltip;
 
@@ -44,11 +44,11 @@ public class CardView extends StackPane{
 			s2=s2.toUpperCase();
 			s3=s3.toLowerCase();
 			
-			faceImage=new Image("view/"+card2.getName()+s2+s3+".png");
+			faceImage=new Image(card2.getName()+s2+s3+".png");
 		}
 		else{
 			//System.out.print(card.getName());
-			faceImage=new Image("view/"+card.getName()+".jpg");
+			faceImage=new Image(card.getName()+".jpg");
 		}
 		imageView =new ImageView(faceImage);
 		imageView.setSmooth(true);
