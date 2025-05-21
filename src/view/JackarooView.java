@@ -86,6 +86,10 @@ public class JackarooView {
 		return firePit;
 	}
 	
+	public void setButtonPane(Pane buttonPane) {
+		this.buttonPane = buttonPane;
+	}
+	
 	public boolean isPlayed() {
 		return played;
 	}
@@ -687,7 +691,7 @@ public class JackarooView {
 	    popup.getIcons().add(icon);
 	
 	    popup.setOnCloseRequest(evt -> popup.hide());
-	    popup.show();
+	    popup.showAndWait();
 	}
 	public void putFirePit(){
 		firePit=new FirePitView();
@@ -715,7 +719,7 @@ public class JackarooView {
 	        "-fx-border-radius: 10;"
 	    );
 
-	    buttonPane = new Pane();
+//	    buttonPane = new Pane();
 	    buttonPane.setPickOnBounds(false);
 	    buttonPane.getChildren().add(playButton);
 

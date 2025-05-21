@@ -151,6 +151,8 @@ public class JackarooGUI extends Application{
 	            	
 	            	view.showNotification(primaryStage);
 	            	
+	            	view.setButtonPane(new Pane());
+	            	
 	            }
 	            catch(IOException exception) {
 	            }
@@ -247,8 +249,10 @@ public class JackarooGUI extends Application{
 		        scaleUp.play();
 		        
 		        //Only if its the turn of the current play
-		        if(game.getCurrentPlayerIndex()==0)
+		        if(game.getCurrentPlayerIndex()==0) {
+//		        	view.removePlayButton();
 		        	view.showPlayButton();
+		        }
 		        
 		        
 		        if(card.getCard().getName().equals("Seven"))

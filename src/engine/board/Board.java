@@ -3,6 +3,7 @@ package engine.board;
 import java.util.ArrayList;
 
 import view.JackarooView;
+import engine.Game;
 import engine.GameManager;
 import exception.CannotFieldException;
 import exception.IllegalDestroyException;
@@ -11,6 +12,7 @@ import exception.IllegalSwapException;
 import exception.InvalidMarbleException;
 import model.Colour;
 import model.player.Marble;
+import model.player.Player;
 
 @SuppressWarnings("unused")
 public class Board implements BoardManager {
@@ -266,8 +268,13 @@ public class Board implements BoardManager {
             throw new CannotFieldException("One of your marbles is already on your Base Cell");
 	}
     private void validateFielding(Cell occupiedBaseCell,Colour colour) throws CannotFieldException {
-    	if (occupiedBaseCell.getMarble().getColour() == colour)
-            throw new CannotFieldException("One of your marbles is already on your Base Cell");
+    	if (occupiedBaseCell.getMarble().getColour() == colour) {
+    		Game game = (Game) gameManager;
+    		ArrayList<Player> players = game.getPlayers();
+    		String name = "";
+    		for(Player player : players) if(player.getColour()==colour) name = player.getName();
+            throw new CannotFieldException("One of " + name +  "'s marbles is already on " + name + "'s Base Cell");
+    	}
 	}
     
     
