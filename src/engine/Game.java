@@ -91,7 +91,7 @@ public class Game implements GameManager {
 
     public void editSplitDistance(int splitDistance) throws SplitOutOfRangeException {
         if(splitDistance < 1 || splitDistance > 6)
-            throw new SplitOutOfRangeException("invalid split distance , hint : should be from 1 to 6");
+            throw new SplitOutOfRangeException("Invalid split distance!\n" + "hint: <1,6>");
 
         board.setSplitDistance(splitDistance);
     }
