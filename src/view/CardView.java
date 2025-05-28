@@ -116,9 +116,7 @@ public class CardView extends StackPane{
 				@Override
 				public void handle(Event event) {
 					JackarooGUI.selectCard(CardView.this);
-					 Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/draw1.m4a").toURI().toString());
-					    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-					    mediaPlayer.play();
+					 
 				}
         });
 			

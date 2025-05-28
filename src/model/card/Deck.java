@@ -44,7 +44,7 @@ public class Deck {
 			
 			int code = Integer.parseInt(data[0]);
 			int frequency = Integer.parseInt(data[1]);
-			if(name.equals("MarbleSaver"))
+			if(name.equals("MarbleSaver")||name.equals("MarbleBurner"))
 				frequency=50;
 			
 			for (int i = 0; i < frequency; i++) {

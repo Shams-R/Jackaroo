@@ -164,8 +164,8 @@ public class Game implements GameManager {
                 player.regainMarble(marble);
                 
      	     
-    	       JackarooGUI.sound("Click");
-			   JackarooGUI.sound("Marfoda");
+    	       JackarooGUI.sound("Click.m4a");
+			   JackarooGUI.sound("Marfoda.m4a");
 			    
                 break;
             }

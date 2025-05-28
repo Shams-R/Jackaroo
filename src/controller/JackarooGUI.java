@@ -78,7 +78,7 @@ public class JackarooGUI extends Application{
 		return selectedMarbles;
 	}
 	public static void sound(String s){
-		Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/"+s+".m4a").toURI().toString());
+		Media sound = new Media(JackarooGUI.class.getResource("/"+s).toExternalForm());
 	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
 	    mediaPlayer.play();
 	}
@@ -99,7 +99,7 @@ public class JackarooGUI extends Application{
 		
 	    start.setOnMouseClicked(new EventHandler<Event>() {
 	        public void handle(Event e) {
-	        	Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/Faroga.m4a").toURI().toString());
+	        	Media sound = new Media(getClass().getResource("/Faroga.m4a").toExternalForm());
 	 	       MediaPlayer mediaPlayer = new MediaPlayer(sound);
 	 	       mediaPlayer.play();
 	            String playerName = nameField.getText();
@@ -227,6 +227,7 @@ public class JackarooGUI extends Application{
 		if(game.getCurrentPlayerIndex()!=0)return ;
 		 try {
 			 game.selectCard(card.getCard());
+			 sound("draw1.m4a");
 			 
 		     if (currentlySelectedCard != null && currentlySelectedCard != card) {
 		         currentlySelectedCard.setEffect(null);
@@ -427,7 +428,7 @@ public class JackarooGUI extends Application{
 		if (game.checkWin() != null) {
 			
 			showWinnerPopup(primaryStage, game.checkWin(), game);
-			sound("3amaloha");
+			sound("3amaloha.m4a");
 			return;
 		}
 
@@ -445,7 +446,7 @@ public class JackarooGUI extends Application{
 			if (game.checkWin() != null) {
 				
 				showWinnerPopup(primaryStage, game.checkWin(), game);
-				sound("3amaloha");
+				sound("3amaloha.m4a");
 				return;
 			}
 			
@@ -463,7 +464,7 @@ public class JackarooGUI extends Application{
 				if (game.checkWin() != null) {
 					
 					showWinnerPopup(primaryStage, game.checkWin(), game);
-					sound("3amaloha");
+					sound("3amaloha.m4a");
 					return;
 				}
 
@@ -481,7 +482,7 @@ public class JackarooGUI extends Application{
 					if (game.checkWin() != null) {
 						
 						showWinnerPopup(primaryStage, game.checkWin(), game);
-						sound("3amaloha");
+						sound("3amaloha.m4a");
 						return;
 					}
 

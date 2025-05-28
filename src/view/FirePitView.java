@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
+import controller.JackarooGUI;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -60,9 +61,8 @@ public class FirePitView extends StackPane{
     		firePit.remove(0);
     	}
     	
-    	 Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/draw2.m4a").toURI().toString());
-		    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-		    mediaPlayer.play();
+    	 
+		    JackarooGUI.sound("draw2.m4a");
 		    
     	if(cards.size()>size+1){
     		CardView cardview1=new CardView(cards.get(cards.size()-1));
