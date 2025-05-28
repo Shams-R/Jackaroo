@@ -425,7 +425,7 @@ public class JackarooGUI extends Application{
 		deselectAll();
 
 		if (game.checkWin() != null) {
-			sound("3amaloha");
+			
 			showWinnerPopup(primaryStage, game.checkWin(), game);
 			sound("3amaloha");
 			return;
@@ -443,7 +443,7 @@ public class JackarooGUI extends Application{
 			view.updatePlayerHighlights(game.getCurrentPlayerIndex()); // 🌟 Show it's CPU2's turn
 
 			if (game.checkWin() != null) {
-				sound("3amaloha");
+				
 				showWinnerPopup(primaryStage, game.checkWin(), game);
 				sound("3amaloha");
 				return;
@@ -461,7 +461,7 @@ public class JackarooGUI extends Application{
 				view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's CPU3's turn
 
 				if (game.checkWin() != null) {
-					sound("3amaloha");
+					
 					showWinnerPopup(primaryStage, game.checkWin(), game);
 					sound("3amaloha");
 					return;
@@ -479,7 +479,7 @@ public class JackarooGUI extends Application{
 					view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's Human's turn
 					
 					if (game.checkWin() != null) {
-						sound("3amaloha");
+						
 						showWinnerPopup(primaryStage, game.checkWin(), game);
 						sound("3amaloha");
 						return;
@@ -528,7 +528,11 @@ public class JackarooGUI extends Application{
 	
 public static void showWinnerPopup(Stage owner, Colour winnerColour, Game game) {
 	    
-	    Label msg = new Label("🏆 " + getName(winnerColour) + " " + winnerColour + " wins!");
+	Label msg;
+    if(winnerColour.equals(game.getPlayers().get(0).getColour()))
+    	  msg = new Label("Winner Winner Chicken dinner");
+    else
+    	 msg = new Label("🏆 " + getName(winnerColour) + " " + winnerColour + " wins! \n You lost!");
 	    msg.setWrapText(true);
 	    msg.setMaxWidth(380);
 	    msg.setTextAlignment(TextAlignment.CENTER);
