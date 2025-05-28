@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,6 +42,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -150,14 +153,19 @@ public class JackarooGUI extends Application{
 	            	addShowShortcutsButton(primaryStage);
 	            	
 	            	view.showNotification(primaryStage);
-	            	
+				       
 	            	view.setButtonPane(new Pane());
-	            	
+				       
 	            }
 	            catch(IOException exception) {
 	            }
 	        }
 	    }  );
+	    
+    	
+	       Media sound = new Media(new File("C:/Users/smc/Desktop/Faroga.m4a").toURI().toString());
+	       MediaPlayer mediaPlayer = new MediaPlayer(sound);
+	       mediaPlayer.play();
 	}
 	
 		  public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view,Game game) {

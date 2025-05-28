@@ -1,12 +1,16 @@
 package view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+
+import javax.print.DocFlavor.URL;
 
 import controller.JackarooGUI;
 import engine.Game;
 import engine.board.Board;
 import engine.board.Cell;
+import engine.board.CellType;
 import engine.board.SafeZone;
 import exception.CannotFieldException;
 import exception.IllegalDestroyException;
@@ -50,6 +54,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -319,7 +325,19 @@ public class JackarooView {
 				cellsView.get(i).getMarbleView(); //this removes the marble
 			else if(marbleView==null ||marbleView.getMarble()!=marble ){
 				MarbleView marbleView2=new MarbleView(marble);
+				
+			       Media sound = new Media(new File("C:/Users/smc/Desktop/Click.m4a").toURI().toString());
+			       MediaPlayer mediaPlayer = new MediaPlayer(sound);
+			       mediaPlayer.play();
+			       
+			       if(cells.get(0).getCellType()==CellType.SAFE) {
+				       Media sound1 = new Media(new File("C:/Users/smc/Desktop/Wa7da.m4a").toURI().toString());
+				       MediaPlayer mediaPlayer2 = new MediaPlayer(sound1);
+				       mediaPlayer2.play();
+			       }
+			       
 				cellsView.get(i).setMarbleView(marbleView2);
+				
 			}
 			
 			}
@@ -693,7 +711,7 @@ public class JackarooView {
 	    popup.getIcons().add(icon);
 	
 	    popup.setOnCloseRequest(evt -> popup.hide());
-	    popup.showAndWait();
+	    popup.show();
 	}
 	public void putFirePit(){
 		firePit=new FirePitView();

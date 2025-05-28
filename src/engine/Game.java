@@ -1,10 +1,13 @@
 package engine;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import controller.JackarooGUI;
 import engine.board.Board;
 import engine.board.SafeZone;
@@ -147,8 +150,13 @@ public class Game implements GameManager {
 
     public Colour checkWin() {
         for(SafeZone safeZone : board.getSafeZones()) 
-            if(safeZone.isFull())
+            if(safeZone.isFull()) {
+			       Media sound = new Media(new File("C:/Users/smc/Desktop/3amaloha.m4a").toURI().toString());
+			       MediaPlayer mediaPlayer = new MediaPlayer(sound);
+			       mediaPlayer.play();
+			       
                 return safeZone.getColour();
+            }
     
         return null;
     }
@@ -158,6 +166,15 @@ public class Game implements GameManager {
         for (Player player : players) {
             if (player.getColour() == marble.getColour()) {
                 player.regainMarble(marble);
+                
+     	       Media sound1 = new Media(new File("C:/Users/smc/Desktop/Faroga.m4a").toURI().toString());
+    	       MediaPlayer mediaPlayer2 = new MediaPlayer(sound1);
+    	       mediaPlayer2.play();
+    	       
+			    Media sound = new Media(new File("C:/Users/smc/Desktop/Marfoda.m4a").toURI().toString());
+			    MediaPlayer mediaPlayer = new MediaPlayer(sound);
+			    mediaPlayer.play();
+			    
                 break;
             }
         }
