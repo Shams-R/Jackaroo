@@ -326,12 +326,12 @@ public class JackarooView {
 			else if(marbleView==null ||marbleView.getMarble()!=marble ){
 				MarbleView marbleView2=new MarbleView(marble);
 				
-			       Media sound = new Media(new File("C:/Users/smc/Desktop/Click.m4a").toURI().toString());
+			       Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/Click.m4a").toURI().toString());
 			       MediaPlayer mediaPlayer = new MediaPlayer(sound);
 			       mediaPlayer.play();
 			       
 			       if(cells.get(0).getCellType()==CellType.SAFE) {
-				       Media sound1 = new Media(new File("C:/Users/smc/Desktop/Wa7da.m4a").toURI().toString());
+				       Media sound1 = new Media(new File("C:/Users/Zbook G8/Desktop/Wa7da.m4a").toURI().toString());
 				       MediaPlayer mediaPlayer2 = new MediaPlayer(sound1);
 				       mediaPlayer2.play();
 			       }

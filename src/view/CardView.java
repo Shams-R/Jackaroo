@@ -1,10 +1,14 @@
 package view;
 
+import java.io.File;
+
 import controller.JackarooGUI;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import model.card.Card;
 import model.card.standard.Standard;
 import javafx.animation.ScaleTransition;
@@ -112,6 +116,9 @@ public class CardView extends StackPane{
 				@Override
 				public void handle(Event event) {
 					JackarooGUI.selectCard(CardView.this);
+					 Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/draw1.m4a").toURI().toString());
+					    MediaPlayer mediaPlayer = new MediaPlayer(sound);
+					    mediaPlayer.play();
 				}
         });
 			

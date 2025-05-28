@@ -94,6 +94,9 @@ public class JackarooGUI extends Application{
 		
 	    start.setOnMouseClicked(new EventHandler<Event>() {
 	        public void handle(Event e) {
+	        	Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/Faroga.m4a").toURI().toString());
+	 	       MediaPlayer mediaPlayer = new MediaPlayer(sound);
+	 	       mediaPlayer.play();
 	            String playerName = nameField.getText();
 	            if (playerName.equals("") || selectedGender.get().equals("")) {
 	            	Stage alertStage = new Stage();
@@ -163,9 +166,7 @@ public class JackarooGUI extends Application{
 	    }  );
 	    
     	
-	       Media sound = new Media(new File("C:/Users/smc/Desktop/Faroga.m4a").toURI().toString());
-	       MediaPlayer mediaPlayer = new MediaPlayer(sound);
-	       mediaPlayer.play();
+	       
 	}
 	
 		  public static void fieldShortcut(TrackView mainTrack,ArrayList<HomeZoneView> homeZones,Stage owner,JackarooView view,Game game) {
