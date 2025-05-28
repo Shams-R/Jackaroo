@@ -77,6 +77,11 @@ public class JackarooGUI extends Application{
 	public static ArrayList<MarbleView> getSelectedMarbles(){
 		return selectedMarbles;
 	}
+	public static void sound(String s){
+		Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/"+s+".m4a").toURI().toString());
+	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
+	    mediaPlayer.play();
+	}
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		
@@ -420,7 +425,9 @@ public class JackarooGUI extends Application{
 		deselectAll();
 
 		if (game.checkWin() != null) {
+			sound("3amaloha");
 			showWinnerPopup(primaryStage, game.checkWin(), game);
+			sound("3amaloha");
 			return;
 		}
 
@@ -436,7 +443,9 @@ public class JackarooGUI extends Application{
 			view.updatePlayerHighlights(game.getCurrentPlayerIndex()); // 🌟 Show it's CPU2's turn
 
 			if (game.checkWin() != null) {
+				sound("3amaloha");
 				showWinnerPopup(primaryStage, game.checkWin(), game);
+				sound("3amaloha");
 				return;
 			}
 			
@@ -452,7 +461,9 @@ public class JackarooGUI extends Application{
 				view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's CPU3's turn
 
 				if (game.checkWin() != null) {
+					sound("3amaloha");
 					showWinnerPopup(primaryStage, game.checkWin(), game);
+					sound("3amaloha");
 					return;
 				}
 
@@ -468,7 +479,9 @@ public class JackarooGUI extends Application{
 					view.updatePlayerHighlights(game.getCurrentPlayerIndex()); //  Show it's Human's turn
 					
 					if (game.checkWin() != null) {
+						sound("3amaloha");
 						showWinnerPopup(primaryStage, game.checkWin(), game);
+						sound("3amaloha");
 						return;
 					}
 

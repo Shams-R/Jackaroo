@@ -151,10 +151,6 @@ public class Game implements GameManager {
     public Colour checkWin() {
         for(SafeZone safeZone : board.getSafeZones()) 
             if(safeZone.isFull()) {
-			       Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/3amaloha.m4a").toURI().toString());
-			       MediaPlayer mediaPlayer = new MediaPlayer(sound);
-			       mediaPlayer.play();
-			       
                 return safeZone.getColour();
             }
     
@@ -167,13 +163,9 @@ public class Game implements GameManager {
             if (player.getColour() == marble.getColour()) {
                 player.regainMarble(marble);
                 
-     	     Media sound1 = new Media(new File("C:/Users/Zbook G8/Desktop/Click.m4a").toURI().toString());
-    	       MediaPlayer mediaPlayer2 = new MediaPlayer(sound1);
-    	       mediaPlayer2.play();
-    	       
-			    Media sound = new Media(new File("C:/Users/Zbook G8/Desktop/Marfoda.m4a").toURI().toString());
-			    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-			    mediaPlayer.play();
+     	     
+    	       JackarooGUI.sound("Click");
+			   JackarooGUI.sound("Marfoda");
 			    
                 break;
             }
